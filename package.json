@@ -21,6 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:staged": "CI=true npm test -- --findRelatedTests",
+    "test:ci": "CI=true npm test -- --coverage",
     "eject": "react-scripts eject",
     "prepare": "husky install"
   },
