@@ -20,8 +20,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:staged": "CI=true npm test -- --findRelatedTests",
-    "test:ci": "CI=true npm test -- --coverage",
+    "test:staged": "npm test -- --findRelatedTests --watchAll=false",
+    "test:ci": "npm test -- --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "prepare": "husky install"
   },
@@ -29,6 +29,15 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/index.tsx",
+      "!src/**/*.d.ts",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/path/to/dir/"
     ]
   },
   "browserslist": {
