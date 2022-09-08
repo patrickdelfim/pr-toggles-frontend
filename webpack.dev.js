@@ -7,39 +7,46 @@ const { merge } = require('webpack-merge')
 module.exports = merge(common, {
   mode: 'development',
   module: {
-    rules: [{
-      test: /\.ts(x?)$/,
-      loader: 'ts-loader',
-      exclude: /node_modules/
-    }, {
-      test: /\.scss$/,
-      use: [{
-        loader: 'style-loader'
-      }, {
-        loader: 'css-loader',
-        options: {
-          modules: true
-        }
-      }, {
-        loader: 'sass-loader'
-      }]
-    }]
+    rules: [
+      {
+        test: /\.ts(x?)$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(scss|css)$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+            },
+          },
+          {
+            loader: 'sass-loader',
+          },
+        ],
+      },
+    ],
   },
   devServer: {
     static: './dist',
     historyApiFallback: true,
     devMiddleware: {
-      writeToDisk: true
+      writeToDisk: true,
     },
-    port: 8080
+    port: 8080,
   },
   devtool: 'inline-source-map',
   plugins: [
     new DefinePlugin({
-      'process.env.API_URL': JSON.stringify('http://fordevs.herokuapp.com/api')
+      'process.env.API_URL': JSON.stringify('http://fordevs.herokuapp.com/api'),
     }),
     new HtmlWebpackPlugin({
-      template: './template.dev.html'
-    })
-  ]
+      template: './template.dev.html',
+    }),
+  ],
 })
