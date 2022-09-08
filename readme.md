@@ -1,0 +1,3 @@
+[![Coverage Status](https://coveralls.io/repos/github/patrickdelfim/4Dev-Enquetes-para-programadores/badge.svg?branch=main)](https://coveralls.io/github/patrickdelfim/4Dev-Enquetes-para-programadores?branch=feat/ci)
+![Build Status](https://github.com/patrickdelfim/4Dev-Enquetes-para-programadores/actions/workflows/heroku-deploy.yml/badge.svg)
+[![Known Vulnerabilities](https://snyk.io/test/github/patrickdelfim/4Dev-Enquetes-para-programadores/badge.svg)](https://snyk.io/test/github/patrickdelfim/4Dev-Enquetes-para-programadores)

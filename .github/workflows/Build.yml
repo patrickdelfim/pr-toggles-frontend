@@ -1,0 +1,29 @@
+name: Build
+on:
+  push:
+    branches:
+      - '*'
+      - '!main'
+  workflow_call:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v2
+    - name: Use Node.js 14.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14.x
+        cache: 'npm'
+    - run: npm install
+    - run: npx eslint './src/**/*.{ts,tsx}'
+    - run: npm run test:ci
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}

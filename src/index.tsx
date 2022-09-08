@@ -1,13 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './presentation/pages/app/App';
-import './presentation/styles/global.scss';
+import { ChakraProvider } from '@chakra-ui/react'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import SignUp from './presentation/pages/signUp/signUp'
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+    <ChakraProvider>
+      <SignUp />
+    </ChakraProvider>
+  </React.StrictMode>,
+  document.getElementById('main')
+)
