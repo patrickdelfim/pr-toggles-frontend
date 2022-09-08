@@ -1,11 +1,12 @@
+import InputField from '@/presentation/components/input/input'
 import {
   Box,
   Button,
+  Container,
   FormControl,
   FormLabel,
   Heading,
   Image,
-  Input,
   Text,
 } from '@chakra-ui/react'
 import React from 'react'
@@ -13,58 +14,77 @@ import React from 'react'
 import logo from '../../assets/logo_transparent_vector.svg'
 const SignUp: React.FC = () => {
   return (
-    <Box display="flex" alignItems="center" flexDirection="column">
-      <Box display="flex" alignItems="center" flexDirection="column" mt={10}>
-        <Image boxSize="200px" src={logo} alt="PR Toggles logo" />
-        <Heading fontSize="2xl" fontWeight="700">
-          Experimente nossa versão gratuita.
-        </Heading>
-        <Text fontSize="md" fontWeight="light" mt={3}>
-          Comece a configurar o seu projeto agora mesmo!
-        </Text>
-      </Box>
+    <Box display="flex" alignItems="center" flexDirection="column" bg="white">
+      <Container>
+        <Box display="flex" alignItems="center" flexDirection="column" mt={1}>
+          <Image boxSize="200px" src={logo} alt="PR Toggles logo" />
+          <Heading fontSize="2xl" fontWeight="700" textAlign="center">
+            Experimente nossa versão agratuita..
+          </Heading>
+          <Text fontSize="md" fontWeight="light" mt={3} textAlign="center">
+            Comece a configurar o seu projeto agora mesmo!
+          </Text>
+        </Box>
+      </Container>
       <Box
         width="100%"
         maxW="2xl"
-        mt={10}
+        mt={4}
         padding={8}
         boxShadow="2xl"
-        bg="orange.50"
+        bg="bgColor.500"
         borderRadius="lg"
         color="black"
       >
         <Box my={3}>
           <FormControl>
-            <FormLabel>Nome da empresa</FormLabel>
-            <Input type="text" placeholder="RB Engenharia" />
+            <FormLabel color="primary.700" fontWeight="600">
+              Nome da empresa
+            </FormLabel>
+            <InputField type="text" placeholder="RB Engenharia" />
           </FormControl>
         </Box>
         <Box my={3}>
           <FormControl>
-            <FormLabel>Endereço de Email</FormLabel>
-            <Input type="email" placeholder="you@company.com" />
+            <FormLabel color="primary.700" fontWeight="600">
+              Endereço de Email
+            </FormLabel>
+            <InputField type="email" placeholder="you@company.com" />
           </FormControl>
         </Box>
         <Box my={3}>
           <FormControl>
-            <FormLabel>senha</FormLabel>
-            <Input type="password" placeholder="password" />
+            <FormLabel color="primary.700" fontWeight="600">
+              senha
+            </FormLabel>
+            <InputField type="password" placeholder="password" />
           </FormControl>
         </Box>
         <Box my={3}>
           <FormControl>
-            <FormLabel>confirmação de senha</FormLabel>
-            <Input type="password" placeholder="" />
+            <FormLabel color="primary.600" fontWeight="600">
+              confirmação de senha
+            </FormLabel>
+            <InputField type="password" />
           </FormControl>
         </Box>
         <Box my={3}>
           <FormControl>
-            <FormLabel>Telefone</FormLabel>
-            <Input type="tel" placeholder="(xx) xxxx-xxxx" />
+            <FormLabel color="primary.600" fontWeight="600">
+              Telefone
+            </FormLabel>
+            <InputField type="tel" placeholder="(xx) xxxx-xxxx" />
           </FormControl>
         </Box>
         <Box mt={5}>
-          <Button colorScheme="blue" w="100%">
+          <Button
+            color="white"
+            bg="secondary.500"
+            w="100%"
+            _focus={{ border: 'none' }}
+            _hover={{ bg: 'secondary.400' }}
+            _active={{ bg: 'secondary.300' }}
+          >
             Cadastrar!
           </Button>
         </Box>
