@@ -1,20 +1,36 @@
 const { DefinePlugin } = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-
 const common = require('./webpack.common')
 const { merge } = require('webpack-merge')
 
 module.exports = merge(common, {
   mode: 'development',
+  optimization: {
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
+  },
+  output: {
+    pathinfo: false,
+  },
   module: {
     rules: [
       {
         test: /\.ts(x?)$/,
         loader: 'ts-loader',
         exclude: /node_modules/,
+        options: {
+          transpileOnly: true,
+          experimentalWatchApi: true,
+        },
       },
       {
-        test: /\.(scss|css)$/,
+        test: /\.css$/,
+        loader: 'css-loader',
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
         use: [
           {
             loader: 'style-loader',
@@ -38,6 +54,7 @@ module.exports = merge(common, {
     devMiddleware: {
       writeToDisk: true,
     },
+    hot: true,
     port: 8080,
   },
   devtool: 'inline-source-map',
@@ -49,4 +66,5 @@ module.exports = merge(common, {
       template: './template.dev.html',
     }),
   ],
+  cache: true,
 })
