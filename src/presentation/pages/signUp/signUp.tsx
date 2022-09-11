@@ -3,11 +3,13 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   FormControl,
   FormLabel,
   Heading,
   Image,
   Text,
+  Link,
 } from '@chakra-ui/react'
 import React from 'react'
 
@@ -29,7 +31,7 @@ const SignUp: React.FC = () => {
       <Box
         width="100%"
         maxW="2xl"
-        mt={4}
+        my={4}
         padding={8}
         boxShadow="2xl"
         bg="bgColor.500"
@@ -87,6 +89,18 @@ const SignUp: React.FC = () => {
           >
             Cadastrar!
           </Button>
+        </Box>
+        <Box mt={5} display="flex" alignItems="center">
+          <Divider borderColor="gray.400" />
+          <Text px={5} color="gray.400">
+            Ou
+          </Text>
+          <Divider borderColor="gray.400" />
+        </Box>
+        <Box mt={3} display="flex" alignItems="center" flexDirection="column">
+          <Link color="secondary.500" fontWeight="700">
+            Login
+          </Link>
         </Box>
       </Box>
     </Box>

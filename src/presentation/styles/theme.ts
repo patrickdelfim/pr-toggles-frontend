@@ -25,24 +25,24 @@ const theme = extendTheme({
       600: '#621d42',
       700: '#491631',
     },
-    secondaryDark: {
-      default: '#55193A',
-    },
-    secondaryLight: {
-      default: '#CEC2CE',
-    },
-    secondaryLightest: {
-      default: '#E3DFE8',
-    },
-    tertiary: {
-      default: '#7a6f24',
-    },
+    // secondaryDark: {
+    //   default: '#55193A',
+    // },
+    // secondaryLight: {
+    //   default: '#CEC2CE',
+    // },
+    // secondaryLightest: {
+    //   default: '#E3DFE8',
+    // },
+    // tertiary: {
+    //   default: '#7a6f24',
+    // },
     textDark: {
       500: '#374155',
     },
-    textNormal: {
-      default: '#B0BAC9',
-    },
+    // textNormal: {
+    //   default: '#B0BAC9',
+    // },
     bgColor: {
       500: '#f4f6fc',
     },
