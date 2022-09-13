@@ -1,4 +1,3 @@
-import InputField from '@/presentation/components/input/input'
 import {
   Box,
   Button,
@@ -10,18 +9,47 @@ import {
   Image,
   Text,
   Link,
+  FormErrorMessage,
+  Input,
 } from '@chakra-ui/react'
 import React from 'react'
+import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 
 import logo from '../../assets/logo_transparent_vector.svg'
+import signupValidators from './signup-validators'
+
+type FormInputs = {
+  nomeEmpresa: string
+}
+
 const SignUp: React.FC = () => {
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<FormInputs>({
+    defaultValues: {
+      nomeEmpresa: '',
+    },
+  })
+
+  const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault()
+    handleSubmit(makeNewUser)(event)
+  }
+
+  const makeNewUser: SubmitHandler<FormInputs> = (values: FormInputs) => {
+    console.log(values)
+  }
+
   return (
     <Box display="flex" alignItems="center" flexDirection="column" bg="white">
       <Container>
         <Box display="flex" alignItems="center" flexDirection="column" mt={1}>
           <Image boxSize="200px" src={logo} alt="PR Toggles logo" />
           <Heading fontSize="2xl" fontWeight="700" textAlign="center">
-            Experimente nossa versão agratuita..
+            Experimente nossa versão gratuita..
           </Heading>
           <Text fontSize="md" fontWeight="light" mt={3} textAlign="center">
             Comece a configurar o seu projeto agora mesmo!
@@ -38,58 +66,69 @@ const SignUp: React.FC = () => {
         borderRadius="lg"
         color="black"
       >
-        <Box my={3}>
-          <FormControl>
-            <FormLabel color="primary.700" fontWeight="600">
-              Nome da empresa
-            </FormLabel>
-            <InputField type="text" placeholder="RB Engenharia" />
-          </FormControl>
-        </Box>
-        <Box my={3}>
-          <FormControl>
-            <FormLabel color="primary.700" fontWeight="600">
-              Endereço de Email
-            </FormLabel>
-            <InputField type="email" placeholder="you@company.com" />
-          </FormControl>
-        </Box>
-        <Box my={3}>
-          <FormControl>
-            <FormLabel color="primary.700" fontWeight="600">
-              senha
-            </FormLabel>
-            <InputField type="password" placeholder="password" />
-          </FormControl>
-        </Box>
-        <Box my={3}>
-          <FormControl>
-            <FormLabel color="primary.600" fontWeight="600">
-              confirmação de senha
-            </FormLabel>
-            <InputField type="password" />
-          </FormControl>
-        </Box>
-        <Box my={3}>
-          <FormControl>
-            <FormLabel color="primary.600" fontWeight="600">
-              Telefone
-            </FormLabel>
-            <InputField type="tel" placeholder="(xx) xxxx-xxxx" />
-          </FormControl>
-        </Box>
-        <Box mt={5}>
-          <Button
-            color="white"
-            bg="secondary.500"
-            w="100%"
-            _focus={{ border: 'none' }}
-            _hover={{ bg: 'secondary.400' }}
-            _active={{ bg: 'secondary.300' }}
-          >
-            Cadastrar!
-          </Button>
-        </Box>
+        <form autoComplete="off" onSubmit={handleSubmitForm}>
+          <Box my={3}>
+            <FormControl isInvalid={!!errors.nomeEmpresa}>
+              <FormLabel
+                htmlFor="nomeEmpresa"
+                color="primary.700"
+                fontWeight="600"
+              >
+                Nome da empresa
+              </FormLabel>
+              <Controller
+                name="nomeEmpresa"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    {...register('nomeEmpresa', signupValidators.nomeEmpresa)}
+                    type="text"
+                    placeholder="RB Engenharia"
+                  />
+                )}
+              />
+              <FormErrorMessage>{errors.nomeEmpresa?.message}</FormErrorMessage>
+            </FormControl>
+          </Box>
+          {/* <Box my={3}>
+            <FormControl>
+              <FormLabel color="primary.700" fontWeight="600">
+                Endereço de Email
+              </FormLabel>
+              <InputField type="email" placeholder="you@company.com" />
+            </FormControl>
+          </Box>
+          <Box my={3}>
+            <FormControl>
+              <FormLabel color="primary.700" fontWeight="600">
+                senha
+              </FormLabel>
+              <InputField type="password" placeholder="password" />
+            </FormControl>
+          </Box>
+          <Box my={3}>
+            <FormControl>
+              <FormLabel color="primary.600" fontWeight="600">
+                confirmação de senha
+              </FormLabel>
+              <InputField type="password" />
+            </FormControl>
+          </Box>
+          <Box my={3}>
+            <FormControl>
+              <FormLabel color="primary.600" fontWeight="600">
+                Telefone
+              </FormLabel>
+              <InputField type="tel" placeholder="(xx) xxxx-xxxx" />
+            </FormControl>
+          </Box> */}
+          <Box mt={5}>
+            <Button isLoading={isSubmitting} type="submit">
+              Cadastrar!
+            </Button>
+          </Box>
+        </form>
         <Box mt={5} display="flex" alignItems="center">
           <Divider borderColor="gray.400" />
           <Text px={5} color="gray.400">
@@ -98,9 +137,7 @@ const SignUp: React.FC = () => {
           <Divider borderColor="gray.400" />
         </Box>
         <Box mt={3} display="flex" alignItems="center" flexDirection="column">
-          <Link color="secondary.500" fontWeight="700">
-            Login
-          </Link>
+          <Link>Login</Link>
         </Box>
       </Box>
     </Box>
