@@ -11,7 +11,10 @@ import {
   Link,
   FormErrorMessage,
   Input,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react'
+import InputMask from 'react-input-mask'
 import React from 'react'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 
@@ -20,6 +23,10 @@ import signupValidators from './signup-validators'
 
 type FormInputs = {
   nomeEmpresa: string
+  email: string
+  password: string
+  passwordConfirmation: string
+  phone: string
 }
 
 const SignUp: React.FC = () => {
@@ -27,12 +34,19 @@ const SignUp: React.FC = () => {
     handleSubmit,
     register,
     control,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormInputs>({
     defaultValues: {
       nomeEmpresa: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+      phone: '',
     },
   })
+
+  const validators = signupValidators(getValues)
 
   const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
@@ -62,9 +76,8 @@ const SignUp: React.FC = () => {
         my={4}
         padding={8}
         boxShadow="2xl"
-        bg="bgColor.500"
+        bg="bgContainer"
         borderRadius="lg"
-        color="black"
       >
         <form autoComplete="off" onSubmit={handleSubmitForm}>
           <Box my={3}>
@@ -82,7 +95,7 @@ const SignUp: React.FC = () => {
                 render={({ field }) => (
                   <Input
                     {...field}
-                    {...register('nomeEmpresa', signupValidators.nomeEmpresa)}
+                    {...register('nomeEmpresa', validators.nomeEmpresa)}
                     type="text"
                     placeholder="RB Engenharia"
                   />
@@ -91,38 +104,100 @@ const SignUp: React.FC = () => {
               <FormErrorMessage>{errors.nomeEmpresa?.message}</FormErrorMessage>
             </FormControl>
           </Box>
-          {/* <Box my={3}>
-            <FormControl>
+          <Box my={3}>
+            <FormControl isInvalid={!!errors.email}>
               <FormLabel color="primary.700" fontWeight="600">
                 Endereço de Email
               </FormLabel>
-              <InputField type="email" placeholder="you@company.com" />
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    {...register('email', validators.email)}
+                    type="text"
+                    placeholder="you@company.com"
+                  />
+                )}
+              />
+              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
           </Box>
+
           <Box my={3}>
-            <FormControl>
+            <FormControl isInvalid={!!errors.password}>
               <FormLabel color="primary.700" fontWeight="600">
                 senha
               </FormLabel>
-              <InputField type="password" placeholder="password" />
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    {...register('password', validators.password)}
+                    type="password"
+                    placeholder="password"
+                  />
+                )}
+              />
+              <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
             </FormControl>
           </Box>
+
           <Box my={3}>
-            <FormControl>
+            <FormControl isInvalid={!!errors.passwordConfirmation}>
               <FormLabel color="primary.600" fontWeight="600">
                 confirmação de senha
               </FormLabel>
-              <InputField type="password" />
+              <Controller
+                name="passwordConfirmation"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    {...register(
+                      'passwordConfirmation',
+                      validators.passwordConfirmation
+                    )}
+                    type="password"
+                    placeholder="password Confirmation"
+                  />
+                )}
+              />
+              <FormErrorMessage>
+                {errors.passwordConfirmation?.message}
+              </FormErrorMessage>
             </FormControl>
           </Box>
           <Box my={3}>
-            <FormControl>
+            <FormControl isInvalid={!!errors.phone}>
               <FormLabel color="primary.600" fontWeight="600">
                 Telefone
               </FormLabel>
-              <InputField type="tel" placeholder="(xx) xxxx-xxxx" />
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">+55</InputLeftElement>
+                <Controller
+                  name="phone"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      pl={10}
+                      as={InputMask}
+                      mask="(**) *****-****"
+                      maskChar={null}
+                      {...field}
+                      {...register('phone', validators.phone)}
+                      type="tel"
+                      placeholder="(xx) xxxx-xxxx"
+                    />
+                  )}
+                />
+              </InputGroup>
+              <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
             </FormControl>
-          </Box> */}
+          </Box>
           <Box mt={5}>
             <Button isLoading={isSubmitting} type="submit">
               Cadastrar!
