@@ -1,9 +1,9 @@
+import { AddAccount } from '@/domain/usecases'
 import { UseFormGetValues } from 'react-hook-form'
-import { FormInputs, signupValidatorsProtocol } from './signUp-protocols'
 
 /* eslint-disable no-useless-escape */
 const signupValidators = (
-  getValues: UseFormGetValues<FormInputs>
+  getValues: UseFormGetValues<AddAccount.Params>
 ): signupValidatorsProtocol => ({
   nomeEmpresa: {
     required: 'This is required',
@@ -64,5 +64,63 @@ const signupValidators = (
     },
   },
 })
-
 export default signupValidators
+
+export interface signupValidatorsProtocol {
+  nomeEmpresa: {
+    required: string
+    minLength: {
+      value: number
+      message: string
+    }
+    maxLength: {
+      value: number
+      message: string
+    }
+  }
+  email: {
+    required: string
+    minLength: {
+      value: number
+      message: string
+    }
+    maxLength: {
+      value: number
+      message: string
+    }
+    pattern: {
+      value: RegExp
+      message: string
+    }
+  }
+  password: {
+    required: string
+    minLength: {
+      value: number
+      message: string
+    }
+    maxLength: {
+      value: number
+      message: string
+    }
+  }
+  passwordConfirmation: {
+    required: string
+    minLength: {
+      value: number
+      message: string
+    }
+    maxLength: {
+      value: number
+      message: string
+    }
+    validate: (value: string) => boolean | string
+  }
+  phone: {
+    required: string
+    minLength: {
+      value: number
+      message: string
+    }
+  }
+}

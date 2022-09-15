@@ -3,19 +3,23 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import React from 'react'
 
 import signupValidators from './signup-validators'
-import { FormInputs } from './signUp-protocols'
-import AccessLayoutHeader from '../components/header'
-import FormContainer from '../components/formContainer'
-import FormField from '../components/formField'
+import AccessLayoutHeader from '@/presentation/pages/accessLayout/components/header'
+import FormContainer from '@/presentation/pages/accessLayout/components/formContainer'
+import FormField from '@/presentation/pages/accessLayout/components/formField'
+import { AddAccount } from '@/domain/usecases'
 
-const SignUp: React.FC = () => {
+type Props = {
+  addAccount: AddAccount
+}
+
+const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
   const {
     handleSubmit,
     register,
     control,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<FormInputs>({
+  } = useForm<AddAccount.Params>({
     defaultValues: {
       nomeEmpresa: '',
       email: '',
@@ -32,8 +36,14 @@ const SignUp: React.FC = () => {
     handleSubmit(makeNewUser)(event)
   }
 
-  const makeNewUser: SubmitHandler<FormInputs> = (values: FormInputs) => {
-    console.log(values)
+  const makeNewUser: SubmitHandler<AddAccount.Params> = (values: AddAccount.Params) => {
+    try {
+      console.log(values)
+      addAccount.add(values)
+      // adicionar dados da conta do usuario no storage para autenticar requisições futuras
+    } catch (err) {
+      // mostrar erro ao usuario na view
+    }
   }
 
   return (

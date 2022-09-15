@@ -3,11 +3,6 @@ import { AddAccount } from '@/domain/usecases'
 import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 
 export default class addAccountService implements AddAccount {
-  makeApiUrl: (path: string) => string
-  constructor () {
-    this.makeApiUrl = makeApiUrl
-  }
-
   async add (params: AddAccount.Params): Promise<AddAccount.Model> {
     const httpResponse = await makeRequest({
       url: makeApiUrl('/cadastro'),
