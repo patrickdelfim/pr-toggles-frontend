@@ -1,5 +1,10 @@
+import { UseFormGetValues } from 'react-hook-form'
+import { FormInputs, signupValidatorsProtocol } from './signUp-protocols'
+
 /* eslint-disable no-useless-escape */
-const signupValidators = (getValues): any => ({
+const signupValidators = (
+  getValues: UseFormGetValues<FormInputs>
+): signupValidatorsProtocol => ({
   nomeEmpresa: {
     required: 'This is required',
     minLength: {
