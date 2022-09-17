@@ -1,18 +1,22 @@
 import { Box, Button, Divider, Text, Link, useToast } from '@chakra-ui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import React from 'react'
+import React, { useContext } from 'react'
 
 import signupValidators from './signup-validators'
 import AccessLayoutHeader from '@/presentation/pages/accessLayout/components/header'
 import FormContainer from '@/presentation/pages/accessLayout/components/formContainer'
 import FormField from '@/presentation/pages/accessLayout/components/formField'
 import { AddAccount } from '@/domain/usecases'
+import { ApiContext } from '@/presentation/context/api-context'
+import { Link as RouterDomLink, useNavigate } from 'react-router-dom'
 
 type Props = {
   addAccount: AddAccount
 }
 
 const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
+  const { setCurrentAccount } = useContext(ApiContext)
+  const navigate = useNavigate()
   const {
     handleSubmit,
     register,
@@ -41,7 +45,9 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
   const makeNewUser: SubmitHandler<AddAccount.Params> = async (values: AddAccount.Params) => {
     try {
       console.log(values)
-      await addAccount.add(values)
+      const account = await addAccount.add(values)
+      setCurrentAccount(account)
+      navigate('/panel')
       // adicionar dados da conta do usuario no storage para autenticar requisições futuras
     } catch (error) {
       toast({
@@ -122,7 +128,7 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
           <Divider borderColor="gray.400" />
         </Box>
         <Box mt={3} display="flex" alignItems="center" flexDirection="column">
-          <Link>Login</Link>
+          <Link data-testid="loginBtn" as={RouterDomLink} to='/login'>Login</Link>
         </Box>
       </FormContainer>
     </Box>

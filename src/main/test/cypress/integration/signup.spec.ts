@@ -6,7 +6,7 @@ import * as Http from '../utils/http-mocks'
 const path = /signup/
 const mockEmailInUseError = (): void => Http.mockForbiddenError(path, 'POST')
 const mockUnexpectedError = (): void => Http.mockServerError(path, 'POST')
-// const mockSuccess = (): Cypress.Chainable => cy.fixture('account').then(fix => Http.mockOk(path, 'POST', fix))
+const mockSuccess = (): Cypress.Chainable => cy.fixture('account').then(fix => Http.mockOk(path, 'POST', fix))
 
 const populateFields = (): void => {
   cy.getByTestId('nomeEmpresa').type(faker.name.findName())
@@ -81,24 +81,29 @@ describe('SignUp', () => {
     Helper.testUrl('/signup')
   })
 
-  // it('should present save accesstoken if valid cretendials are provided', () => {
-  //   mockSuccess()
-  //   simulateValidSubmit()
-  //   Helper.testUrl('/')
-  //   Helper.testLocalStorageItem('account')
-  // })
+  it('should present save accesstoken if valid cretendials are provided', () => {
+    mockSuccess()
+    simulateValidSubmit()
+    Helper.testUrl('/panel')
+    Helper.testLocalStorageItem('account')
+  })
 
-  // it('should prevent multiple submits', () => {
-  //   mockSuccess()
-  //   populateFields()
-  //   cy.getByTestId('submit').dblclick()
-  //   cy.wait('@request')
-  //   Helper.testHttpCallsCount(1)
-  // })
+  it('should prevent multiple submits', () => {
+    mockSuccess()
+    populateFields()
+    cy.getByTestId('submit').dblclick()
+    cy.wait('@request')
+    Helper.testHttpCallsCount(1)
+  })
 
-  // it('should not call submit if form is invalid', () => {
-  //   mockSuccess()
-  //   cy.getByTestId('email').type(faker.internet.email()).type('{enter}')
-  //   Helper.testHttpCallsCount(0)
-  // })
+  it('should not call submit if form is invalid', () => {
+    mockSuccess()
+    cy.getByTestId('email').type(faker.internet.email()).type('{enter}')
+    Helper.testHttpCallsCount(0)
+  })
+
+  it('should navigate to login page when clicking Login btn', () => {
+    cy.getByTestId('loginBtn').click()
+    Helper.testUrl('/login')
+  })
 })

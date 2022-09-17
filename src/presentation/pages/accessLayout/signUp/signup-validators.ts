@@ -119,8 +119,8 @@ export interface signupValidatorsProtocol {
   }
   phone: {
     required: string
-    minLength: {
-      value: number
+    pattern: {
+      value: RegExp
       message: string
     }
   }

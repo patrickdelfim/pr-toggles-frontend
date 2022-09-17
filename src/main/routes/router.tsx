@@ -8,31 +8,32 @@ import SignUp from '@/presentation/pages/accessLayout/signUp/signUp'
 import AddAccountService from '@/services/add-account-service'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from '@/presentation/styles/theme'
+import { ApiContext, setCurrentAccount, getCurrentAccount } from '@/presentation/context/api-context'
 
 const Router: React.FC = () => {
   return (
-    // <ApiContext.Provider
-    // value={{
-    //   setCurrentAccount: setCurrentAccountAdapter,
-    //   getCurrentAccount: getCurrentAccountAdapter
-    // }}
-    //   >
-    <ChakraProvider theme={theme}>
-      <BrowserRouter>
-        <Routes>
-          {/* <Route path='/' element={<PrivateRoute />}>
-            <Route path="/" element={<MakeSurveyList />} />
-            <Route path="/surveys/:id" element={<MakeSurveyResult />} />
-          </Route> */}
-          {/* <Route path="/login" element={<MakeLogin />} /> */}
-          <Route
-            path="/signup"
-            element={<SignUp addAccount={new AddAccountService()} />}
-          />
-        </Routes>
-      </BrowserRouter>
-    </ChakraProvider>
-    // </ApiContext.Provider>
+    <ApiContext.Provider
+    value={{
+      setCurrentAccount,
+      getCurrentAccount
+    }}
+      >
+      <ChakraProvider theme={theme}>
+        <BrowserRouter>
+          <Routes>
+            {/* <Route path='/' element={<PrivateRoute />}>
+              <Route path="/" element={<MakeSurveyList />} />
+              <Route path="/surveys/:id" element={<MakeSurveyResult />} />
+            </Route> */}
+            {/* <Route path="/login" element={<MakeLogin />} /> */}
+            <Route
+              path="/signup"
+              element={<SignUp addAccount={new AddAccountService()} />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </ChakraProvider>
+    </ApiContext.Provider>
   )
 }
 
