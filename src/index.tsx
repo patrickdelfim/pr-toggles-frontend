@@ -2,15 +2,9 @@ import '@fontsource/raleway/400.css'
 import '@fontsource/open-sans/700.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { ChakraProvider } from '@chakra-ui/react'
-import SignUp from './presentation/pages/accessLayout/signUp/signUp'
-import theme from './presentation/styles/theme'
+import Router from '@/main/routes/router'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <SignUp />
-    </ChakraProvider>
-  </React.StrictMode>,
+  <Router />,
   document.getElementById('main')
 )

@@ -2,10 +2,10 @@ import { EmailInUseError, UnexpectedError } from '@/domain/errors'
 import { AddAccount } from '@/domain/usecases'
 import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 
-export default class addAccountService implements AddAccount {
+export default class AddAccountService implements AddAccount {
   async add (params: AddAccount.Params): Promise<AddAccount.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl('/cadastro'),
+      url: makeApiUrl('/signup'),
       method: 'post',
       body: params,
     })

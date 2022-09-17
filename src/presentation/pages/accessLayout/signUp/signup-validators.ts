@@ -6,10 +6,10 @@ const signupValidators = (
   getValues: UseFormGetValues<AddAccount.Params>
 ): signupValidatorsProtocol => ({
   nomeEmpresa: {
-    required: 'This is required',
+    required: 'Campo obrigatório',
     minLength: {
       value: 4,
-      message: 'Minimum length should be 4',
+      message: 'Texto deve ter mínimo de 4 caracteres.',
     },
     maxLength: {
       value: 100,
@@ -17,7 +17,7 @@ const signupValidators = (
     },
   },
   email: {
-    required: 'This is required',
+    required: 'Campo obrigatório',
     minLength: {
       value: 4,
       message: 'Minimum length should be 4',
@@ -29,14 +29,14 @@ const signupValidators = (
     pattern: {
       value:
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      message: 'Email Invalid.',
+      message: 'Email invalido.',
     },
   },
   password: {
-    required: 'This is required',
+    required: 'Campo obrigatório',
     minLength: {
       value: 8,
-      message: 'Minimum length should be 8',
+      message: 'Senha deve ter mínimo de 8 caracteres.',
     },
     maxLength: {
       value: 12,
@@ -44,10 +44,10 @@ const signupValidators = (
     },
   },
   passwordConfirmation: {
-    required: 'This is required',
+    required: 'Campo obrigatório',
     minLength: {
       value: 8,
-      message: 'Minimum length should be 8',
+      message: 'Senha deve ter mínimo de 8 caracteres.',
     },
     maxLength: {
       value: 12,
@@ -57,10 +57,11 @@ const signupValidators = (
       value === getValues('password') || 'password not match!',
   },
   phone: {
-    required: 'This is required',
-    minLength: {
-      value: 4,
-      message: 'Minimum length should be 4',
+    required: 'Campo obrigatório',
+    pattern: {
+      value:
+        /([\(])([0-9]{2})([\)])(\s)([0-9]{5})([\-])?([0-9]{4})/g,
+      message: 'Telefone invalido.',
     },
   },
 })

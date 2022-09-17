@@ -34,8 +34,8 @@ const FormField: React.FC<props> = ({
 }: props) => {
   return (
     <Box my={3}>
-      <FormControl isInvalid={!!error}>
-        <FormLabel htmlFor={fieldKey} color="primary.700" fontWeight="600">
+      <FormControl data-testid={`${fieldKey}-wrap`} data-status={error ? 'invalid' : 'valid'} isInvalid={!!error}>
+        <FormLabel data-testid={`${fieldKey}-label`} title={error?.message} htmlFor={fieldKey} color="primary.700" fontWeight="600">
           {fieldName}
         </FormLabel>
         <Controller
@@ -43,8 +43,10 @@ const FormField: React.FC<props> = ({
           control={control}
           render={({ field }) => (
             <Input
+              data-testid={fieldKey}
               {...field}
               {...validators}
+              title={error?.message}
               type={type}
               placeholder={placeholder}
               as={!!mask && InputMask}

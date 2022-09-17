@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Text, Link } from '@chakra-ui/react'
+import { Box, Button, Divider, Text, Link, useToast } from '@chakra-ui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import React from 'react'
 
@@ -29,6 +29,8 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
     },
   })
 
+  const toast = useToast()
+
   const validators = signupValidators(getValues)
 
   const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (event) => {
@@ -36,13 +38,18 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
     handleSubmit(makeNewUser)(event)
   }
 
-  const makeNewUser: SubmitHandler<AddAccount.Params> = (values: AddAccount.Params) => {
+  const makeNewUser: SubmitHandler<AddAccount.Params> = async (values: AddAccount.Params) => {
     try {
       console.log(values)
-      addAccount.add(values)
+      await addAccount.add(values)
       // adicionar dados da conta do usuario no storage para autenticar requisições futuras
-    } catch (err) {
-      // mostrar erro ao usuario na view
+    } catch (error) {
+      toast({
+        id: 'signupFormError',
+        title: error.message,
+        status: 'error',
+        isClosable: true,
+      })
     }
   }
 
@@ -102,7 +109,7 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
             mask="(99) 99999-9999"
           />
           <Box mt={5}>
-            <Button isLoading={isSubmitting} type="submit">
+            <Button isLoading={isSubmitting} data-testid="submit" type="submit">
               Cadastrar!
             </Button>
           </Box>
