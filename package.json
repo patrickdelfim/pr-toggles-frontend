@@ -1,6 +1,6 @@
 {
-  "name": "clean-react",
-  "version": "2.0.0",
+  "name": "pr-toggles",
+  "version": "0.0.1",
   "description": "",
   "scripts": {
     "start": "node index",

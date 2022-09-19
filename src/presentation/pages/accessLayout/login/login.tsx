@@ -2,20 +2,21 @@ import { Box, Button, Divider, Text, Link, useToast } from '@chakra-ui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import React, { useContext, useEffect } from 'react'
 
-import signupValidators from './signup-validators'
+import loginValidators from './login-validators'
 import AccessLayoutHeader from '@/presentation/pages/accessLayout/components/header'
 import FormContainer from '@/presentation/pages/accessLayout/components/formContainer'
 import FormField from '@/presentation/pages/accessLayout/components/formField'
 import { AddAccount } from '@/domain/usecases'
-import { ApiContext } from '@/presentation/context/api-context'
+import { ApiContext, getCurrentAccount } from '@/presentation/context/api-context'
 import { Link as RouterDomLink, useNavigate } from 'react-router-dom'
+import { Authentication } from '@/domain/usecases/authentication'
 
 type Props = {
-  addAccount: AddAccount
+  authentication: Authentication
 }
 
-const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
-  const { setCurrentAccount, getCurrentAccount } = useContext(ApiContext)
+const Login: React.FC<Props> = ({ authentication }: Props) => {
+  const { setCurrentAccount } = useContext(ApiContext)
   const navigate = useNavigate()
   const {
     handleSubmit,
@@ -23,13 +24,10 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
     control,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<AddAccount.Params>({
+  } = useForm<Authentication.Params>({
     defaultValues: {
-      nomeEmpresa: '',
       email: '',
       password: '',
-      passwordConfirmation: '',
-      phone: '',
     },
   })
 
@@ -39,8 +37,10 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
       navigate('/panel')
     }
   }, [])
+
   const toast = useToast()
-  const validators = signupValidators(getValues)
+
+  const validators = loginValidators(getValues)
 
   const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
@@ -50,13 +50,13 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
   const makeNewUser: SubmitHandler<AddAccount.Params> = async (values: AddAccount.Params) => {
     try {
       console.log(values)
-      const account = await addAccount.add(values)
+      const account = await authentication.auth(values)
       setCurrentAccount(account)
       navigate('/panel')
-      // adicionar dados da conta do usuario no storage para autenticar requisições futuras
     } catch (error) {
+      console.log(error)
       toast({
-        id: 'signupFormError',
+        id: 'loginFormError',
         title: error.message,
         status: 'error',
         isClosable: true,
@@ -66,20 +66,9 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
 
   return (
     <Box display="flex" alignItems="center" flexDirection="column" bg="white">
-      <AccessLayoutHeader
-      title="Experimente nossa versão gratuita..."
-      subtitle="Comece a configurar o seu projeto agora mesmo!" />
+      <AccessLayoutHeader title="Login" />
       <FormContainer>
         <form autoComplete="off" onSubmit={handleSubmitForm}>
-          <FormField
-            fieldName="Nome da empresa"
-            fieldKey="nomeEmpresa"
-            placeholder="RB Engenharia"
-            type="text"
-            error={errors.nomeEmpresa}
-            control={control}
-            validators={register('nomeEmpresa', validators.nomeEmpresa)}
-          />
           <FormField
             fieldName="Endereço de Email"
             fieldKey="email"
@@ -98,32 +87,9 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
             control={control}
             validators={register('password', validators.password)}
           />
-          <FormField
-            fieldName="confirmação de senha"
-            fieldKey="passwordConfirmation"
-            placeholder="password Confirmation"
-            type="password"
-            error={errors.passwordConfirmation}
-            control={control}
-            validators={register(
-              'passwordConfirmation',
-              validators.passwordConfirmation
-            )}
-          />
-
-          <FormField
-            fieldName="Telefone"
-            fieldKey="phone"
-            placeholder="(xx) xxxx-xxxx"
-            type="tel"
-            error={errors.phone}
-            control={control}
-            validators={register('phone', validators.phone)}
-            mask="(99) 99999-9999"
-          />
           <Box mt={5}>
             <Button isLoading={isSubmitting} data-testid="submit" type="submit">
-              Cadastrar!
+              Login!
             </Button>
           </Box>
         </form>
@@ -135,11 +101,11 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
           <Divider borderColor="gray.400" />
         </Box>
         <Box mt={3} display="flex" alignItems="center" flexDirection="column">
-          <Link data-testid="loginBtn" as={RouterDomLink} to='/login'>Login</Link>
+          <Link data-testid="signupBtn" as={RouterDomLink} to='/signup'>Cadastro</Link>
         </Box>
       </FormContainer>
     </Box>
   )
 }
 
-export default SignUp
+export default Login

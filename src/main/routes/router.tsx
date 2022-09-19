@@ -9,6 +9,8 @@ import AddAccountService from '@/services/add-account-service'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from '@/presentation/styles/theme'
 import { ApiContext, setCurrentAccount, getCurrentAccount } from '@/presentation/context/api-context'
+import AuthService from '@/services/auth-service'
+import Login from '@/presentation/pages/accessLayout/login/login'
 
 const Router: React.FC = () => {
   return (
@@ -25,7 +27,7 @@ const Router: React.FC = () => {
               <Route path="/" element={<MakeSurveyList />} />
               <Route path="/surveys/:id" element={<MakeSurveyResult />} />
             </Route> */}
-            {/* <Route path="/login" element={<MakeLogin />} /> */}
+            <Route path="/login" element={<Login authentication={new AuthService()} />} />
             <Route
               path="/signup"
               element={<SignUp addAccount={new AddAccountService()} />}
