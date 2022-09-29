@@ -11,6 +11,10 @@ import theme from '@/presentation/styles/theme'
 import { ApiContext, setCurrentAccount, getCurrentAccount } from '@/presentation/context/api-context'
 import AuthService from '@/services/auth-service'
 import Login from '@/presentation/pages/accessLayout/login/login'
+// import PrivateRoute from '@/presentation/components/private-route/private-route'
+import SidebarWithHeader from '@/presentation/components/sidebar/sidebar'
+import Header from '@/presentation/components/header/header'
+import Dumb from '@/presentation/components/dumbComponent'
 
 const Router: React.FC = () => {
   return (
@@ -23,10 +27,16 @@ const Router: React.FC = () => {
       <ChakraProvider theme={theme}>
         <BrowserRouter>
           <Routes>
-            {/* <Route path='/' element={<PrivateRoute />}>
-              <Route path="/" element={<MakeSurveyList />} />
-              <Route path="/surveys/:id" element={<MakeSurveyResult />} />
-            </Route> */}
+            {/* <Route path='/admin' element={<PrivateRoute />}> */}
+              <Route path="/admin/" element={<Header />} >
+              <Route path="/admin/" element={<Dumb />} />
+              </Route>
+              <Route path="/admin/project" element={<SidebarWithHeader />} >
+                <Route path="/admin/project" element={<Header />} >
+                  <Route path="/admin/project/2" element={<Dumb />} />
+                </Route>
+              </Route>
+            {/* </Route> */}
             <Route path="/login" element={<Login authentication={new AuthService()} />} />
             <Route
               path="/signup"

@@ -32,7 +32,6 @@ const theme = extendTheme({
     textDark: {
       500: '#374155',
     },
-    bgContainer: '#f4f6fc',
   },
   components: {
     Button,

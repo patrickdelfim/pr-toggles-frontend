@@ -9,7 +9,7 @@ const FormContainer: React.FC = ({ children }) => {
       my={4}
       padding={8}
       boxShadow="2xl"
-      bg="bgContainer"
+      bg="gray.100"
       borderRadius="lg"
     >
       {children}
