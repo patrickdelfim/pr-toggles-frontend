@@ -17,12 +17,13 @@ import {
 } from '@chakra-ui/react'
 import { FiMenu, FiChevronDown } from 'react-icons/fi'
 import { Outlet } from 'react-router-dom'
-import { useOpenSidebarMenu } from '../sidebar/sidebar'
 import logo from '../../assets/logo-no-text.svg'
 
-const Header: React.FC = () => {
-  const ctx = useOpenSidebarMenu()
-  const onOpen = ctx?.onOpen
+type props = {
+  onOpen?: () => void
+}
+
+const Header: React.FC<props> = ({ onOpen }: props) => {
   const withSidebar = !!onOpen
 
   return (

@@ -29,12 +29,10 @@ const Router: React.FC = () => {
           <Routes>
             {/* <Route path='/admin' element={<PrivateRoute />}> */}
               <Route path="/admin/" element={<Header />} >
-              <Route path="/admin/" element={<Dumb />} />
+                <Route path="/admin/" element={<Dumb />} />
               </Route>
               <Route path="/admin/project" element={<SidebarWithHeader />} >
-                <Route path="/admin/project" element={<Header />} >
-                  <Route path="/admin/project/2" element={<Dumb />} />
-                </Route>
+                <Route path="/admin/project/" element={<Dumb />} />
               </Route>
             {/* </Route> */}
             <Route path="/login" element={<Login authentication={new AuthService()} />} />

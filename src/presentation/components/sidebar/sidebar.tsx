@@ -18,9 +18,9 @@ import {
   FiSettings,
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
-import { Outlet, useOutletContext } from 'react-router-dom'
 import NavItem from './NavItem'
 import logo from '../../assets/logo_transparent_vector.svg'
+import Header from '../header/header'
 
 interface LinkItemProps {
   name: string
@@ -58,7 +58,7 @@ export default function SidebarWithHeader (): JSX.Element {
           </DrawerContent>
         </Drawer>
         <Box flex="1">
-          <Outlet context={{ onOpen }} />
+          <Header onOpen={onOpen} />
         </Box>
       </Flex>
     </Box>
@@ -99,10 +99,4 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps): JSX.Element => {
       ))}
     </Box>
   )
-}
-
-type ContextType = { onOpen: () => void }
-
-export function useOpenSidebarMenu (): ContextType {
-  return useOutletContext<ContextType>()
 }
