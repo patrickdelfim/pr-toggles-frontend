@@ -54,8 +54,8 @@ describe('SignUp', () => {
     cy.getByTestId('submit').click()
     FormHelper.testInputStatus('nomeEmpresa', 'Texto deve ter mínimo de 4 caracteres.')
     FormHelper.testInputStatus('email', 'Email invalido.')
-    FormHelper.testInputStatus('password', 'Senha deve ter mínimo de 8 caracteres.')
-    FormHelper.testInputStatus('passwordConfirmation', 'Senha deve ter mínimo de 8 caracteres.')
+    FormHelper.testInputStatus('password', 'Campo deve ter mínimo de 8 caracteres.')
+    FormHelper.testInputStatus('passwordConfirmation', 'Campo deve ter mínimo de 8 caracteres.')
     FormHelper.testInputStatus('phone', 'Telefone invalido.')
   })
 
