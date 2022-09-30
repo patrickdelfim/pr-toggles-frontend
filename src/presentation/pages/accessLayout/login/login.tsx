@@ -2,7 +2,7 @@ import { Box, Button, Divider, Text, Link, useToast } from '@chakra-ui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import React, { useContext, useEffect } from 'react'
 
-import loginValidators from './login-validators'
+import loginValidators from '@/presentation/validators/login-validators'
 import AccessLayoutHeader from '@/presentation/pages/accessLayout/components/header'
 import FormContainer from '@/presentation/pages/accessLayout/components/formContainer'
 import FormField from '@/presentation/pages/accessLayout/components/formField'
