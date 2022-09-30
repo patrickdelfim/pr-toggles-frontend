@@ -1,6 +1,6 @@
 import { Box, Container, Heading, Image, Text } from '@chakra-ui/react'
 import React from 'react'
-import logo from '../../../assets/logo_transparent_vector.svg'
+import logo from '@/presentation/assets/logo_transparent_vector.svg'
 
 type props = {
   title?: string
