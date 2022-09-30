@@ -9,22 +9,22 @@ const signupValidators = (
     required: 'Campo obrigatório',
     minLength: {
       value: 4,
-      message: 'Texto deve ter mínimo de 4 caracteres.',
+      message: 'Campo deve ter mínimo de 4 caracteres.',
     },
     maxLength: {
       value: 100,
-      message: 'Minimum length should be 100',
+      message: 'Campo deve ter no máximo 100 caracteres.',
     },
   },
   email: {
     required: 'Campo obrigatório',
     minLength: {
       value: 4,
-      message: 'Minimum length should be 4',
+      message: 'Campo deve ter no máximo 4 caracteres.',
     },
     maxLength: {
       value: 50,
-      message: 'Minimum length should be 50',
+      message: 'Campo deve ter no máximo 50 caracteres.',
     },
     pattern: {
       value:
@@ -36,22 +36,22 @@ const signupValidators = (
     required: 'Campo obrigatório',
     minLength: {
       value: 8,
-      message: 'Senha deve ter mínimo de 8 caracteres.',
+      message: 'Campo deve ter mínimo de 8 caracteres.',
     },
     maxLength: {
       value: 12,
-      message: 'Minimum length should be 12',
+      message: 'Campo deve ter no máximo 12 caracteres.',
     },
   },
   passwordConfirmation: {
     required: 'Campo obrigatório',
     minLength: {
       value: 8,
-      message: 'Senha deve ter mínimo de 8 caracteres.',
+      message: 'Campo deve ter mínimo de 8 caracteres.',
     },
     maxLength: {
       value: 12,
-      message: 'Minimum length should be 12',
+      message: 'Campo deve ter no máximo 12 caracteres.',
     },
     validate: (value: string) =>
       value === getValues('password') || 'password not match!',

@@ -1,11 +1,11 @@
-import { Authentication } from '@/domain/usecases'
+import { CreateProject } from '@/domain/usecases'
 import { UseFormGetValues } from 'react-hook-form'
 
 /* eslint-disable no-useless-escape */
 const loginValidators = (
-  getValues: UseFormGetValues<Authentication.Params>
+  getValues: UseFormGetValues<CreateProject.Params>
 ): loginValidatorsProtocol => ({
-  email: {
+  name: {
     required: 'Campo obrigatório',
     minLength: {
       value: 4,
@@ -15,20 +15,18 @@ const loginValidators = (
       value: 50,
       message: 'Campo deve ter no máximo 50 caracteres.',
     },
-    pattern: {
-      value:
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      message: 'Email invalido.',
-    },
   },
-  password: {
-    required: 'Campo obrigatório',
+  description: {
+    maxLength: {
+      value: 200,
+      message: 'Campo deve ter no máximo 200 caracteres.',
+    },
   },
 })
 export default loginValidators
 
 export interface loginValidatorsProtocol {
-  email: {
+  name: {
     required: string
     minLength: {
       value: number
@@ -38,12 +36,11 @@ export interface loginValidatorsProtocol {
       value: number
       message: string
     }
-    pattern: {
-      value: RegExp
+  }
+  description: {
+    maxLength: {
+      value: number
       message: string
     }
-  }
-  password: {
-    required: string
   }
 }
