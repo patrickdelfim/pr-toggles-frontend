@@ -6,6 +6,14 @@ export const ButtonTheme: ComponentStyleConfig = {
   variants: {
     primary: {
       color: 'white',
+      bg: 'primary.500',
+      w: '100%',
+      _focus: { border: 'none' },
+      _hover: { bg: 'primary.400' },
+      _active: { bg: 'primary.300' },
+    },
+    secondary: {
+      color: 'white',
       bg: 'secondary.500',
       w: '100%',
       _focus: { border: 'none' },
@@ -14,6 +22,6 @@ export const ButtonTheme: ComponentStyleConfig = {
     },
   },
   defaultProps: {
-    variant: 'primary',
+    variant: 'secondary',
   },
 }

@@ -26,6 +26,11 @@ type props = {
 const Header: React.FC<props> = ({ onOpen }: props) => {
   const withSidebar = !!onOpen
 
+  const userData = {
+    userName: 'UserName',
+    userAvatar: 'Your User avatar url'
+  }
+
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
       <Flex
@@ -71,8 +76,9 @@ const Header: React.FC<props> = ({ onOpen }: props) => {
                 <HStack>
                   <Avatar
                     size={'sm'}
+                    name={userData.userName}
                     src={
-                      'https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                      userData.userAvatar
                     }
                   />
                   <VStack
@@ -81,7 +87,7 @@ const Header: React.FC<props> = ({ onOpen }: props) => {
                     spacing="1px"
                     ml="2"
                   >
-                    <Text fontSize="sm">Justina Clark</Text>
+                    <Text fontSize="sm">{userData.userName}</Text>
                     <Text fontSize="xs" color="gray.600">
                       Admin
                     </Text>

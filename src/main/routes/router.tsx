@@ -15,6 +15,7 @@ import Login from '@/presentation/pages/accessLayout/login/login'
 import SidebarWithHeader from '@/presentation/components/sidebar/sidebar'
 import Header from '@/presentation/components/header/header'
 import Dumb from '@/presentation/components/dumbComponent'
+import Projects from '@/presentation/pages/projects/projects'
 
 const Router: React.FC = () => {
   return (
@@ -29,7 +30,7 @@ const Router: React.FC = () => {
           <Routes>
             {/* <Route path='/admin' element={<PrivateRoute />}> */}
               <Route path="/admin/" element={<Header />} >
-                <Route path="/admin/" element={<Dumb />} />
+                <Route path="/admin/" element={<Projects />} />
               </Route>
               <Route path="/admin/project" element={<SidebarWithHeader />} >
                 <Route path="/admin/project/" element={<Dumb />} />
