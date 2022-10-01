@@ -14,6 +14,7 @@ import {
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import FormField from '@/presentation/components/formField/formField'
+import useCreateProject from '@/presentation/hooks/useCreateProject'
 
 type props = {
   isOpen: boolean
@@ -22,10 +23,12 @@ type props = {
 
 const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
   const handleCloseModal = (): void => {
-    resetField('name')
-    resetField('description')
+    resetField('nome')
+    resetField('descricao')
     onClose()
   }
+
+  const createProjectMutation = useCreateProject()
 
   const {
     handleSubmit,
@@ -33,11 +36,11 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
     resetField,
     control,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<CreateProject.Params>({
     defaultValues: {
-      name: '',
-      description: '',
+      nome: '',
+      descricao: '',
     },
   })
   const validators = createProjectValidators(getValues)
@@ -51,6 +54,7 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
     values: CreateProject.Params
   ) => {
     console.log(values)
+    createProjectMutation.mutate(values)
   }
 
   return (
@@ -67,36 +71,38 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
           >
             <FormField
               fieldName="Nome do projeto"
-              fieldKey="name"
+              fieldKey="nome"
               placeholder="Ex: backend revolucionário"
               type="text"
-              error={errors.name}
+              error={errors.nome}
               control={control}
-              validators={register('name', validators.name)}
+              validators={register('nome', validators.nome)}
             />
             <TextAreaField
               fieldName="Descrição do projeto"
-              fieldKey="description"
+              fieldKey="descricao"
               placeholder="Ex: Esse projeto vai revolucionar o mercado com chuva de sabedoria"
               maxLength={200}
               type="text"
-              error={errors.description}
+              error={errors.descricao}
               control={control}
-              validators={register('description', validators.description)}
+              validators={register('descricao', validators.descricao)}
             />
           </form>
         </ModalBody>
 
         <ModalFooter justifyContent="center">
           <Button
-            isLoading={isSubmitting}
+            loadingText="Loading"
+            spinnerPlacement="start"
+            isLoading={createProjectMutation.isLoading}
             form="createProjectForm"
             variant="primary"
             maxW="50%"
             data-testid="submit"
             type="submit"
           >
-            Login!
+            Criar!
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -5,7 +5,7 @@ import { UseFormGetValues } from 'react-hook-form'
 const createProjectValidators = (
   getValues: UseFormGetValues<CreateProject.Params>
 ): loginValidatorsProtocol => ({
-  name: {
+  nome: {
     required: 'Campo obrigatório',
     minLength: {
       value: 4,
@@ -16,7 +16,7 @@ const createProjectValidators = (
       message: 'Campo deve ter no máximo 50 caracteres.',
     },
   },
-  description: {
+  descricao: {
     maxLength: {
       value: 200,
       message: 'Campo deve ter no máximo 200 caracteres.',
@@ -26,7 +26,7 @@ const createProjectValidators = (
 export default createProjectValidators
 
 export interface loginValidatorsProtocol {
-  name: {
+  nome: {
     required: string
     minLength: {
       value: number
@@ -37,7 +37,7 @@ export interface loginValidatorsProtocol {
       message: string
     }
   }
-  description: {
+  descricao: {
     maxLength: {
       value: number
       message: string

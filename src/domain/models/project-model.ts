@@ -1,4 +1,8 @@
 export type ProjectModel = {
-  name: string
-  description: string
+  projeto_id: number
+  cliente_id: number
+  nome: string
+  descricao: string
+  created_at: string
+  updated_at: string
 }

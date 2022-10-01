@@ -1,13 +1,12 @@
 import { ProjectModel } from '@/domain/models'
 
 export type createProjectParams = {
-  name: string
-  description: string
-
+  nome: string
+  descricao: string
 }
 
 export interface CreateProject {
-  add: (params: CreateProject.Params) => Promise<CreateProject.Model>
+  create: (params: CreateProject.Params) => Promise<CreateProject.Model>
 }
 
 export namespace CreateProject {
