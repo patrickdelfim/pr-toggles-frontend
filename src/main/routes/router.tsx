@@ -8,7 +8,11 @@ import SignUp from '@/presentation/pages/signUp/signUp'
 import AddAccountService from '@/services/add-account-service'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from '@/presentation/styles/theme'
-import { ApiContext, setCurrentAccount, getCurrentAccount } from '@/presentation/context/api-context'
+import {
+  ApiContext,
+  setCurrentAccount,
+  getCurrentAccount,
+} from '@/presentation/context/api-context'
 import AuthService from '@/services/auth-service'
 import Login from '@/presentation/pages/login/login'
 // import PrivateRoute from '@/presentation/components/private-route/private-route'
@@ -16,35 +20,42 @@ import SidebarWithHeader from '@/presentation/components/sidebar/sidebar'
 import Header from '@/presentation/components/header/header'
 import Dumb from '@/presentation/components/dumbComponent'
 import Projects from '@/presentation/pages/projects/projects'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
+export const queryClient = new QueryClient()
 const Router: React.FC = () => {
   return (
-    <ApiContext.Provider
-    value={{
-      setCurrentAccount,
-      getCurrentAccount
-    }}
+    <QueryClientProvider client={queryClient}>
+      <ApiContext.Provider
+        value={{
+          setCurrentAccount,
+          getCurrentAccount,
+        }}
       >
-      <ChakraProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            {/* <Route path='/admin' element={<PrivateRoute />}> */}
-              <Route path="/admin/" element={<Header />} >
+        <ChakraProvider theme={theme}>
+          <BrowserRouter>
+            <Routes>
+              {/* <Route path='/admin' element={<PrivateRoute />}> */}
+              <Route path="/admin/" element={<Header />}>
                 <Route path="/admin/" element={<Projects />} />
               </Route>
-              <Route path="/admin/project" element={<SidebarWithHeader />} >
+              <Route path="/admin/project" element={<SidebarWithHeader />}>
                 <Route path="/admin/project/" element={<Dumb />} />
               </Route>
-            {/* </Route> */}
-            <Route path="/login" element={<Login authentication={new AuthService()} />} />
-            <Route
-              path="/signup"
-              element={<SignUp addAccount={new AddAccountService()} />}
-            />
-          </Routes>
-        </BrowserRouter>
-      </ChakraProvider>
-    </ApiContext.Provider>
+              {/* </Route> */}
+              <Route
+                path="/login"
+                element={<Login authentication={new AuthService()} />}
+              />
+              <Route
+                path="/signup"
+                element={<SignUp addAccount={new AddAccountService()} />}
+              />
+            </Routes>
+          </BrowserRouter>
+        </ChakraProvider>
+      </ApiContext.Provider>
+    </QueryClientProvider>
   )
 }
 
