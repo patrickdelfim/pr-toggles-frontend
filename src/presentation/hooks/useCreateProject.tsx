@@ -10,7 +10,7 @@ function useCreateProject (): any {
 
   return useMutation(async (params: CreateProject.Params) => await createProjectService.create(params), {
     onSuccess: async () => {
-      await queryClient.invalidateQueries('getProjects')
+      await queryClient.invalidateQueries('projects')
       toast({
         id: 'getProjectToast',
         title: 'Projeto criado com sucesso!',
