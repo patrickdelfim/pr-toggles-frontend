@@ -2,7 +2,7 @@ import { CreateProject } from '@/domain/usecases'
 import { UseFormGetValues } from 'react-hook-form'
 
 /* eslint-disable no-useless-escape */
-const loginValidators = (
+const createProjectValidators = (
   getValues: UseFormGetValues<CreateProject.Params>
 ): loginValidatorsProtocol => ({
   name: {
@@ -23,7 +23,7 @@ const loginValidators = (
     },
   },
 })
-export default loginValidators
+export default createProjectValidators
 
 export interface loginValidatorsProtocol {
   name: {
