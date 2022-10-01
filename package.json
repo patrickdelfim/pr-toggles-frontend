@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index",
     "dev:base": "webpack-dev-server --config webpack.dev.js",
-    "dev": "npm run dev:base -- --open",
+    "dev": "NODE_ENV=development npm run dev:base -- --open",
     "build": "webpack --config webpack.prod.js",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
@@ -52,6 +52,7 @@
     "jest-localstorage-mock": "^2.4.19",
     "lint-staged": "^12.3.4",
     "mini-css-extract-plugin": "^2.6.0",
+    "miragejs": "^0.1.45",
     "node-sass": "^7.0.1",
     "sass-loader": "^12.6.0",
     "start-server-and-test": "^1.14.0",
@@ -79,6 +80,7 @@
     "react-hook-form": "^7.35.0",
     "react-icons": "^4.4.0",
     "react-input-mask": "^2.0.4",
+    "react-query": "^3.39.2",
     "react-router-dom": "^6.2.1"
   }
 }
