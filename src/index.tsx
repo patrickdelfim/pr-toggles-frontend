@@ -3,10 +3,11 @@ import '@fontsource/open-sans/700.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Router from '@/main/routes/router'
-import { makeServer } from './server'
+import { makeServer } from './fakeServer/server'
 
-makeServer({ environment: 'development' })
-
+if (process.env.NODE_ENV === 'development') {
+  makeServer({ environment: 'development' })
+}
 ReactDOM.render(
   <Router />,
   document.getElementById('main')
