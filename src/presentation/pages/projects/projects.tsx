@@ -8,12 +8,16 @@ import {
   InputLeftElement,
   Input,
   Heading,
+  useDisclosure,
 } from '@chakra-ui/react'
 import React from 'react'
 import { FiChevronRight, FiSearch } from 'react-icons/fi'
+import CreateProjectModal from './Components/createProjectModal'
 
 const Projects: React.FC = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   return (
+    <>
     <Container maxW="7xl" mt={20}>
       <Box
         pb="2"
@@ -29,7 +33,7 @@ const Projects: React.FC = () => {
           </Text>
         </Box>
         <Box>
-          <Button variant="primary" height="50px">
+          <Button variant="primary" height="50px" onClick={onOpen}>
             Criar novo projeto
           </Button>
         </Box>
@@ -81,7 +85,7 @@ const Projects: React.FC = () => {
           borderBottom: '2px',
           borderColor: 'gray.300',
         }}
-      >
+        >
         <Box display="flex" flexDirection="column" justifyContent="end">
           <Box display="flex" alignItems="center" pb="1">
             <Text
@@ -140,6 +144,9 @@ const Projects: React.FC = () => {
         <Icon alignSelf="center" mr="2" fontSize="32" as={FiChevronRight} />
       </Box>
     </Container>
+        <CreateProjectModal isOpen={isOpen} onClose={onClose} />
+              </>
+
   )
 }
 
