@@ -60,7 +60,7 @@ module.exports = merge(common, {
   devtool: 'inline-source-map',
   plugins: [
     new DefinePlugin({
-      'process.env.API_URL': JSON.stringify('http://fordevs.herokuapp.com/api'),
+      'process.env.API_URL': JSON.stringify(''),
     }),
     new HtmlWebpackPlugin({
       template: './template.dev.html',
