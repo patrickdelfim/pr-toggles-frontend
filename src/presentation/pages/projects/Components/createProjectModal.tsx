@@ -10,6 +10,7 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  useToast,
 } from '@chakra-ui/react'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -22,13 +23,35 @@ type props = {
 }
 
 const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
+  const toast = useToast()
   const handleCloseModal = (): void => {
     resetField('nome')
     resetField('descricao')
     onClose()
   }
 
-  const createProjectMutation = useCreateProject()
+  const onSuccess = async (): Promise<void> => {
+    toast({
+      id: 'getProjectToast',
+      title: 'Projeto criado com sucesso!',
+      status: 'success',
+      isClosable: true,
+    })
+    resetField('nome')
+    resetField('descricao')
+    onClose()
+  }
+
+  const onError = async (error: Error): Promise<void> => {
+    toast({
+      id: 'getProjectToast',
+      title: error.message || 'Algo inesperado aconteceu.',
+      status: 'error',
+      isClosable: true,
+    })
+  }
+
+  const createProjectMutation = useCreateProject(onSuccess, onError)
 
   const {
     handleSubmit,
@@ -43,6 +66,7 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
       descricao: '',
     },
   })
+
   const validators = createProjectValidators(getValues)
 
   const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (event) => {
@@ -53,16 +77,15 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
   const createNewProject: SubmitHandler<CreateProject.Params> = async (
     values: CreateProject.Params
   ) => {
-    console.log(values)
     createProjectMutation.mutate(values)
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleCloseModal} isCentered size={'6xl'}>
+    <Modal isOpen={isOpen} onClose={handleCloseModal} isCentered size={'6xl'} closeOnOverlayClick={!createProjectMutation.isLoading}>
       <ModalOverlay />
       <ModalContent justifyContent="center">
         <ModalHeader>Cadastrar novo projeto.</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton disabled={createProjectMutation.isLoading}/>
         <ModalBody>
           <form
             id="createProjectForm"

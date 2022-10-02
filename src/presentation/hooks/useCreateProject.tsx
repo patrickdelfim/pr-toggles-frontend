@@ -1,30 +1,18 @@
 import { CreateProject } from '@/domain/usecases'
 import { queryClient } from '@/main/routes/router'
 import CreateProjectService from '@/services/create-project-service'
-import { useToast } from '@chakra-ui/react'
 import { useMutation } from 'react-query'
 
-function useCreateProject (): any {
+function useCreateProject (onSuccessAction, onErrorAction): any {
   const createProjectService = new CreateProjectService()
-  const toast = useToast()
 
   return useMutation(async (params: CreateProject.Params) => await createProjectService.create(params), {
     onSuccess: async () => {
       await queryClient.invalidateQueries('projects')
-      toast({
-        id: 'getProjectToast',
-        title: 'Projeto criado com sucesso!',
-        status: 'success',
-        isClosable: true,
-      })
+      onSuccessAction()
     },
     onError: (error: Error) => {
-      toast({
-        id: 'getProjectToast',
-        title: error.message || 'Algo inesperado aconteceu.',
-        status: 'error',
-        isClosable: true,
-      })
+      onErrorAction(error)
     }
   })
 }
