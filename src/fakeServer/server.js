@@ -1,9 +1,16 @@
 
-import { createServer, Model, Response } from 'miragejs'
+import { createServer, Model, Response, RestSerializer, } from 'miragejs'
 
 export function makeServer ({ environment = 'development' } = {}) {
   console.log('creation server')
   const server = createServer({
+    serializers: {
+      project: RestSerializer.extend({
+        keyForAttribute (key) {
+          return key === 'id' ? 'projeto_id' : key
+        },
+      })
+    },
     models: {
       project: Model,
     },
@@ -19,10 +26,10 @@ export function makeServer ({ environment = 'development' } = {}) {
       this.get('/projects', (schema, request) => {
         return schema.projects.all()
       })
-      this.post('/project/create', (schema, request) => {
+      this.post('/project/create', async (schema, request) => {
         const attrs = JSON.parse(request.requestBody)
-        console.log(attrs)
-        const model = { projeto_id: 4, cliente_id: 1, nome: attrs.nome, descricao: attrs.descricao, created_at: new Date(), updated_at: new Date() }
+
+        const model = { cliente_id: 1, nome: attrs.nome, descricao: attrs.descricao, created_at: new Date(), updated_at: new Date() }
         schema.projects.create(model)
         return new Response(200, {}, { message: 'projeto criado com sucesso' },
         )
