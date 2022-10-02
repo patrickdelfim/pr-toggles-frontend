@@ -1,12 +1,11 @@
 import faker from '@faker-js/faker'
 import * as FormHelper from '../utils/form-helpers'
 import * as Helper from '../utils/helpers'
-import * as Http from '../utils/http-mocks'
+
+import { makeServer } from '../../../../fakeServer/server.js'
+import { Response } from 'miragejs'
 
 const path = /signup/
-const mockEmailInUseError = (): void => Http.mockForbiddenError(path, 'POST')
-const mockUnexpectedError = (): void => Http.mockServerError(path, 'POST')
-const mockSuccess = (): Cypress.Chainable => cy.fixture('account').then(fix => Http.mockOk(path, 'POST', fix))
 
 const populateFields = (): void => {
   cy.getByTestId('nomeEmpresa').type(faker.name.findName())
@@ -27,10 +26,18 @@ const simulateValidSubmit = (): void => {
   cy.getByTestId('submit').click()
 }
 describe('SignUp', () => {
+  let server
+
   beforeEach(() => {
+    server = makeServer({ environment: 'test' })
     if (Cypress.currentTest.title === 'should navigate to Panel page when account already defined') return
     cy.visit('signup')
   })
+
+  afterEach(() => {
+    server.shutdown()
+  })
+
   it('should load Input with correct initial state ', () => {
     FormHelper.testInputContent('nomeEmpresa', '')
     FormHelper.testInputContent('email', '')
@@ -52,7 +59,7 @@ describe('SignUp', () => {
     cy.getByTestId('passwordConfirmation').type(faker.random.alphaNumeric(4))
     cy.getByTestId('phone').type(faker.random.numeric(4))
     cy.getByTestId('submit').click()
-    FormHelper.testInputStatus('nomeEmpresa', 'Texto deve ter mínimo de 4 caracteres.')
+    FormHelper.testInputStatus('nomeEmpresa', 'Campo deve ter mínimo de 4 caracteres.')
     FormHelper.testInputStatus('email', 'Email invalido.')
     FormHelper.testInputStatus('password', 'Campo deve ter mínimo de 8 caracteres.')
     FormHelper.testInputStatus('passwordConfirmation', 'Campo deve ter mínimo de 8 caracteres.')
@@ -69,38 +76,27 @@ describe('SignUp', () => {
     FormHelper.testInputStatus('phone')
   })
   it('should present EmailInUseError on 403', () => {
-    mockEmailInUseError()
+    server.post(path, () => {
+      return new Response(403, {}, {})
+    })
     simulateValidSubmit()
     cy.get('#signupFormError').should('contain.text', 'Esse e-mail já esta em uso')
     Helper.testUrl('/signup')
   })
 
   it('should present UnexpectedError on default error cases', () => {
-    mockUnexpectedError()
+    server.post(path, () => {
+      return new Response(500, {}, {})
+    })
     simulateValidSubmit()
     cy.get('#signupFormError').should('contain.text', 'Algo de errado aconteceu. tente novamente em breve.')
     Helper.testUrl('/signup')
   })
 
   it('should present save accesstoken if valid cretendials are provided', () => {
-    mockSuccess()
     simulateValidSubmit()
     Helper.testUrl('/panel')
     Helper.testLocalStorageItem('account')
-  })
-
-  it('should prevent multiple submits', () => {
-    mockSuccess()
-    populateFields()
-    cy.getByTestId('submit').dblclick()
-    cy.wait('@request')
-    Helper.testHttpCallsCount(1)
-  })
-
-  it('should not call submit if form is invalid', () => {
-    mockSuccess()
-    cy.getByTestId('email').type(faker.internet.email()).type('{enter}')
-    Helper.testHttpCallsCount(0)
   })
 
   it('should navigate to login page when clicking Login btn', () => {

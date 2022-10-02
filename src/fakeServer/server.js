@@ -4,6 +4,7 @@ import { createServer, Model, Response, RestSerializer, } from 'miragejs'
 export function makeServer ({ environment = 'development' } = {}) {
   console.log('creation server')
   const server = createServer({
+    trackRequests: true,
     serializers: {
       project: RestSerializer.extend({
         keyForAttribute (key) {
@@ -22,7 +23,22 @@ export function makeServer ({ environment = 'development' } = {}) {
     routes () {
       this.namespace = 'api'
       this.timing = 2000
-
+      this.post('/auth/', async (schema, request) => {
+        return new Response(200, {}, {
+          // deepcode ignore HardcodedNonCryptoSecret: <please specify a reason of ignoring this>
+          accessToken: 'any_token',
+          name: 'empresa do patrick'
+        },
+        )
+      })
+      this.post('/signup/', async (schema, request) => {
+        return new Response(200, {}, {
+          // deepcode ignore HardcodedNonCryptoSecret: <please specify a reason of ignoring this>
+          accessToken: 'any_token',
+          name: 'empresa do patrick'
+        },
+        )
+      })
       this.get('/projects', (schema, request) => {
         return schema.projects.all()
       })

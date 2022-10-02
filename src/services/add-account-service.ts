@@ -5,7 +5,7 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class AddAccountService implements AddAccount {
   async add (params: AddAccount.Params): Promise<AddAccount.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl('/signup'),
+      url: makeApiUrl('/api/signup'),
       method: 'post',
       body: params,
     })
