@@ -21,6 +21,7 @@ import Header from '@/presentation/components/header/header'
 import Dumb from '@/presentation/components/dumbComponent'
 import Projects from '@/presentation/pages/projects/projects'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import PrivateRoute from '@/presentation/components/private-route/private-route'
 
 export const queryClient = new QueryClient()
 const Router: React.FC = () => {
@@ -35,14 +36,14 @@ const Router: React.FC = () => {
         <ChakraProvider theme={theme}>
           <BrowserRouter>
             <Routes>
-              {/* <Route path='/admin' element={<PrivateRoute />}> */}
-              <Route path="/admin/" element={<Header />}>
-                <Route path="/admin/" element={<Projects />} />
+              <Route path='/panel' element={<PrivateRoute />}>
+                <Route path="/panel/" element={<Header />}>
+                  <Route path="/panel/" element={<Projects />} />
+                </Route>
+                <Route path="/panel/project" element={<SidebarWithHeader />}>
+                  <Route path="/panel/project/" element={<Dumb />} />
+                </Route>
               </Route>
-              <Route path="/admin/project" element={<SidebarWithHeader />}>
-                <Route path="/admin/project/" element={<Dumb />} />
-              </Route>
-              {/* </Route> */}
               <Route
                 path="/login"
                 element={<Login authentication={new AuthService()} />}
