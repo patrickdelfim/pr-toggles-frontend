@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   IconButton,
   Avatar,
@@ -18,18 +18,17 @@ import {
 import { FiMenu, FiChevronDown } from 'react-icons/fi'
 import { Outlet } from 'react-router-dom'
 import logo from '../../assets/logo-no-text.svg'
+import { ApiContext } from '@/presentation/context'
 
 type props = {
   onOpen?: () => void
 }
 
 const Header: React.FC<props> = ({ onOpen }: props) => {
+  const { getCurrentAccount } = useContext(ApiContext)
   const withSidebar = !!onOpen
 
-  const userData = {
-    userName: 'UserName',
-    userAvatar: 'Your User avatar url'
-  }
+  const userData = getCurrentAccount()
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
@@ -76,9 +75,9 @@ const Header: React.FC<props> = ({ onOpen }: props) => {
                 <HStack>
                   <Avatar
                     size={'sm'}
-                    name={userData.userName}
+                    name={userData.name}
                     src={
-                      userData.userAvatar
+                      'userData?.userAvatar'
                     }
                   />
                   <VStack
@@ -87,7 +86,7 @@ const Header: React.FC<props> = ({ onOpen }: props) => {
                     spacing="1px"
                     ml="2"
                   >
-                    <Text fontSize="sm">{userData.userName}</Text>
+                    <Text fontSize="sm" data-testid="username">{userData.name}</Text>
                     <Text fontSize="xs" color="gray.600">
                       Admin
                     </Text>

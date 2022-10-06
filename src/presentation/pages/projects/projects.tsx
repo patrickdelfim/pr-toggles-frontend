@@ -1,4 +1,5 @@
 import ApiError from '@/presentation/components/apiError/apiError'
+import { useErrorHandler } from '@/presentation/hooks/use-error-handler'
 import useListProject from '@/presentation/hooks/uselistProject'
 import {
   Box,
@@ -11,24 +12,22 @@ import {
   Heading,
   useDisclosure,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 import CardList from './Components/cardList'
 import CreateProjectModal from './Components/createProjectModal'
 import SkeletonCardList from './Components/skeletonCardList'
 
 const Projects: React.FC = () => {
+  const onError = useErrorHandler()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { data, status, error } = useListProject()
+  const { data, status, error } = useListProject(onError)
   const [search, setSearch] = useState('')
   const onCloseModal = (): void => {
     setSearch('')
     onClose()
   }
 
-  useEffect(() => {
-
-  }, [search])
   return (
     <>
       <Container maxW="7xl" mt={20}>
@@ -46,7 +45,13 @@ const Projects: React.FC = () => {
             </Text>
           </Box>
           <Box>
-            <Button variant="primary" height="50px" onClick={onOpen} disabled={ status === 'loading' || status === 'error' }>
+            <Button
+              variant="primary"
+              height="50px"
+              onClick={onOpen}
+              disabled={status === 'loading' || status === 'error'}
+              data-testid="openNewProjectModal"
+            >
               Criar novo projeto
             </Button>
           </Box>
@@ -79,13 +84,19 @@ const Projects: React.FC = () => {
                 type="text"
                 placeholder="Search"
                 borderRadius="lg"
-                disabled={status === 'loading' || status === 'error' || data.length === 0}
+                disabled={
+                  status === 'loading' ||
+                  status === 'error' ||
+                  data.length === 0
+                }
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                data-testid="searchInput"
               />
             </InputGroup>
           </Box>
         </Box>
+
         {status === 'error' && (
           <Box>
             {console.log(error)}
@@ -108,6 +119,7 @@ const Projects: React.FC = () => {
             minH="60px"
             borderBottom="1px"
             borderColor="gray.200"
+            data-testid="noProjectContainer"
           >
             <Box
               display="flex"
@@ -116,10 +128,10 @@ const Projects: React.FC = () => {
               alignItems="center"
               p="10"
             >
-              <Text fontSize="xl">
+              <Text fontSize="xl" data-testid="title">
                 Parece que voce ainda não tem nenhum projeto.
               </Text>
-              <Text pt="4" fontSize="xl">
+              <Text pt="4" fontSize="xl" data-testid="subtitle">
                 Clique em
                 <Text
                   as="span"
@@ -128,26 +140,15 @@ const Projects: React.FC = () => {
                   _hover={{ cursor: 'pointer', color: 'primary.300' }}
                   onClick={onOpen}
                 >
-                  {' '}Criar novo projeto{' '}
+                  {' '}
+                  Criar novo projeto{' '}
                 </Text>
                 para utilizar todo o potencial de PR toggles!
               </Text>
             </Box>
           </Box>
         )}
-        {data?.length > 0 &&
-          search.length > 0 &&
-          data.filter((s) => s.nome.includes(search)).length > 0 &&
-          data
-            .filter((s) => s.nome.includes(search))
-            .map((project) => (
-              <CardList
-                key={project.projeto_id}
-                title={project.nome}
-                subtitle={`Created ${project.created_at as string} - 
-            ${(project.descricao as string) || 'Sem descrição'}`}
-              />
-            ))}
+
         {data?.length > 0 &&
           search.length > 0 &&
           data.filter((s) => s.nome.includes(search)).length === 0 && (
@@ -158,20 +159,34 @@ const Projects: React.FC = () => {
               borderBottom="1px"
               borderColor="gray.200"
             >
-              <Text fontSize="xl" textAlign="center" pt="4">Resultado não encontrado.</Text>
+              <Text fontSize="xl" textAlign="center" pt="4" data-testid="projectNotFoundSearchText">
+                Resultado não encontrado.
+              </Text>
             </Box>
         )}
-
-        {data?.length > 0 &&
-          search.length === 0 &&
-          data.map((project) => (
-            <CardList
-              key={project.projeto_id}
-              title={project.nome}
-              subtitle={`Created ${project.created_at as string} - 
-            ${(project.descricao as string) || 'Sem descrição'}`}
-            />
-          ))}
+        {data?.length > 0 && (
+          <Box data-testid="projectsContainer">
+            {search.length > 0
+              ? data.filter((s) => s.nome.includes(search)).length > 0 &&
+                data
+                  .filter((s) => s.nome.includes(search))
+                  .map((project) => (
+                    <CardList
+                      key={project.projeto_id}
+                      title={project.nome}
+                      subtitle={`Created ${project.created_at as string} - ${(project.descricao as string) || 'Sem descrição'}`}
+                    />
+                  ))
+              : search.length === 0 &&
+                data.map((project) => (
+                  <CardList
+                    key={project.projeto_id}
+                    title={project.nome}
+                    subtitle={`Created ${project.created_at as string} - ${(project.descricao as string) || 'Sem descrição'}`}
+                  />
+                ))}
+          </Box>
+        )}
       </Container>
       <CreateProjectModal isOpen={isOpen} onClose={onCloseModal} />
     </>

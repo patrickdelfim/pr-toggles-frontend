@@ -3,7 +3,7 @@ import React from 'react'
 
 const SkeletonCardList: React.FC = () => {
   return (
-    <Box>
+    <Box data-testid="skeletonCardList">
       {[...Array(5)].map((_, idx) => (
         <Box
           key={idx}

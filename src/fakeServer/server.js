@@ -22,7 +22,7 @@ export function makeServer ({ environment = 'development' } = {}) {
     },
     routes () {
       this.namespace = 'api'
-      this.timing = 2000
+      this.timing = environment === 'test' ? 0 : 2000
       this.post('/auth/', async (schema, request) => {
         return new Response(200, {}, {
           // deepcode ignore HardcodedNonCryptoSecret: <please specify a reason of ignoring this>

@@ -32,11 +32,13 @@ const CardList: React.FC<props> = ({ title, subtitle }: props) => {
             color="primary.500"
             fontWeight="bold"
             letterSpacing={1.1}
+            data-testid="title"
           >
             {title}
           </Text>
         </Box>
-        <Text pl="4" color="gray.600" fontSize="10">
+        <Text pl="4" color="gray.600" fontSize="10" data-testid="subtitle"
+>
           {subtitle}
         </Text>
       </Box>

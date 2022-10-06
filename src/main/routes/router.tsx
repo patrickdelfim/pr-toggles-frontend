@@ -23,7 +23,15 @@ import Projects from '@/presentation/pages/projects/projects'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import PrivateRoute from '@/presentation/components/private-route/private-route'
 
-export const queryClient = new QueryClient()
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // turns retries on dev mode
+      retry: process.env.NODE_ENV !== 'development',
+    },
+  },
+})
+console.log(process.env.NODE_ENV)
 const Router: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>

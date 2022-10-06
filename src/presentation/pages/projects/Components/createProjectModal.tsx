@@ -32,7 +32,7 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
 
   const onSuccess = async (): Promise<void> => {
     toast({
-      id: 'getProjectToast',
+      id: 'saveProjectSuccess',
       title: 'Projeto criado com sucesso!',
       status: 'success',
       isClosable: true,
@@ -44,7 +44,7 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
 
   const onError = async (error: Error): Promise<void> => {
     toast({
-      id: 'getProjectToast',
+      id: 'saveProjectError',
       title: error.message || 'Algo inesperado aconteceu.',
       status: 'error',
       isClosable: true,
@@ -84,8 +84,8 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
     <Modal isOpen={isOpen} onClose={handleCloseModal} isCentered size={'6xl'} closeOnOverlayClick={!createProjectMutation.isLoading}>
       <ModalOverlay />
       <ModalContent justifyContent="center">
-        <ModalHeader>Cadastrar novo projeto.</ModalHeader>
-        <ModalCloseButton disabled={createProjectMutation.isLoading}/>
+        <ModalHeader data-testid="modalHeader">Cadastrar novo projeto.</ModalHeader>
+        <ModalCloseButton data-testid="closeNewProjectModal" disabled={createProjectMutation.isLoading}/>
         <ModalBody>
           <form
             id="createProjectForm"

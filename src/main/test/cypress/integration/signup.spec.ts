@@ -93,7 +93,7 @@ describe('SignUp', () => {
     Helper.testUrl('/signup')
   })
 
-  it('should present save accesstoken if valid cretendials are provided', () => {
+  it('should save accesstoken if valid cretendials are provided', () => {
     simulateValidSubmit()
     Helper.testUrl('/panel')
     Helper.testLocalStorageItem('account')

@@ -11,7 +11,7 @@ const ApiError: React.FC<props> = ({ error }: props) => {
       <VStack spacing={4}>
         <BiError size={200} color="gray.300"/>
         <Heading>Oops!</Heading>
-        <Text fontSize="xl">{error.message}</Text>
+        <Text fontSize="xl" data-testid='error'>{error.message}</Text>
       </VStack>
     </Box>
   )
