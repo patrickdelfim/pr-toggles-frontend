@@ -45,6 +45,7 @@ describe('login', () => {
   })
 
   it('should present valid state if is valid', () => {
+    server.timing = 2000
     populateFields()
     cy.getByTestId('submit').click()
     FormHelper.testInputStatus('email')
