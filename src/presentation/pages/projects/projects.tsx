@@ -1,6 +1,6 @@
 import ApiError from '@/presentation/components/apiError/apiError'
 import { useErrorHandler } from '@/presentation/hooks/use-error-handler'
-import useListProject from '@/presentation/hooks/uselistProject'
+import useListProjects from '@/presentation/hooks/uselistProjects'
 import {
   Box,
   Button,
@@ -21,7 +21,7 @@ import SkeletonCardList from './Components/skeletonCardList'
 const Projects: React.FC = () => {
   const onError = useErrorHandler()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { data, status, error } = useListProject(onError)
+  const { data, status, error } = useListProjects(onError)
   const [search, setSearch] = useState('')
   const onCloseModal = (): void => {
     setSearch('')
@@ -173,16 +173,14 @@ const Projects: React.FC = () => {
                   .map((project) => (
                     <CardList
                       key={project.projeto_id}
-                      title={project.nome}
-                      subtitle={`Created ${project.created_at as string} - ${(project.descricao as string) || 'Sem descrição'}`}
+                      project={project}
                     />
                   ))
               : search.length === 0 &&
                 data.map((project) => (
                   <CardList
                     key={project.projeto_id}
-                    title={project.nome}
-                    subtitle={`Created ${project.created_at as string} - ${(project.descricao as string) || 'Sem descrição'}`}
+                    project={project}
                   />
                 ))}
           </Box>
