@@ -45,11 +45,11 @@ const Router: React.FC = () => {
           <BrowserRouter>
             <Routes>
               <Route path='/panel' element={<PrivateRoute />}>
-                <Route path="/panel/" element={<Header />}>
-                  <Route path="/panel/" element={<Projects />} />
+                <Route path="" element={<Header />}>
+                  <Route index element={<Projects />} />
                 </Route>
-                <Route path="/panel/project" element={<SidebarWithHeader />}>
-                  <Route path="/panel/project/" element={<Dumb />} />
+                <Route path="project/:id" element={<SidebarWithHeader />}>
+                  <Route index element={<Dumb />} />
                 </Route>
               </Route>
               <Route
