@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 function useListProjects (onError): any {
   const loadProjectsService = new LoadProjectsService()
 
-  return useQuery<ProjectModel[], Error>('projects', async () => await loadProjectsService.load(), {
+  return useQuery<ProjectModel[], Error>(['projects'], async () => await loadProjectsService.load(), {
     onError
   })
 }

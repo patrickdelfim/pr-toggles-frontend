@@ -9,18 +9,27 @@ import {
   useDisclosure,
   BoxProps,
   Image,
+  Text,
+  Link,
+  Divider,
+  useToast,
+  Spinner,
 } from '@chakra-ui/react'
 import {
-  FiHome,
-  FiTrendingUp,
   FiCompass,
-  FiStar,
   FiSettings,
+  FiUsers,
+  FiFlag,
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import NavItem from './NavItem'
 import logo from '../../assets/logo_transparent_vector.svg'
 import Header from '../header/header'
+import { Link as RouterDomLink, useParams, useLocation } from 'react-router-dom'
+import { LoadProjects } from '@/domain/usecases/load-projects'
+import useGetProject from '@/presentation/hooks/usegetProject'
+import { useErrorHandler } from '@/presentation/hooks/use-error-handler'
+import { ProjectContext } from '@/presentation/context'
 
 interface LinkItemProps {
   name: string
@@ -28,48 +37,66 @@ interface LinkItemProps {
   path: string
 }
 const LinkItems: LinkItemProps[] = [
-  { name: 'Home', icon: FiHome, path: '#' },
-  { name: 'Trending', icon: FiTrendingUp, path: '#' },
-  { name: 'Explore', icon: FiCompass, path: '#' },
-  { name: 'Favourites', icon: FiStar, path: '#' },
-  { name: 'Settings', icon: FiSettings, path: '#' },
+  { name: 'Funcionalidades', icon: FiFlag, path: '#' },
+  { name: 'Segmentos', icon: FiUsers, path: '#' },
+  { name: 'Auditoria e Logs', icon: FiCompass, path: '#' },
+  { name: 'Configuração', icon: FiSettings, path: '#' },
 ]
 
 export default function SidebarWithHeader (): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
+  const params = useParams()
+  const location = useLocation()
+  const onError = useErrorHandler((error) => {
+    toast({
+      id: 'getProjectById',
+      title: error.message || 'Algo inesperado aconteceu.',
+      status: 'error',
+      isClosable: true,
+    })
+  })
+
+  const state = location.state as {project: LoadProjects.Model}
+  const { data: project } = useGetProject(params.id, state?.project, onError)
+
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <Flex height="100vh">
-        <SidebarContent
-          onClose={() => onClose}
-          display={{ base: 'none', md: 'block' }}
-        />
-        <Drawer
-          autoFocus={false}
-          isOpen={isOpen}
-          placement="left"
-          onClose={onClose}
-          returnFocusOnClose={false}
-          onOverlayClick={onClose}
-          size="full"
-        >
-          <DrawerContent>
-            <SidebarContent onClose={onClose} />
-          </DrawerContent>
-        </Drawer>
-        <Box flex="1">
-          <Header onOpen={onOpen} />
-        </Box>
-      </Flex>
-    </Box>
+    <ProjectContext.Provider value={project}>
+      <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+        <Flex height="100vh">
+            <SidebarContent
+            projectName={project?.nome}
+            onClose={() => onClose}
+            display={{ base: 'none', md: 'block' }}
+          />
+          <Drawer
+            autoFocus={false}
+            isOpen={isOpen}
+            placement="left"
+            onClose={onClose}
+            returnFocusOnClose={false}
+            onOverlayClick={onClose}
+            size="full"
+          >
+            <DrawerContent>
+              <SidebarContent onClose={onClose} projectName={project?.nome}/>
+            </DrawerContent>
+          </Drawer>
+          <Box flex="1">
+            <Header onOpen={onOpen} />
+          </Box>
+        </Flex>
+      </Box>
+    </ProjectContext.Provider>
   )
 }
 
 interface SidebarProps extends BoxProps {
+  projectName: string
   onClose: () => void
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps): JSX.Element => {
+const SidebarContent = ({ onClose, projectName, ...rest }: SidebarProps): JSX.Element => {
   return (
     <Box
       transition="3s ease"
@@ -92,6 +119,30 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps): JSX.Element => {
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
+      <Box justifyContent="center" textAlign="center" pt="4">
+        {projectName
+          ? (
+          <Text pb="4">{projectName}</Text>
+            )
+          : (
+          <Box pb="4">
+            <Spinner />
+          </Box>
+            )}
+
+        <Link
+          as={RouterDomLink}
+          to={'/panel'}
+          variant="primary"
+          style={{ textDecoration: 'none' }}
+          _focus={{ boxShadow: 'none' }}
+        >
+          Alterar projeto
+        </Link>
+      </Box>
+      <Box py="4">
+        <Divider borderColor="black" />
+      </Box>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon} path={link.path}>
           {link.name}

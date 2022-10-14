@@ -39,9 +39,16 @@ export function makeServer ({ environment = 'development' } = {}) {
         },
         )
       })
+
       this.get('/projects', (schema, request) => {
         return schema.projects.all()
       })
+
+      this.get('/projects/:id', (schema, request) => {
+        const id = request.params.id
+        return schema.projects.findBy({ projeto_id: id })
+      })
+
       this.post('/project/create', async (schema, request) => {
         const attrs = JSON.parse(request.requestBody)
 
