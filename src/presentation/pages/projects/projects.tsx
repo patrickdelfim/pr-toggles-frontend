@@ -14,9 +14,9 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
-import CardList from './Components/cardList'
+import ProjectCardList from './Components/projectcardList'
 import CreateProjectModal from './Components/createProjectModal'
-import SkeletonCardList from './Components/skeletonCardList'
+import SkeletonCardList from '@/presentation/components/skeletonCardList/skeletonCardList'
 
 const Projects: React.FC = () => {
   const onError = useErrorHandler()
@@ -171,14 +171,14 @@ const Projects: React.FC = () => {
                 data
                   .filter((s) => s.nome.includes(search))
                   .map((project) => (
-                    <CardList
+                    <ProjectCardList
                       key={project.projeto_id}
                       project={project}
                     />
                   ))
               : search.length === 0 &&
                 data.map((project) => (
-                  <CardList
+                  <ProjectCardList
                     key={project.projeto_id}
                     project={project}
                   />

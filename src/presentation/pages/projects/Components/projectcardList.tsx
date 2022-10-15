@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 type props = {
   project: LoadProjects.Model
 }
-const CardList: React.FC<props> = ({ project }: props) => {
+const ProjectCardList: React.FC<props> = ({ project }: props) => {
   return (
     <Link to={`project/${project.projeto_id}`} state={{ project }}>
     <Box
@@ -50,4 +50,4 @@ const CardList: React.FC<props> = ({ project }: props) => {
   )
 }
 
-export default CardList
+export default ProjectCardList

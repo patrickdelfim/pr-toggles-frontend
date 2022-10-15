@@ -110,9 +110,7 @@ const Header: React.FC<props> = ({ onOpen }: props) => {
           </Flex>
         </HStack>
       </Flex>
-      <Box p="4">
-        <Outlet />
-      </Box>
+      <Outlet />
     </Box>
   )
 }
