@@ -1,8 +1,9 @@
 import { AccessDeniedError, UnexpectedError } from '@/domain/errors'
 import { LoadProjects } from '@/domain/usecases/load-projects'
+import { LoadProjectById } from '@/domain/usecases/load-project-by-Id'
 import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 
-export default class LoadProjectsService implements LoadProjects {
+export default class LoadProjectsService implements LoadProjects, LoadProjectById {
   async load (): Promise<LoadProjects.Model[]> {
     const httpResponse = await makeRequest({
       url: makeApiUrl('/api/projects/'),

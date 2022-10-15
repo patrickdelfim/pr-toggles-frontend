@@ -28,7 +28,7 @@ export type HttpRequest = {
   body?: any
   headers?: any
 }
-export type HttpMethod = 'post' | 'get' | 'put' | 'delete'
+export type HttpMethod = 'post' | 'get' | 'put' | 'patch' | 'delete'
 
 export enum HttpStatusCode{
   ok = 200,

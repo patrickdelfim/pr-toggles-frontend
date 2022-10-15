@@ -8,7 +8,7 @@ export type FeatureModel = {
   ativada_prod?: boolean
   ativada_homolog?: boolean
   ativada_dev?: boolean
-  created_at?: string | Date
-  updated_at?: string | Date
+  created_at?: string
+  updated_at?: string
   estrategias?: StrategyModel[]
 }
