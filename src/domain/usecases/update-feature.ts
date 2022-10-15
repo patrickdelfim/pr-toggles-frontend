@@ -6,7 +6,7 @@ export type updateFeatureParams = {
   ativada_dev?: boolean
 }
 export interface UpdateFeature {
-  update: (featureId: string, params: UpdateFeature.params) => Promise<UpdateFeature.Model>
+  update: (params: UpdateFeature.params) => Promise<UpdateFeature.Model>
 }
 
 export namespace UpdateFeature {
