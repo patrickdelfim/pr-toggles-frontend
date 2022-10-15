@@ -15,13 +15,12 @@ import {
 } from '@/presentation/context/api-context'
 import AuthService from '@/services/auth-service'
 import Login from '@/presentation/pages/login/login'
-// import PrivateRoute from '@/presentation/components/private-route/private-route'
 import SidebarWithHeader from '@/presentation/components/sidebar/sidebar'
 import Header from '@/presentation/components/header/header'
-import Dumb from '@/presentation/components/dumbComponent'
 import Projects from '@/presentation/pages/projects/projects'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import PrivateRoute from '@/presentation/components/private-route/private-route'
+import Funcionalidades from '@/presentation/pages/funcionalidades/funcionalidades'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,7 +48,7 @@ const Router: React.FC = () => {
                   <Route index element={<Projects />} />
                 </Route>
                 <Route path="project/:id" element={<SidebarWithHeader />}>
-                  <Route index element={<Dumb />} />
+                  <Route index element={<Funcionalidades />} />
                 </Route>
               </Route>
               <Route
