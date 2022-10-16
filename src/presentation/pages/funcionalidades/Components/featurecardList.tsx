@@ -1,20 +1,45 @@
 import { FeatureModel } from '@/domain/models/feature-model'
-import { Box, Switch, Text } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import useUpdateFeature from '@/presentation/hooks/useUpdateFeature'
+import { Box, Switch, Text, useToast } from '@chakra-ui/react'
+import React, { useState } from 'react'
 
 type props = {
   feature: FeatureModel
-  selectedEnv: boolean
+  selectedEnv: string
 }
 const FeatureCardList: React.FC<props> = ({ feature, selectedEnv }: props) => {
-  const [checked, setChecked] = useState(false)
-  console.log(selectedEnv)
-  useEffect(() => {
-    setChecked(selectedEnv)
-  }, [selectedEnv])
+  const toast = useToast()
+  const [fetching, setfetching] = useState(false)
+  const onSuccess = async (): Promise<void> => {
+    toast({
+      title: 'salvo!',
+      status: 'success',
+      isClosable: true,
+    })
+    setfetching(false)
+  }
+
+  const onError = async (error: Error): Promise<void> => {
+    toast({
+      id: 'updateFeatureError',
+      title: error.message || 'Algo inesperado aconteceu.',
+      status: 'error',
+      isClosable: true,
+    })
+    setfetching(false)
+  }
+  const updateFeatureMutation = useUpdateFeature(onSuccess, onError)
+
+  const updateFeature = (): void => {
+    if (!fetching) {
+      updateFeatureMutation.mutate({ ...feature, [selectedEnv]: !feature[selectedEnv] })
+    }
+    setfetching(true)
+  }
+
   return (
     <Box
-      cursor="pointer"
+      cursor={fetching ? 'wait' : 'pointer'}
       display="flex"
       justifyContent="space-between"
       bg="white"
@@ -56,7 +81,7 @@ const FeatureCardList: React.FC<props> = ({ feature, selectedEnv }: props) => {
         </Box>
       </Box>
       <Box display="flex" alignSelf="center" pr={4}>
-        <Switch colorScheme="facebook" isChecked={checked} onChange={() => { setChecked(!checked) }}/>
+        <Switch colorScheme="facebook" isChecked={feature[selectedEnv]} onChange={updateFeature}/>
       </Box>
     </Box>
   )

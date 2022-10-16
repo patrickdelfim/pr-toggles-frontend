@@ -143,7 +143,7 @@ const Funcionalidades: React.FC = () => {
               p="10"
             >
               <Text fontSize="xl" data-testid="title">
-                Parece que voce ainda não tem nenhum projeto.
+                Parece que voce ainda não tem nenhum funcionalidade cadastrada.
               </Text>
               <Text pt="4" fontSize="xl" data-testid="subtitle">
                 Clique em
@@ -155,7 +155,7 @@ const Funcionalidades: React.FC = () => {
                   onClick={onOpen}
                 >
                   {' '}
-                  Criar novo projeto{' '}
+                  Criar nova funcionalidade{' '}
                 </Text>
                 para utilizar todo o potencial de PR toggles!
               </Text>
@@ -190,11 +190,19 @@ const Funcionalidades: React.FC = () => {
                 data
                   .filter((s) => s.nome.includes(search))
                   .map((feature) => (
-                    <FeatureCardList key={feature.id} selectedEnv={selectedEnv} feature={feature} />
+                    <FeatureCardList
+                      key={feature.id}
+                      selectedEnv={`ativada_${selectedEnv}`}
+                      feature={feature}
+                    />
                   ))
               : search.length === 0 &&
                 data.map((feature) => (
-                  <FeatureCardList key={feature.id} selectedEnv={feature[`ativada_${selectedEnv}`]} feature={feature} />
+                  <FeatureCardList
+                    key={feature.id}
+                    selectedEnv={`ativada_${selectedEnv}`}
+                    feature={feature}
+                  />
                 ))}
           </Box>
         )}
