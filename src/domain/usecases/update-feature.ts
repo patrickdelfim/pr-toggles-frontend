@@ -1,6 +1,6 @@
 import { FeatureModel } from '../models/feature-model'
 export type updateFeatureParams = {
-  feature_id: string
+  id: string
   ativada_prod?: boolean
   ativada_homolog?: boolean
   ativada_dev?: boolean
