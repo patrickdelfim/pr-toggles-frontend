@@ -20,7 +20,8 @@ export function makeServer ({ environment = 'development' } = {}) {
       server.create('project', { projeto_id: 1, cliente_id: 1, nome: 'back end do futuro', descricao: 'descricao linda do projeto', created_at: new Date(), updated_at: new Date() })
       server.create('project', { projeto_id: 2, cliente_id: 1, nome: 'back end do futuro 2', descricao: '', created_at: new Date(), updated_at: new Date() })
       server.create('project', { projeto_id: 3, cliente_id: 1, nome: 'back end do futuro 3', descricao: 'descricao linda do projeto 2', created_at: new Date(), updated_at: new Date() })
-      server.create('feature', { projeto_id: 3, nome: 'chatBot', descricao: 'liberação gradual de chatbot', ativada_prod: false, ativada_homolog: false, ativada_dev: true, estrategias: null, created_at: new Date(), updated_at: new Date() })
+      server.create('feature', { projeto_id: '3', nome: 'chatBot', descricao: 'liberação gradual de chatbot', ativada_prod: false, ativada_homolog: false, ativada_dev: true, estrategias: null, created_at: new Date(), updated_at: new Date() })
+      server.create('feature', { projeto_id: '3', nome: 'Layout especial de natal', descricao: '', ativada_prod: true, ativada_homolog: true, ativada_dev: false, estrategias: null, created_at: new Date(), updated_at: new Date() })
     },
     routes () {
       this.namespace = 'api'
@@ -74,24 +75,23 @@ export function makeServer ({ environment = 'development' } = {}) {
 
       this.get('/projects/:id/features', (schema, request) => {
         const id = request.params.id
-        console.log('server: ', id)
         return schema.features.where({ projeto_id: id })
       })
 
-      this.patch('/api/features/:featureId', async (schema, request) => {
+      this.patch('/features/:featureId', async (schema, request) => {
         const featureEditableSchema = ['ativada_prod', 'ativada_homolog', 'ativada_dev']
         const featureId = request.params.featureId
-        const body = request.body
+        const body = JSON.parse(request.requestBody)
         const feature = await schema.features.findBy({ id: featureId })
 
         if (!feature) return new Response(400, {}, { message: 'funcionalidade nao existe.' })
         const fieldsToUpdate = {}
         for (const field of featureEditableSchema) {
           if (Object.keys(body).includes(field)) {
-            Object.assign(fieldsToUpdate, { field: body[field] })
+            Object.assign(fieldsToUpdate, { [field]: body[field] })
           }
         }
-        if (Object.key(fieldsToUpdate).length === 0) return new Response(400, {}, { message: 'Nenhum campo foi atualizado.' })
+        if (Object.keys(fieldsToUpdate).length === 0) return new Response(400, {}, { message: 'Nenhum campo foi atualizado.' })
 
         await feature.update(fieldsToUpdate)
         return schema.features.findBy({ id: featureId })
