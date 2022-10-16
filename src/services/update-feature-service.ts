@@ -5,12 +5,12 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class UpdateFeatureService implements UpdateFeature {
   async update (params: UpdateFeature.params): Promise<UpdateFeature.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl(`/api/features/${params.feature_id}`),
+      url: makeApiUrl(`/api/features/${params.id}`),
       method: 'patch',
       body: params,
     })
+
     const feature = httpResponse.body?.feature
-    console.log('updated feature: ', feature)
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
         return Object.assign(feature, {

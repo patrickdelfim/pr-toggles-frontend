@@ -35,7 +35,6 @@ export default class LoadProjectsService implements LoadProjects, LoadProjectByI
       method: 'get',
     })
     const project = httpResponse.body?.project
-    console.log(project)
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
         return Object.assign(project, {

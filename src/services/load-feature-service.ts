@@ -9,7 +9,6 @@ export default class LoadFeatureService implements LoadFeaturesByProjectId {
       method: 'get',
     })
     const featureList = httpResponse.body?.features || []
-    console.log('loadByProjectId: ', featureList)
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
         return featureList.map((feature) => Object.assign(feature, {
