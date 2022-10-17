@@ -6,7 +6,10 @@ import loginValidators from '@/presentation/validators/login-validators'
 import AccessLayoutHeader from '@/presentation/components/accessLayoutHeader/accessLayoutHeader'
 import FormField from '@/presentation/components/formField/formField'
 import { AddAccount } from '@/domain/usecases'
-import { ApiContext, getCurrentAccount } from '@/presentation/context/api-context'
+import {
+  ApiContext,
+  getCurrentAccount,
+} from '@/presentation/context/api-context'
 import { Link as RouterDomLink, useNavigate } from 'react-router-dom'
 import { Authentication } from '@/domain/usecases/authentication'
 
@@ -46,7 +49,9 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
     handleSubmit(makeNewUser)(event)
   }
 
-  const makeNewUser: SubmitHandler<AddAccount.Params> = async (values: AddAccount.Params) => {
+  const makeNewUser: SubmitHandler<AddAccount.Params> = async (
+    values: AddAccount.Params
+  ) => {
     try {
       console.log(values)
       const account = await authentication.auth(values)
@@ -67,33 +72,37 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
     <Box display="flex" alignItems="center" flexDirection="column" bg="white">
       <AccessLayoutHeader title="Login" />
       <Box
-      width="100%"
-      maxW="2xl"
-      my={4}
-      padding={8}
-      boxShadow="2xl"
-      bg="gray.100"
-      borderRadius="lg"
-    >
+        width="100%"
+        maxW="2xl"
+        my={4}
+        padding={8}
+        boxShadow="2xl"
+        bg="gray.100"
+        borderRadius="lg"
+      >
         <form autoComplete="off" onSubmit={handleSubmitForm}>
-          <FormField
-            fieldName="Endereço de Email"
-            fieldKey="email"
-            placeholder="you@company.com"
-            type="text"
-            error={errors.email}
-            control={control}
-            validators={register('email', validators.email)}
-          />
-          <FormField
-            fieldName="password"
-            fieldKey="password"
-            placeholder="password"
-            type="password"
-            error={errors.password}
-            control={control}
-            validators={register('password', validators.password)}
-          />
+          <Box my={3}>
+            <FormField
+              fieldName="Endereço de Email"
+              fieldKey="email"
+              placeholder="you@company.com"
+              type="text"
+              error={errors.email}
+              control={control}
+              validators={register('email', validators.email)}
+            />
+          </Box>
+          <Box my={3}>
+            <FormField
+              fieldName="password"
+              fieldKey="password"
+              placeholder="password"
+              type="password"
+              error={errors.password}
+              control={control}
+              validators={register('password', validators.password)}
+            />
+          </Box>
           <Box mt={5}>
             <Button isLoading={isSubmitting} data-testid="submit" type="submit">
               Login!
@@ -108,9 +117,11 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
           <Divider borderColor="gray.400" />
         </Box>
         <Box mt={3} display="flex" alignItems="center" flexDirection="column">
-          <Link data-testid="signupBtn" as={RouterDomLink} to='/signup'>Cadastro</Link>
+          <Link data-testid="signupBtn" as={RouterDomLink} to="/signup">
+            Cadastro
+          </Link>
         </Box>
-        </Box>
+      </Box>
     </Box>
   )
 }

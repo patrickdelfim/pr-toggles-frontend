@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -33,30 +32,39 @@ const FormField: React.FC<props> = ({
   mask,
 }: props) => {
   return (
-    <Box my={3}>
-      <FormControl data-testid={`${fieldKey}-wrap`} data-status={error ? 'invalid' : 'valid'} isInvalid={!!error}>
-        <FormLabel data-testid={`${fieldKey}-label`} title={error?.message} htmlFor={fieldKey} color="primary.700" fontWeight="600">
-          {fieldName}
-        </FormLabel>
-        <Controller
-          name={fieldKey}
-          control={control}
-          render={({ field }) => (
-            <Input
-              data-testid={fieldKey}
-              {...field}
-              {...validators}
-              title={error?.message}
-              type={type}
-              placeholder={placeholder}
-              as={!!mask && InputMask}
-              mask={mask}
-            />
-          )}
-        />
-        <FormErrorMessage>{error?.message}</FormErrorMessage>
-      </FormControl>
-    </Box>
+    <FormControl
+      data-testid={`${fieldKey}-wrap`}
+      data-status={error ? 'invalid' : 'valid'}
+      isInvalid={!!error}
+    >
+      <FormLabel
+        data-testid={`${fieldKey}-label`}
+        title={error?.message}
+        htmlFor={fieldKey}
+        color="primary.700"
+        fontWeight="600"
+      >
+        {fieldName}
+      </FormLabel>
+      <Controller
+        name={fieldKey}
+        control={control}
+        render={({ field }) => (
+          <Input
+            key={fieldKey}
+            data-testid={fieldKey}
+            {...field}
+            {...validators}
+            title={error?.message}
+            type={type}
+            placeholder={placeholder}
+            as={!!mask && InputMask}
+            mask={mask}
+          />
+        )}
+      />
+      <FormErrorMessage>{error?.message}</FormErrorMessage>
+    </FormControl>
   )
 }
 

@@ -46,7 +46,9 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
     handleSubmit(makeNewUser)(event)
   }
 
-  const makeNewUser: SubmitHandler<AddAccount.Params> = async (values: AddAccount.Params) => {
+  const makeNewUser: SubmitHandler<AddAccount.Params> = async (
+    values: AddAccount.Params
+  ) => {
     try {
       console.log(values)
       const account = await addAccount.add(values)
@@ -66,68 +68,78 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
   return (
     <Box display="flex" alignItems="center" flexDirection="column" bg="white">
       <AccessLayoutHeader
-      title="Experimente nossa versão gratuita..."
-      subtitle="Comece a configurar o seu projeto agora mesmo!" />
-       <Box
-      width="100%"
-      maxW="2xl"
-      my={4}
-      padding={8}
-      boxShadow="2xl"
-      bg="gray.100"
-      borderRadius="lg"
-    >
+        title="Experimente nossa versão gratuita..."
+        subtitle="Comece a configurar o seu projeto agora mesmo!"
+      />
+      <Box
+        width="100%"
+        maxW="2xl"
+        my={4}
+        padding={8}
+        boxShadow="2xl"
+        bg="gray.100"
+        borderRadius="lg"
+      >
         <form autoComplete="off" onSubmit={handleSubmitForm}>
-          <FormField
-            fieldName="Nome da empresa"
-            fieldKey="nomeEmpresa"
-            placeholder="RB Engenharia"
-            type="text"
-            error={errors.nomeEmpresa}
-            control={control}
-            validators={register('nomeEmpresa', validators.nomeEmpresa)}
-          />
-          <FormField
-            fieldName="Endereço de Email"
-            fieldKey="email"
-            placeholder="you@company.com"
-            type="text"
-            error={errors.email}
-            control={control}
-            validators={register('email', validators.email)}
-          />
-          <FormField
-            fieldName="password"
-            fieldKey="password"
-            placeholder="password"
-            type="password"
-            error={errors.password}
-            control={control}
-            validators={register('password', validators.password)}
-          />
-          <FormField
-            fieldName="confirmação de senha"
-            fieldKey="passwordConfirmation"
-            placeholder="password Confirmation"
-            type="password"
-            error={errors.passwordConfirmation}
-            control={control}
-            validators={register(
-              'passwordConfirmation',
-              validators.passwordConfirmation
-            )}
-          />
-
-          <FormField
-            fieldName="Telefone"
-            fieldKey="phone"
-            placeholder="(xx) xxxx-xxxx"
-            type="tel"
-            error={errors.phone}
-            control={control}
-            validators={register('phone', validators.phone)}
-            mask="(99) 99999-9999"
-          />
+          <Box my={3}>
+            <FormField
+              fieldName="Nome da empresa"
+              fieldKey="nomeEmpresa"
+              placeholder="RB Engenharia"
+              type="text"
+              error={errors.nomeEmpresa}
+              control={control}
+              validators={register('nomeEmpresa', validators.nomeEmpresa)}
+            />
+          </Box>
+          <Box my={3}>
+            <FormField
+              fieldName="Endereço de Email"
+              fieldKey="email"
+              placeholder="you@company.com"
+              type="text"
+              error={errors.email}
+              control={control}
+              validators={register('email', validators.email)}
+            />
+          </Box>
+          <Box my={3}>
+            <FormField
+              fieldName="password"
+              fieldKey="password"
+              placeholder="password"
+              type="password"
+              error={errors.password}
+              control={control}
+              validators={register('password', validators.password)}
+            />
+          </Box>
+          <Box my={3}>
+            <FormField
+              fieldName="confirmação de senha"
+              fieldKey="passwordConfirmation"
+              placeholder="password Confirmation"
+              type="password"
+              error={errors.passwordConfirmation}
+              control={control}
+              validators={register(
+                'passwordConfirmation',
+                validators.passwordConfirmation
+              )}
+            />
+          </Box>
+          <Box my={3}>
+            <FormField
+              fieldName="Telefone"
+              fieldKey="phone"
+              placeholder="(xx) xxxx-xxxx"
+              type="tel"
+              error={errors.phone}
+              control={control}
+              validators={register('phone', validators.phone)}
+              mask="(99) 99999-9999"
+            />
+          </Box>
           <Box mt={5}>
             <Button isLoading={isSubmitting} data-testid="submit" type="submit">
               Cadastrar!
@@ -142,9 +154,11 @@ const SignUp: React.FC<Props> = ({ addAccount }: Props) => {
           <Divider borderColor="gray.400" />
         </Box>
         <Box mt={3} display="flex" alignItems="center" flexDirection="column">
-          <Link data-testid="loginBtn" as={RouterDomLink} to='/login'>Login</Link>
+          <Link data-testid="loginBtn" as={RouterDomLink} to="/login">
+            Login
+          </Link>
         </Box>
-        </Box>
+      </Box>
     </Box>
   )
 }
