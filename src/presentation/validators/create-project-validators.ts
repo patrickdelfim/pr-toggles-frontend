@@ -4,7 +4,7 @@ import { UseFormGetValues } from 'react-hook-form'
 /* eslint-disable no-useless-escape */
 const createProjectValidators = (
   getValues: UseFormGetValues<CreateProject.Params>
-): loginValidatorsProtocol => ({
+): createProjectValidatorsProtocol => ({
   nome: {
     required: 'Campo obrigatório',
     minLength: {
@@ -25,7 +25,7 @@ const createProjectValidators = (
 })
 export default createProjectValidators
 
-export interface loginValidatorsProtocol {
+export interface createProjectValidatorsProtocol {
   nome: {
     required: string
     minLength: {

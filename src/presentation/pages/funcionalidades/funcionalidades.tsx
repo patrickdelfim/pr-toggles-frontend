@@ -20,13 +20,14 @@ import FeatureCardList from './Components/featurecardList'
 import SkeletonCardList from '@/presentation/components/skeletonCardList/skeletonCardList'
 import useListFeatures from '@/presentation/hooks/useListFeatures'
 import { useParams } from 'react-router-dom'
+import CreateFeatureDrawer from './Components/createFeatureDrawer'
 
 const Funcionalidades: React.FC = () => {
   const envs = ['dev', 'homolog', 'prod']
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedEnv, setSelectedEnv] = useState(envs[0])
   const params = useParams()
   const onError = useErrorHandler()
-  const { onOpen } = useDisclosure()
   const { data, status, error } = useListFeatures(params.id, onError)
   const [search, setSearch] = useState('')
 
@@ -207,6 +208,7 @@ const Funcionalidades: React.FC = () => {
           </Box>
         )}
       </Container>
+      <CreateFeatureDrawer isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
