@@ -13,6 +13,7 @@ import {
   Text,
   Alert,
   AlertIcon,
+  useToast,
 } from '@chakra-ui/react'
 import { FiTrash2 } from 'react-icons/fi'
 import React, { useState } from 'react'
@@ -20,6 +21,8 @@ import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import FormField from '@/presentation/components/formField/formField'
 import { CreateFeature } from '@/domain/usecases/create-feature'
 import createFeatureValidators from '@/presentation/validators/create-feature-validators'
+import useCreateFeature from '@/presentation/hooks/useCreateFeature'
+import { useParams } from 'react-router-dom'
 
 type props = {
   isOpen: boolean
@@ -27,35 +30,34 @@ type props = {
 }
 
 const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
-  // const toast = useToast()
-  // const handleCloseModal = (): void => {
-  //   resetField('nome')
-  //   resetField('descricao')
-  //   onClose()
-  // }
+  const toast = useToast()
+  const params = useParams()
+  const handleCloseModal = (): void => {
+    reset()
+    onClose()
+  }
 
-  // const onSuccess = async (): Promise<void> => {
-  //   toast({
-  //     id: 'saveProjectSuccess',
-  //     title: 'Projeto criado com sucesso!',
-  //     status: 'success',
-  //     isClosable: true,
-  //   })
-  //   resetField('nome')
-  //   resetField('descricao')
-  //   onClose()
-  // }
+  const onSuccess = async (): Promise<void> => {
+    toast({
+      id: 'saveProjectSuccess',
+      title: 'Funcionalidade criada com sucesso!',
+      status: 'success',
+      isClosable: true,
+    })
+    reset()
+    onClose()
+  }
 
-  // const onError = async (error: Error): Promise<void> => {
-  //   toast({
-  //     id: 'saveProjectError',
-  //     title: error.message || 'Algo inesperado aconteceu.',
-  //     status: 'error',
-  //     isClosable: true,
-  //   })
-  // }
+  const onError = async (error: Error): Promise<void> => {
+    toast({
+      id: 'saveFeatureError',
+      title: error.message || 'Algo inesperado aconteceu.',
+      status: 'error',
+      isClosable: true,
+    })
+  }
 
-  // const createProjectMutation = useCreateProject(onSuccess, onError)
+  const createFeatureMutation = useCreateFeature(params.id, onSuccess, onError)
 
   const {
     handleSubmit,
@@ -63,6 +65,7 @@ const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
     control,
     getValues,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<CreateFeature.Params>({
     defaultValues: {
@@ -92,8 +95,12 @@ const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
   const createNewFeature: SubmitHandler<CreateFeature.Params> = async (
     values: CreateFeature.Params
   ) => {
-    console.log(values)
-    // createProjectMutation.mutate(values)
+    const payload = {
+      projeto_id: params.id,
+      ...values,
+      variacoes: values.variacoes.map(element => ({ valor: element.valor, peso: parseFloat(element.peso) }))
+    }
+    createFeatureMutation.mutate(payload)
   }
 
   const [mainPercent, setMainPercent] = useState(100)
@@ -103,7 +110,7 @@ const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
     setMainPercent(value)
   }
   return (
-    <Drawer isOpen={isOpen} placement="right" onClose={onClose} size={'xl'}>
+    <Drawer isOpen={isOpen} placement="right" onClose={handleCloseModal} size={'xl'}>
       <DrawerOverlay />
       <DrawerContent>
         <Box borderBottomWidth="1px">
@@ -237,7 +244,7 @@ const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
 
         <DrawerFooter>
           <Box >
-            <Button form="createFeatureForm" type="submit" disabled={!(mainPercent >= 0)}>
+            <Button form="createFeatureForm" isLoading={createFeatureMutation.isLoading} type="submit" disabled={!(mainPercent >= 0)}>
               Save
             </Button>
           </Box>
