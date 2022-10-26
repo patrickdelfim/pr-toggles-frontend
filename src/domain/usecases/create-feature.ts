@@ -1,4 +1,3 @@
-import { FeatureModel } from '@/domain/models'
 
 type variacao = {
   valor: string
@@ -6,6 +5,7 @@ type variacao = {
 }
 
 export type createFeatureParams = {
+  project_id: string
   nome: string
   descricao: string
   valor: string
@@ -18,5 +18,5 @@ export interface CreateFeature {
 
 export namespace CreateFeature {
   export type Params = createFeatureParams
-  export type Model = FeatureModel
+  export type Model = {message: string}
 }

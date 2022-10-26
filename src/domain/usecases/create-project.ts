@@ -1,4 +1,3 @@
-import { ProjectModel } from '@/domain/models'
 
 export type createProjectParams = {
   nome: string
@@ -11,5 +10,5 @@ export interface CreateProject {
 
 export namespace CreateProject {
   export type Params = createProjectParams
-  export type Model = ProjectModel
+  export type Model = {message: string}
 }
