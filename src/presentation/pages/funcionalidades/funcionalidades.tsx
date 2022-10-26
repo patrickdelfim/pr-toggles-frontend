@@ -21,10 +21,12 @@ import SkeletonCardList from '@/presentation/components/skeletonCardList/skeleto
 import useListFeatures from '@/presentation/hooks/useListFeatures'
 import { useParams } from 'react-router-dom'
 import CreateFeatureDrawer from './Components/createFeatureDrawer'
+import UpdateFeatureDrawer from './Components/updateFeatureDrawer'
 
 const Funcionalidades: React.FC = () => {
   const envs = ['dev', 'homolog', 'prod']
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isOpenCreate, onOpen: onOpenCreate, onClose: onCloseCreate } = useDisclosure()
+  const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure()
   const [selectedEnv, setSelectedEnv] = useState(envs[0])
   const params = useParams()
   const onError = useErrorHandler()
@@ -61,7 +63,7 @@ const Funcionalidades: React.FC = () => {
             <Button
               variant="primary"
               fontSize="sm"
-              onClick={onOpen}
+              onClick={onOpenCreate}
               disabled={status === 'loading' || status === 'error'}
               data-testid="openNewProjectModal"
             >
@@ -153,7 +155,7 @@ const Funcionalidades: React.FC = () => {
                   color="primary.500"
                   fontWeight="bold"
                   _hover={{ cursor: 'pointer', color: 'primary.300' }}
-                  onClick={onOpen}
+                  onClick={onOpenCreate}
                 >
                   {' '}
                   Criar nova funcionalidade{' '}
@@ -195,6 +197,7 @@ const Funcionalidades: React.FC = () => {
                       key={feature.id}
                       selectedEnv={`ativada_${selectedEnv}`}
                       feature={feature}
+                      onOpen={onOpenEdit}
                     />
                   ))
               : search.length === 0 &&
@@ -203,12 +206,14 @@ const Funcionalidades: React.FC = () => {
                     key={feature.id}
                     selectedEnv={`ativada_${selectedEnv}`}
                     feature={feature}
+                    onOpen={onOpenEdit}
                   />
                 ))}
           </Box>
         )}
       </Container>
-      <CreateFeatureDrawer isOpen={isOpen} onClose={onClose} />
+      <CreateFeatureDrawer isOpen={isOpenCreate} onClose={onCloseCreate} />
+      <UpdateFeatureDrawer isOpen={isOpenEdit} onClose={onCloseEdit} />
     </>
   )
 }

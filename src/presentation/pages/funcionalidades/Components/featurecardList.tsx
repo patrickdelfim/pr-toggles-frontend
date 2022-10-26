@@ -6,8 +6,9 @@ import React, { useState } from 'react'
 type props = {
   feature: FeatureModel
   selectedEnv: string
+  onOpen: () => void
 }
-const FeatureCardList: React.FC<props> = ({ feature, selectedEnv }: props) => {
+const FeatureCardList: React.FC<props> = ({ feature, selectedEnv, onOpen }: props) => {
   const toast = useToast()
   const [fetching, setfetching] = useState(false)
   const onSuccess = async (): Promise<void> => {
@@ -58,7 +59,7 @@ const FeatureCardList: React.FC<props> = ({ feature, selectedEnv }: props) => {
         display="flex"
         flexGrow={1}
         onClick={() => {
-          console.log('click')
+          onOpen()
         }}
       >
         <Box display="flex" flexDirection="column" justifyContent="end">
