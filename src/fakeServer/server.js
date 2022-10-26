@@ -15,6 +15,7 @@ export function makeServer ({ environment = 'development' } = {}) {
     models: {
       project: Model,
       feature: Model,
+      strategy: Model,
     },
     seeds (server) {
       server.create('project', { projeto_id: 1, cliente_id: 1, nome: 'back end do futuro', descricao: 'descricao linda do projeto', created_at: new Date(), updated_at: new Date() })
@@ -22,6 +23,7 @@ export function makeServer ({ environment = 'development' } = {}) {
       server.create('project', { projeto_id: 3, cliente_id: 1, nome: 'back end do futuro 3', descricao: 'descricao linda do projeto 2', created_at: new Date(), updated_at: new Date() })
       server.create('feature', { projeto_id: '3', nome: 'chatBot', descricao: 'liberação gradual de chatbot', ativada_prod: false, ativada_homolog: false, ativada_dev: true, estrategias: null, created_at: new Date(), updated_at: new Date() })
       server.create('feature', { projeto_id: '3', nome: 'Layout especial de natal', descricao: '', ativada_prod: true, ativada_homolog: true, ativada_dev: false, estrategias: null, created_at: new Date(), updated_at: new Date() })
+      server.create('strategy', { funcionalidade_id: '0', ambiente: 'dev', valor: '0', variacoes: [] })
     },
     routes () {
       this.namespace = 'api'
@@ -95,6 +97,27 @@ export function makeServer ({ environment = 'development' } = {}) {
 
         await feature.update(fieldsToUpdate)
         return schema.features.findBy({ id: featureId })
+      })
+
+      this.post('/feature', async (schema, request) => {
+        const attrs = JSON.parse(request.requestBody)
+        console.log('attr values: ', attrs)
+        const model = { projeto_id: attrs.projeto_id, nome: attrs.nome, descricao: attrs.descricao, estrategias: [], ativada_prod: true, ativada_homolog: true, ativada_dev: true, created_at: new Date(), updated_at: new Date() }
+        console.log('feature model: ', model)
+        const feature = await schema.features.create(model)
+        console.log('criando ambiente...')
+
+        console.log('criando ambiente ', 'dev')
+        const estrategiaDev = await schema.strategies.create({ funcionalidade_id: feature.id, ambiente: 'dev', valor: attrs.valor, variacoes: [...attrs.variacoes] })
+        console.log('criando ambiente ', 'hml')
+        const estrategiaHml = await schema.strategies.create({ funcionalidade_id: feature.id, ambiente: 'hml', valor: attrs.valor, variacoes: [...attrs.variacoes] })
+        console.log('criando ambiente ', 'prd')
+        const estrategiaPrd = await schema.strategies.create({ funcionalidade_id: feature.id, ambiente: 'prd', valor: attrs.valor, variacoes: [...attrs.variacoes] })
+
+        await feature.update({ estrategias: [estrategiaDev.id, estrategiaHml.id, estrategiaPrd.id] })
+        console.log(feature)
+        return new Response(200, {}, { message: 'Feature criada com sucesso' },
+        )
       })
     }
 
