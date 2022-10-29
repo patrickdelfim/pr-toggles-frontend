@@ -90,9 +90,7 @@ export function makeServer ({ environment = 'development' } = {}) {
         if (features.length === 0) return new Response(400, {}, { message: 'Error ao buscar feature' })
         const responsePayload = []
         features.models.forEach(feat => {
-          const estrategias = []
-          feat.strategy.models.forEach(estrategia => estrategias.push(estrategia.attrs))
-          const featureWithStrategies = { ...feat.attrs, estrategias }
+          const featureWithStrategies = { ...feat.attrs, estrategias: extractStrategyFromFeatureObject(feat) }
           delete featureWithStrategies.strategyIds
           responsePayload.push(featureWithStrategies)
         })
@@ -101,6 +99,7 @@ export function makeServer ({ environment = 'development' } = {}) {
       })
 
       this.patch('/features/:featureId', async (schema, request) => {
+        console.log('start update feature')
         const featureEditableSchema = ['ativada_prod', 'ativada_homolog', 'ativada_dev']
         const featureId = request.params.featureId
         const body = JSON.parse(request.requestBody)
@@ -116,7 +115,10 @@ export function makeServer ({ environment = 'development' } = {}) {
         if (Object.keys(fieldsToUpdate).length === 0) return new Response(400, {}, { message: 'Nenhum campo foi atualizado.' })
 
         await feature.update(fieldsToUpdate)
-        return schema.features.findBy({ id: featureId })
+        const updatedFeature = await schema.features.findBy({ id: featureId })
+        const response = { ...updatedFeature.attrs, estrategias: extractStrategyFromFeatureObject(updatedFeature) }
+        delete response.strategyIds
+        return { feature: response }
       })
 
       this.post('/feature', async (schema, request) => {
@@ -144,4 +146,12 @@ export function makeServer ({ environment = 'development' } = {}) {
   })
 
   return server
+}
+
+const extractStrategyFromFeatureObject = (feature) => {
+  const estrategias = []
+  feature.strategy.models.forEach(estrategia => estrategias.push(estrategia.attrs))
+  const featureWithStrategies = { ...feature.attrs, estrategias }
+  delete featureWithStrategies.strategyIds
+  return estrategias
 }
