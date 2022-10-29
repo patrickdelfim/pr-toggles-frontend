@@ -21,24 +21,26 @@ import {
   TabPanels,
 } from '@chakra-ui/react'
 import { FiTrash2 } from 'react-icons/fi'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import FormField from '@/presentation/components/formField/formField'
 import { CreateFeature } from '@/domain/usecases/create-feature'
 import createFeatureValidators from '@/presentation/validators/create-feature-validators'
 import useCreateFeature from '@/presentation/hooks/useCreateFeature'
 import { useParams } from 'react-router-dom'
+import { FeatureModel } from '@/domain/models'
 
 type props = {
   isOpen: boolean
   onClose: () => void
+  feature: FeatureModel | null
+  ambiente: string
 }
 
-const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
+const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambiente }: props) => {
   const toast = useToast()
   const params = useParams()
   const handleCloseModal = (): void => {
-    reset()
     onClose()
   }
 
@@ -63,7 +65,6 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
   }
 
   const createFeatureMutation = useCreateFeature(params.id, onSuccess, onError)
-
   const {
     handleSubmit,
     register,
@@ -72,18 +73,22 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
     setValue,
     reset,
     formState: { errors },
-  } = useForm<CreateFeature.Params>({
-    defaultValues: {
-      nome: '',
-      descricao: '',
-      valor: '',
-      variacoes: [],
-    },
-  })
+  } = useForm<CreateFeature.Params>()
   const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: 'variacoes', // unique name for your Field Array
   })
+
+  useEffect(() => {
+    if (!isOpen) return
+    console.log('useEffect runned')
+    const selectedStrategy = feature.estrategias.find(estrategia => estrategia.ambiente === ambiente)
+    setValue('nome', feature.nome)
+    setValue('descricao', feature.descricao)
+    setValue('valor', selectedStrategy.valor)
+    setValue('variacoes', selectedStrategy.variacoes)
+    if (selectedStrategy.variacoes.length > 0) calculateMainPercent()
+  }, [isOpen])
   const removeVariation = (index: number): void => {
     remove(index)
     calculateMainPercent()
@@ -132,11 +137,12 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
       size={'xl'}
     >
       <DrawerOverlay />
-      <DrawerContent>
+      <DrawerContent >
         <Box borderBottomWidth="1px">
-          <DrawerHeader>Atualizar feature</DrawerHeader>
+          <DrawerHeader>Atualizar feature: {feature.nome}</DrawerHeader>
         </Box>
         <DrawerCloseButton />
+        <DrawerBody >
         <Tabs>
           <TabList>
             <Tab>Funcionalidade</Tab>
@@ -144,8 +150,7 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <DrawerBody display="flex" justifyContent="center">
-                <Box width="100%">
+                <Box>
                   <form
                     id="createFeatureForm"
                     autoComplete="off"
@@ -153,26 +158,8 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
                   >
                     <Box py={3}>
                       <FormField
-                        fieldName="Nome da feature"
-                        fieldKey="nome"
-                        placeholder="Ex: Chatbot"
-                        type="text"
-                        error={errors.nome}
-                        control={control}
-                        validators={register('nome', {
-                          ...validators.nome,
-                          onChange: () =>
-                            setValue(
-                              'nome',
-                              getValues('nome').replace(' ', '_')
-                            ),
-                        })}
-                      />
-                    </Box>
-                    <Box py={3}>
-                      <FormField
                         fieldName={`valor (opcional)${
-                          mainPercent >= 0 && getValues('variacoes').length > 0
+                          mainPercent >= 0 && getValues('variacoes')?.length > 0
                             ? ` - ${mainPercent}%`
                             : ''
                         }`}
@@ -287,6 +274,12 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
                     />
                   </form>
                 </Box>
+            </TabPanel>
+            <TabPanel>
+              <p>Segmentos!</p>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
               </DrawerBody>
 
               <DrawerFooter>
@@ -301,12 +294,6 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
                   </Button>
                 </Box>
               </DrawerFooter>
-            </TabPanel>
-            <TabPanel>
-              <p>Segmentos!</p>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
       </DrawerContent>
     </Drawer>
   )

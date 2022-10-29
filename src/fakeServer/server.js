@@ -1,5 +1,5 @@
 
-import { createServer, Model, Response, RestSerializer, } from 'miragejs'
+import { belongsTo, createServer, hasMany, Model, Response, RestSerializer, } from 'miragejs'
 
 export function makeServer ({ environment = 'development' } = {}) {
   console.log('creation server')
@@ -14,16 +14,25 @@ export function makeServer ({ environment = 'development' } = {}) {
     },
     models: {
       project: Model,
-      feature: Model,
-      strategy: Model,
+      feature: Model.extend({
+        strategy: hasMany(),
+      }),
+      strategy: Model.extend({
+        feature: belongsTo(),
+      }),
     },
     seeds (server) {
       server.create('project', { projeto_id: 1, cliente_id: 1, nome: 'back end do futuro', descricao: 'descricao linda do projeto', created_at: new Date(), updated_at: new Date() })
       server.create('project', { projeto_id: 2, cliente_id: 1, nome: 'back end do futuro 2', descricao: '', created_at: new Date(), updated_at: new Date() })
       server.create('project', { projeto_id: 3, cliente_id: 1, nome: 'back end do futuro 3', descricao: 'descricao linda do projeto 2', created_at: new Date(), updated_at: new Date() })
-      server.create('feature', { projeto_id: '3', nome: 'chatBot', descricao: 'liberação gradual de chatbot', ativada_prod: false, ativada_homolog: false, ativada_dev: true, estrategias: null, created_at: new Date(), updated_at: new Date() })
-      server.create('feature', { projeto_id: '3', nome: 'Layout especial de natal', descricao: '', ativada_prod: true, ativada_homolog: true, ativada_dev: false, estrategias: null, created_at: new Date(), updated_at: new Date() })
-      server.create('strategy', { funcionalidade_id: '0', ambiente: 'dev', valor: '0', variacoes: [] })
+      const chatBot = server.create('feature', { projeto_id: '3', nome: 'chatBot', descricao: 'liberação gradual de chatbot', ativada_prod: false, ativada_homolog: false, ativada_dev: true, estrategias: null, created_at: new Date(), updated_at: new Date() })
+      server.create('strategy', { feature: chatBot, funcionalidade_id: chatBot.id, ambiente: 'dev', valor: true, variacoes: [] })
+      server.create('strategy', { feature: chatBot, funcionalidade_id: chatBot.id, ambiente: 'homolog', valor: false, variacoes: [] })
+      server.create('strategy', { feature: chatBot, funcionalidade_id: chatBot.id, ambiente: 'prod', valor: 'trds', variacoes: [{ valor: 'blabla', peso: 10 }, { valor: 'salaz', peso: 20 }] })
+      const natal = server.create('feature', { projeto_id: '3', nome: 'Layout especial de natal', descricao: '', ativada_prod: true, ativada_homolog: true, ativada_dev: false, estrategias: null, created_at: new Date(), updated_at: new Date() })
+      server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'dev', valor: 55, variacoes: [] })
+      server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'homolog', valor: 32, variacoes: [] })
+      server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'prod', valor: 100, variacoes: [{ valor: 120, peso: 60 }, { valor: 130, peso: 20 }] })
     },
     routes () {
       this.namespace = 'api'
@@ -75,9 +84,20 @@ export function makeServer ({ environment = 'development' } = {}) {
                 FEATURES
          ========================== */
 
-      this.get('/projects/:id/features', (schema, request) => {
+      this.get('/projects/:id/features', async (schema, request) => {
         const id = request.params.id
-        return schema.features.where({ projeto_id: id })
+        const features = await schema.features.where({ projeto_id: id })
+        if (features.length === 0) return new Response(400, {}, { message: 'Error ao buscar feature' })
+        const responsePayload = []
+        features.models.forEach(feat => {
+          const estrategias = []
+          feat.strategy.models.forEach(estrategia => estrategias.push(estrategia.attrs))
+          const featureWithStrategies = { ...feat.attrs, estrategias }
+          delete featureWithStrategies.strategyIds
+          responsePayload.push(featureWithStrategies)
+        })
+        console.log(responsePayload)
+        return { features: responsePayload }
       })
 
       this.patch('/features/:featureId', async (schema, request) => {

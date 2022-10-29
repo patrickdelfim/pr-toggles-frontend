@@ -1,8 +1,4 @@
-
-type variacao = {
-  valor: string
-  peso: string
-}
+import { variacao } from '../models/variacao-model'
 
 export type createFeatureParams = {
   project_id: string

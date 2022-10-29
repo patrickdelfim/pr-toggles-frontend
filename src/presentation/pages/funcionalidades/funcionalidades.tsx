@@ -27,7 +27,12 @@ const Funcionalidades: React.FC = () => {
   const envs = ['dev', 'homolog', 'prod']
   const { isOpen: isOpenCreate, onOpen: onOpenCreate, onClose: onCloseCreate } = useDisclosure()
   const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure()
+  const openEditFeature = (featureId: string): void => {
+    setSelectedFeatureId(featureId)
+    onOpenEdit()
+  }
   const [selectedEnv, setSelectedEnv] = useState(envs[0])
+  const [selectedFeatureId, setSelectedFeatureId] = useState(null)
   const params = useParams()
   const onError = useErrorHandler()
   const { data, status, error } = useListFeatures(params.id, onError)
@@ -197,7 +202,7 @@ const Funcionalidades: React.FC = () => {
                       key={feature.id}
                       selectedEnv={`ativada_${selectedEnv}`}
                       feature={feature}
-                      onOpen={onOpenEdit}
+                      onOpen={() => openEditFeature(feature.id)}
                     />
                   ))
               : search.length === 0 &&
@@ -206,14 +211,16 @@ const Funcionalidades: React.FC = () => {
                     key={feature.id}
                     selectedEnv={`ativada_${selectedEnv}`}
                     feature={feature}
-                    onOpen={onOpenEdit}
+                    onOpen={() => openEditFeature(feature.id)}
                   />
                 ))}
           </Box>
         )}
       </Container>
       <CreateFeatureDrawer isOpen={isOpenCreate} onClose={onCloseCreate} />
-      <UpdateFeatureDrawer isOpen={isOpenEdit} onClose={onCloseEdit} />
+      {data && selectedFeatureId && (
+        <UpdateFeatureDrawer isOpen={isOpenEdit} onClose={onCloseEdit} feature={data?.find(feature => feature.id === selectedFeatureId)} ambiente={selectedEnv}/>
+      )}
     </>
   )
 }
