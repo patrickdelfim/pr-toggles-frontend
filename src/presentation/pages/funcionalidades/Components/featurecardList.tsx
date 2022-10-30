@@ -33,7 +33,7 @@ const FeatureCardList: React.FC<props> = ({ feature, selectedEnv, onOpen }: prop
 
   const updateFeature = (): void => {
     if (!fetching) {
-      updateFeatureMutation.mutate({ ...feature, [selectedEnv]: !feature[selectedEnv] })
+      updateFeatureMutation.mutate({ id: feature.id, [selectedEnv]: !feature[selectedEnv] })
     }
     setfetching(true)
   }
