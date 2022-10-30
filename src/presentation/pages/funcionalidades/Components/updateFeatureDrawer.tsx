@@ -24,11 +24,10 @@ import { FiTrash2 } from 'react-icons/fi'
 import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import FormField from '@/presentation/components/formField/formField'
-import { CreateFeature } from '@/domain/usecases/create-feature'
-import createFeatureValidators from '@/presentation/validators/create-feature-validators'
-import useCreateFeature from '@/presentation/hooks/useCreateFeature'
-import { useParams } from 'react-router-dom'
 import { FeatureModel } from '@/domain/models'
+import useUpdateFeature from '@/presentation/hooks/useUpdateFeature'
+import { UpdateFeature } from '@/domain/usecases/update-feature'
+import updateFeatureValidators from '@/presentation/validators/update-feature-validators'
 
 type props = {
   isOpen: boolean
@@ -39,15 +38,14 @@ type props = {
 
 const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambiente }: props) => {
   const toast = useToast()
-  const params = useParams()
   const handleCloseModal = (): void => {
     onClose()
   }
 
   const onSuccess = async (): Promise<void> => {
     toast({
-      id: 'saveProjectSuccess',
-      title: 'Funcionalidade criada com sucesso!',
+      id: 'updateFeatureSuccess',
+      title: 'Funcionalidade atualizada com sucesso!',
       status: 'success',
       isClosable: true,
     })
@@ -57,14 +55,14 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
 
   const onError = async (error: Error): Promise<void> => {
     toast({
-      id: 'saveFeatureError',
+      id: 'updateFeatureError',
       title: error.message || 'Algo inesperado aconteceu.',
       status: 'error',
       isClosable: true,
     })
   }
 
-  const createFeatureMutation = useCreateFeature(params.id, onSuccess, onError)
+  const updateFeatureMutation = useUpdateFeature(onSuccess, onError)
   const {
     handleSubmit,
     register,
@@ -72,21 +70,23 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
     getValues,
     setValue,
     reset,
-    formState: { errors },
-  } = useForm<CreateFeature.Params>()
+    formState: { errors, isDirty, dirtyFields },
+  } = useForm<UpdateFeature.params>()
   const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
-    name: 'variacoes', // unique name for your Field Array
+    name: 'estrategia.variacoes', // unique name for your Field Array
   })
 
+  const selectedStrategy = feature.estrategias.find(estrategia => estrategia.ambiente === ambiente)
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) {
+      reset()
+      return
+    }
     console.log('useEffect runned')
-    const selectedStrategy = feature.estrategias.find(estrategia => estrategia.ambiente === ambiente)
-    setValue('nome', feature.nome)
     setValue('descricao', feature.descricao)
-    setValue('valor', selectedStrategy.valor)
-    setValue('variacoes', selectedStrategy.variacoes)
+    setValue('estrategia.valor', selectedStrategy.valor)
+    setValue('estrategia.variacoes', selectedStrategy.variacoes)
     if (selectedStrategy.variacoes.length > 0) calculateMainPercent()
   }, [isOpen])
   const removeVariation = (index: number): void => {
@@ -94,36 +94,53 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
     calculateMainPercent()
   }
 
-  const validators = createFeatureValidators(getValues)
+  const validators = updateFeatureValidators(getValues)
 
   const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
-    console.log(event)
-    handleSubmit(createNewFeature)(event)
+    handleSubmit(updateFeature)(event)
   }
 
-  const createNewFeature: SubmitHandler<CreateFeature.Params> = async (
-    values: CreateFeature.Params
+  const updateFeature: SubmitHandler<UpdateFeature.params> = async (
+    values: UpdateFeature.params
   ) => {
-    const payload = {
-      projeto_id: params.id,
-      ...values,
-      variacoes: values.variacoes.map((element) => ({
-        valor: element.valor,
-        peso: parseFloat(element.peso),
-      })),
+    if (!isDirty) {
+      toast({
+        title: 'Nenhum valor alterado no formulário.',
+        status: 'info',
+        isClosable: true,
+      })
+      return
     }
-    createFeatureMutation.mutate(payload)
+    // AJUSTAR PAYLOAD
+    const payload = {
+      ...dirtyFields?.descricao && { descricao: values.descricao },
+      id: feature.id,
+      ...dirtyFields?.estrategia && {
+        estrategia: {
+          id: selectedStrategy.id,
+          ...dirtyFields?.estrategia?.valor && { valor: values.estrategia.valor },
+          ...dirtyFields?.estrategia?.variacoes && {
+            variacoes: values.estrategia.variacoes.map((element) => ({
+              valor: element.valor,
+              peso: parseFloat(element.peso),
+            }))
+          },
+        }
+      }
+    }
+    console.log('update feature values: ', payload)
+    updateFeatureMutation.mutate(payload)
   }
 
   const [mainPercent, setMainPercent] = useState(100)
   const calculateMainPercent = (): void => {
-    const variacoesArray = getValues('variacoes')
+    const estrategia = getValues('estrategia')
     const value =
-      variacoesArray.length === 0
+      estrategia.variacoes.length === 0
         ? 100
         : 100 -
-          variacoesArray.reduce(
+          estrategia.variacoes.reduce(
             (acc, current) => acc + (parseFloat(current.peso) || 0),
             0
           )
@@ -152,23 +169,23 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
             <TabPanel>
                 <Box>
                   <form
-                    id="createFeatureForm"
+                    id="updateFeatureForm"
                     autoComplete="off"
                     onSubmit={handleSubmitForm}
                   >
                     <Box py={3}>
                       <FormField
                         fieldName={`valor (opcional)${
-                          mainPercent >= 0 && getValues('variacoes')?.length > 0
+                          mainPercent >= 0 && getValues('estrategia.variacoes')?.length > 0
                             ? ` - ${mainPercent}%`
                             : ''
                         }`}
-                        fieldKey="valor"
+                        fieldKey="estrategia.valor"
                         placeholder="Ex: true"
                         type="text"
-                        error={errors.valor}
+                        error={errors?.estrategia?.valor}
                         control={control}
-                        validators={register('valor', validators.valor)}
+                        validators={register('estrategia.valor', validators.valor)}
                       />
                     </Box>
 
@@ -203,7 +220,7 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
                               error={{ message: '' }}
                               control={control}
                               validators={register(
-                                `variacoes.${index}.valor` as const,
+                                `estrategia.variacoes.${index}.valor` as const,
                                 validators.variacaoValor
                               )}
                             />
@@ -217,7 +234,7 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
                               error={{ message: '' }}
                               control={control}
                               validators={register(
-                                `variacoes.${index}.peso` as const,
+                                `estrategia.variacoes.${index}.peso` as const,
                                 {
                                   ...validators.variacaoPeso,
                                   onChange: calculateMainPercent,
@@ -240,8 +257,8 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
                           </Box>
                         </Box>
                         <Text px={4} fontSize="sm" color="red.500">
-                          {errors?.variacoes?.[index]?.valor?.message ||
-                            errors?.variacoes?.[index]?.peso?.message}{' '}
+                          {errors?.estrategia?.variacoes?.[index]?.valor?.message ||
+                            errors?.estrategia?.variacoes?.[index]?.peso?.message}{' '}
                         </Text>
                       </Box>
                     ))}
@@ -285,8 +302,8 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
               <DrawerFooter>
                 <Box>
                   <Button
-                    form="createFeatureForm"
-                    isLoading={createFeatureMutation.isLoading}
+                    form="updateFeatureForm"
+                    isLoading={updateFeatureMutation.isLoading}
                     type="submit"
                     disabled={!(mainPercent >= 0)}
                   >

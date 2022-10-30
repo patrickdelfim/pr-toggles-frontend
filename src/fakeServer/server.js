@@ -99,22 +99,42 @@ export function makeServer ({ environment = 'development' } = {}) {
       })
 
       this.patch('/features/:featureId', async (schema, request) => {
-        console.log('start update feature')
-        const featureEditableSchema = ['ativada_prod', 'ativada_homolog', 'ativada_dev']
+        // TODO: INCLUIR A EDICAO DE ESTRATEGIAS NESSE PATH
+        console.log('server: start update feature')
+        const featureEditableSchema = ['ativada_prod', 'ativada_homolog', 'ativada_dev', 'descricao']
+        const strategyEditableSchema = ['valor', 'variacoes']
         const featureId = request.params.featureId
         const body = JSON.parse(request.requestBody)
         const feature = await schema.features.findBy({ id: featureId })
-
         if (!feature) return new Response(400, {}, { message: 'funcionalidade nao existe.' })
+
+        // EDIT FEATURE SECTION
         const fieldsToUpdate = {}
         for (const field of featureEditableSchema) {
           if (Object.keys(body).includes(field)) {
             Object.assign(fieldsToUpdate, { [field]: body[field] })
           }
         }
-        if (Object.keys(fieldsToUpdate).length === 0) return new Response(400, {}, { message: 'Nenhum campo foi atualizado.' })
+        const strategyToUpdate = {}
+        if (body?.estrategia) {
+          for (const field of strategyEditableSchema) {
+            if (Object.keys(body?.estrategia).includes(field)) {
+              Object.assign(strategyToUpdate, { [field]: body.estrategia[field] })
+            }
+          }
+        }
+        if (Object.keys(fieldsToUpdate).length === 0 && Object.keys(strategyToUpdate).length === 0) return new Response(400, {}, { message: 'Nenhum campo foi atualizado.' })
 
         await feature.update(fieldsToUpdate)
+        // Edit STRATEGY SECTION
+        if (body?.estrategia?.id && Object.keys(strategyToUpdate).length !== 0) {
+          const estrategia = await schema.strategies.findBy({ id: body?.estrategia?.id })
+          if (estrategia.attrs.funcionalidade_id === feature.attrs.id) {
+            estrategia.update(strategyToUpdate)
+          }
+        }
+
+        // Return updated feature
         const updatedFeature = await schema.features.findBy({ id: featureId })
         const response = { ...updatedFeature.attrs, estrategias: extractStrategyFromFeatureObject(updatedFeature) }
         delete response.strategyIds
