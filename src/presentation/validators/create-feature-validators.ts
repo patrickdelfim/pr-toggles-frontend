@@ -28,18 +28,21 @@ const createFeatureValidators = (
     },
   },
   valor: {
+    required: 'Campo obrigatório',
     maxLength: {
       value: 10000,
       message: 'Campo atingiu numero máximo de characteres.',
     },
   },
   variacaoValor: {
+    required: 'Campo obrigatório',
     maxLength: {
       value: 10000,
       message: 'Campo atingiu numero máximo de characteres.',
     },
   },
   variacaoPeso: {
+    required: 'Campo obrigatório',
     maxLength: {
       value: 3,
       message: 'Campo atingiu numero máximo de characteres.',
@@ -79,18 +82,21 @@ export interface createFeatureValidatorsProtocol {
     }
   }
   valor: {
+    required: string
     maxLength: {
       value: number
       message: string
     }
   }
   variacaoValor: {
+    required: string
     maxLength: {
       value: number
       message: string
     }
   }
   variacaoPeso: {
+    required: string
     maxLength: {
       value: number
       message: string
