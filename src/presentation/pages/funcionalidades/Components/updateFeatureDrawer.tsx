@@ -39,12 +39,11 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
       size={'xl'}
     >
       <DrawerOverlay />
-      <DrawerContent >
+      <DrawerContent overflow="scroll">
         <Box borderBottomWidth="1px">
           <DrawerHeader>Atualizar feature: {feature.nome}</DrawerHeader>
         </Box>
         <DrawerCloseButton />
-        <DrawerBody >
         <Tabs>
           <TabList>
             <Tab>Funcionalidade</Tab>
@@ -52,15 +51,15 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
           </TabList>
           <TabPanels>
             <TabPanel>
-              <UpdateFeatureForm feature={feature} isOpen={isOpen} onClose={onClose} ambiente={ambiente} setValidSubmit={setValidSubmit} />
-            </TabPanel>
-            <TabPanel>
-              <p>Segmentos!</p>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+              <DrawerBody>
+                <UpdateFeatureForm
+                  feature={feature}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  ambiente={ambiente}
+                  setValidSubmit={setValidSubmit}
+                />
               </DrawerBody>
-
               <DrawerFooter>
                 <Box>
                   <Button
@@ -72,6 +71,13 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
                   </Button>
                 </Box>
               </DrawerFooter>
+            </TabPanel>
+
+            <TabPanel>
+              <p>Segmentos!</p>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </DrawerContent>
     </Drawer>
   )
