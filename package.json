@@ -75,6 +75,7 @@
     "express": "^4.17.3",
     "express-history-api-fallback": "^2.2.1",
     "framer-motion": "^6.0.0",
+    "jwt-decode": "^3.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.35.0",

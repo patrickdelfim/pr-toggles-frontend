@@ -4,12 +4,13 @@ import { LoadProjectById } from '@/domain/usecases/load-project-by-Id'
 import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 
 export default class LoadProjectsService implements LoadProjects, LoadProjectById {
-  async load (): Promise<LoadProjects.Model[]> {
+  async loadAllByClientId (idCliente: string): Promise<LoadProjects.Model[]> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl('/api/projects/'),
+      url: makeApiUrl(`/api/projetos/cliente/${idCliente}`),
       method: 'get',
     })
-    const projectList = httpResponse.body?.projects || []
+    const projectList = httpResponse.body || []
+    console.log(projectList)
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
         return projectList.map((project) =>
@@ -19,7 +20,8 @@ export default class LoadProjectsService implements LoadProjects, LoadProjectByI
             ),
             updated_at: new Date(project.updated_at).toLocaleDateString(
               'pt-BR'
-            )
+            ),
+            projeto_id: project.id
           })
         )
       case HttpStatusCode.forbidden:
@@ -29,12 +31,12 @@ export default class LoadProjectsService implements LoadProjects, LoadProjectByI
     }
   }
 
-  async loadById (projectId: string): Promise<LoadProjects.Model> {
+  async loadByProjectId (projectId: string): Promise<LoadProjects.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl(`/api/projects/${projectId}`),
+      url: makeApiUrl(`/api/projetos/${projectId}`),
       method: 'get',
     })
-    const project = httpResponse.body?.project
+    const project = httpResponse.body
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
         return Object.assign(project, {
@@ -43,7 +45,8 @@ export default class LoadProjectsService implements LoadProjects, LoadProjectByI
           ),
           updated_at: new Date(project.updated_at).toLocaleDateString(
             'pt-BR'
-          )
+          ),
+          projeto_id: project.id
         })
       case HttpStatusCode.forbidden:
         throw new AccessDeniedError()
@@ -52,3 +55,4 @@ export default class LoadProjectsService implements LoadProjects, LoadProjectByI
     }
   }
 }
+// Checkado com ronaldo

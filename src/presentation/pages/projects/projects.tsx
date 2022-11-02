@@ -17,11 +17,13 @@ import { FiSearch } from 'react-icons/fi'
 import ProjectCardList from './Components/projectcardList'
 import CreateProjectModal from './Components/createProjectModal'
 import SkeletonCardList from '@/presentation/components/skeletonCardList/skeletonCardList'
+import useGetUserData from '@/presentation/hooks/useGetUserData'
 
 const Projects: React.FC = () => {
   const onError = useErrorHandler()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { data, status, error } = useListProjects(onError)
+  const user = useGetUserData()
+  const { data, status, error } = useListProjects(onError, user.cliente_id)
   const [search, setSearch] = useState('')
   const onCloseModal = (): void => {
     setSearch('')
