@@ -49,7 +49,7 @@ export function makeServer ({ environment = 'development' } = {}) {
         },
         )
       })
-      this.post('/signup/', async (schema, request) => {
+      this.post('/cliente/', async (schema, request) => {
         return new Response(200, {}, {
           // deepcode ignore HardcodedNonCryptoSecret: <please specify a reason of ignoring this>
           accessToken: 'any_token',

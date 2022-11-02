@@ -21,7 +21,7 @@ const loginValidators = (
       message: 'Email invalido.',
     },
   },
-  password: {
+  senha: {
     required: 'Campo obrigatório',
   },
 })
@@ -43,7 +43,7 @@ export interface loginValidatorsProtocol {
       message: string
     }
   }
-  password: {
+  senha: {
     required: string
   }
 }

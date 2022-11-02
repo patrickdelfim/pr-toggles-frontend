@@ -8,7 +8,7 @@ const path = /auth/
 
 const populateFields = (): void => {
   cy.getByTestId('email').type(faker.internet.email())
-  cy.getByTestId('password').type(faker.internet.password(9))
+  cy.getByTestId('senha').type(faker.internet.password(9))
 }
 
 const simulateValidSubmit = (): void => {
@@ -31,17 +31,17 @@ describe('login', () => {
 
   it('should load Input with correct initial state ', () => {
     FormHelper.testInputContent('email', '')
-    FormHelper.testInputContent('password', '')
+    FormHelper.testInputContent('senha', '')
     cy.getByTestId('submit').click()
     FormHelper.testInputStatus('email', 'Campo obrigatório')
-    FormHelper.testInputStatus('password', 'Campo obrigatório')
+    FormHelper.testInputStatus('senha', 'Campo obrigatório')
   })
 
   it('should present error state if is invalid', () => {
     cy.getByTestId('email').type(faker.random.word())
     cy.getByTestId('submit').click()
     FormHelper.testInputStatus('email', 'Email invalido.')
-    FormHelper.testInputStatus('password', 'Campo obrigatório')
+    FormHelper.testInputStatus('senha', 'Campo obrigatório')
   })
 
   it('should present valid state if is valid', () => {
@@ -49,7 +49,7 @@ describe('login', () => {
     populateFields()
     cy.getByTestId('submit').click()
     FormHelper.testInputStatus('email')
-    FormHelper.testInputStatus('password')
+    FormHelper.testInputStatus('senha')
   })
   it('should present InvalidCredentialsError on 401', () => {
     server.post(path, () => {
@@ -77,7 +77,7 @@ describe('login', () => {
 
   it('should navigate to signup page when clicking signup btn', () => {
     cy.getByTestId('signupBtn').click()
-    Helper.testUrl('/signup')
+    Helper.testUrl('/cliente')
   })
   it('should navigate to Panel page when account already defined', () => {
     Helper.SetLocalStorageItem('account', { accessToken: 'any_token', name: 'myCompany' })

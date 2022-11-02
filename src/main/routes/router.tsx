@@ -56,7 +56,7 @@ const Router: React.FC = () => {
                 element={<Login authentication={new AuthService()} />}
               />
               <Route
-                path="/signup"
+                path="/cliente"
                 element={<SignUp addAccount={new AddAccountService()} />}
               />
             </Routes>

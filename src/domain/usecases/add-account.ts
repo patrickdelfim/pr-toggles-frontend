@@ -1,11 +1,11 @@
 import { AccountModel } from '@/domain/models'
 
 export type addAccountParams = {
-  nomeEmpresa: string
+  nome_cliente: string
+  nome_usuario: string
   email: string
-  password: string
-  passwordConfirmation: string
-  phone: string
+  senha: string
+  confirmacao_senha: string
 }
 
 export interface AddAccount {

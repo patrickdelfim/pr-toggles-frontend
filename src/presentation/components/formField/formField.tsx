@@ -6,7 +6,6 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { Controller } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 
 type props = {
   validators: object
@@ -18,7 +17,6 @@ type props = {
   control: any
   placeholder: string
   type: string
-  mask?: string
 }
 
 const FormField: React.FC<props> = ({
@@ -29,7 +27,6 @@ const FormField: React.FC<props> = ({
   control,
   placeholder,
   type,
-  mask,
 }: props) => {
   return (
     <FormControl
@@ -58,8 +55,6 @@ const FormField: React.FC<props> = ({
             title={error?.message}
             type={type}
             placeholder={placeholder}
-            as={!!mask && InputMask}
-            mask={mask}
           />
         )}
       />

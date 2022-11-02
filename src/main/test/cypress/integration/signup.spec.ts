@@ -5,33 +5,33 @@ import * as Helper from '../utils/helpers'
 import { makeServer } from '../../../../fakeServer/server.js'
 import { Response } from 'miragejs'
 
-const path = /signup/
+const path = /cliente/
 
 const populateFields = (): void => {
-  cy.getByTestId('nomeEmpresa').type(faker.name.findName())
+  cy.getByTestId('nome_cliente').type(faker.name.findName())
   cy.getByTestId('email').type(faker.internet.email())
-  const password = faker.internet.password(9)
-  cy.getByTestId('password').type(password)
-  cy.getByTestId('passwordConfirmation').type(password)
-  cy.getByTestId('phone').type(faker.random.numeric(11))
+  const senha = faker.internet.password(9)
+  cy.getByTestId('senha').type(senha)
+  cy.getByTestId('confirmacao_senha').type(senha)
+  cy.getByTestId('nome_usuario').type(faker.name.findName())
 }
 
 const simulateValidSubmit = (): void => {
-  cy.getByTestId('nomeEmpresa').type(faker.name.findName())
+  cy.getByTestId('nome_cliente').type(faker.name.findName())
   cy.getByTestId('email').type(faker.internet.email())
-  const password = faker.internet.password(9)
-  cy.getByTestId('password').type(password)
-  cy.getByTestId('passwordConfirmation').type(password)
-  cy.getByTestId('phone').type(faker.random.numeric(11))
+  const senha = faker.internet.password(9)
+  cy.getByTestId('senha').type(senha)
+  cy.getByTestId('confirmacao_senha').type(senha)
+  cy.getByTestId('nome_usuario').type(faker.name.findName())
   cy.getByTestId('submit').click()
 }
-describe('SignUp', () => {
+describe('Cliente', () => {
   let server
 
   beforeEach(() => {
     server = makeServer({ environment: 'test' })
     if (Cypress.currentTest.title === 'should navigate to Panel page when account already defined') return
-    cy.visit('signup')
+    cy.visit('cliente')
   })
 
   afterEach(() => {
@@ -39,42 +39,42 @@ describe('SignUp', () => {
   })
 
   it('should load Input with correct initial state ', () => {
-    FormHelper.testInputContent('nomeEmpresa', '')
+    FormHelper.testInputContent('nome_cliente', '')
     FormHelper.testInputContent('email', '')
-    FormHelper.testInputContent('password', '')
-    FormHelper.testInputContent('passwordConfirmation', '')
-    FormHelper.testInputContent('phone', '')
+    FormHelper.testInputContent('senha', '')
+    FormHelper.testInputContent('confirmacao_senha', '')
+    FormHelper.testInputContent('nome_usuario', '')
     cy.getByTestId('submit').click()
-    FormHelper.testInputStatus('nomeEmpresa', 'Campo obrigatório')
+    FormHelper.testInputStatus('nome_usuario', 'Campo obrigatório')
     FormHelper.testInputStatus('email', 'Campo obrigatório')
-    FormHelper.testInputStatus('password', 'Campo obrigatório')
-    FormHelper.testInputStatus('passwordConfirmation', 'Campo obrigatório')
-    FormHelper.testInputStatus('phone', 'Campo obrigatório')
+    FormHelper.testInputStatus('senha', 'Campo obrigatório')
+    FormHelper.testInputStatus('confirmacao_senha', 'Campo obrigatório')
+    FormHelper.testInputStatus('nome_usuario', 'Campo obrigatório')
   })
 
   it('should present error state if is invalid', () => {
-    cy.getByTestId('nomeEmpresa').type(faker.random.alphaNumeric(3))
+    cy.getByTestId('nome_cliente').type(faker.random.alphaNumeric(3))
+    cy.getByTestId('nome_usuario').type(faker.random.numeric(3))
     cy.getByTestId('email').type(faker.random.word())
-    cy.getByTestId('password').type(faker.random.alphaNumeric(3))
-    cy.getByTestId('passwordConfirmation').type(faker.random.alphaNumeric(4))
-    cy.getByTestId('phone').type(faker.random.numeric(4))
+    cy.getByTestId('senha').type(faker.random.alphaNumeric(3))
+    cy.getByTestId('confirmacao_senha').type(faker.random.alphaNumeric(4))
     cy.getByTestId('submit').click()
-    FormHelper.testInputStatus('nomeEmpresa', 'Campo deve ter mínimo de 4 caracteres.')
+    FormHelper.testInputStatus('nome_cliente', 'Campo deve ter mínimo de 4 caracteres.')
     FormHelper.testInputStatus('email', 'Email invalido.')
-    FormHelper.testInputStatus('password', 'Campo deve ter mínimo de 8 caracteres.')
-    FormHelper.testInputStatus('passwordConfirmation', 'Campo deve ter mínimo de 8 caracteres.')
-    FormHelper.testInputStatus('phone', 'Telefone invalido.')
+    FormHelper.testInputStatus('senha', 'Campo deve ter mínimo de 8 caracteres.')
+    FormHelper.testInputStatus('confirmacao_senha', 'Campo deve ter mínimo de 8 caracteres.')
+    FormHelper.testInputStatus('nome_usuario', 'Campo deve ter mínimo de 4 caracteres.')
   })
 
   it('should present valid state if is valid', () => {
     server.timing = 2000
     populateFields()
     cy.getByTestId('submit').click()
-    FormHelper.testInputStatus('nomeEmpresa')
+    FormHelper.testInputStatus('nome_cliente')
     FormHelper.testInputStatus('email')
-    FormHelper.testInputStatus('password')
-    FormHelper.testInputStatus('passwordConfirmation')
-    FormHelper.testInputStatus('phone')
+    FormHelper.testInputStatus('senha')
+    FormHelper.testInputStatus('confirmacao_senha')
+    FormHelper.testInputStatus('nome_usuario')
   })
   it('should present EmailInUseError on 403', () => {
     server.post(path, () => {
@@ -82,7 +82,7 @@ describe('SignUp', () => {
     })
     simulateValidSubmit()
     cy.get('#signupFormError').should('contain.text', 'Esse e-mail já esta em uso')
-    Helper.testUrl('/signup')
+    Helper.testUrl('/cliente')
   })
 
   it('should present UnexpectedError on default error cases', () => {
@@ -91,7 +91,7 @@ describe('SignUp', () => {
     })
     simulateValidSubmit()
     cy.get('#signupFormError').should('contain.text', 'Algo de errado aconteceu. tente novamente em breve.')
-    Helper.testUrl('/signup')
+    Helper.testUrl('/cliente')
   })
 
   it('should save accesstoken if valid cretendials are provided', () => {
@@ -106,7 +106,7 @@ describe('SignUp', () => {
   })
   it('should navigate to Panel page when account already defined', () => {
     Helper.SetLocalStorageItem('account', { accessToken: 'any_token', name: 'myCompany' })
-    cy.visit('signup')
+    cy.visit('cliente')
     Helper.testUrl('/panel')
   })
 })

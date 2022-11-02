@@ -5,7 +5,7 @@ import { UseFormGetValues } from 'react-hook-form'
 const signupValidators = (
   getValues: UseFormGetValues<AddAccount.Params>
 ): signupValidatorsProtocol => ({
-  nomeEmpresa: {
+  nome_cliente: {
     required: 'Campo obrigatório',
     minLength: {
       value: 4,
@@ -32,7 +32,7 @@ const signupValidators = (
       message: 'Email invalido.',
     },
   },
-  password: {
+  senha: {
     required: 'Campo obrigatório',
     minLength: {
       value: 8,
@@ -43,7 +43,7 @@ const signupValidators = (
       message: 'Campo deve ter no máximo 12 caracteres.',
     },
   },
-  passwordConfirmation: {
+  confirmacao_senha: {
     required: 'Campo obrigatório',
     minLength: {
       value: 8,
@@ -54,21 +54,24 @@ const signupValidators = (
       message: 'Campo deve ter no máximo 12 caracteres.',
     },
     validate: (value: string) =>
-      value === getValues('password') || 'password not match!',
+      value === getValues('senha') || 'senha not match!',
   },
-  phone: {
+  nome_usuario: {
     required: 'Campo obrigatório',
-    pattern: {
-      value:
-        /([\(])([0-9]{2})([\)])(\s)([0-9]{5})([\-])?([0-9]{4})/g,
-      message: 'Telefone invalido.',
+    minLength: {
+      value: 4,
+      message: 'Campo deve ter mínimo de 4 caracteres.',
+    },
+    maxLength: {
+      value: 100,
+      message: 'Campo deve ter no máximo 100 caracteres.',
     },
   },
 })
 export default signupValidators
 
 export interface signupValidatorsProtocol {
-  nomeEmpresa: {
+  nome_cliente: {
     required: string
     minLength: {
       value: number
@@ -94,7 +97,7 @@ export interface signupValidatorsProtocol {
       message: string
     }
   }
-  password: {
+  senha: {
     required: string
     minLength: {
       value: number
@@ -105,7 +108,7 @@ export interface signupValidatorsProtocol {
       message: string
     }
   }
-  passwordConfirmation: {
+  confirmacao_senha: {
     required: string
     minLength: {
       value: number
@@ -117,10 +120,14 @@ export interface signupValidatorsProtocol {
     }
     validate: (value: string) => boolean | string
   }
-  phone: {
+  nome_usuario: {
     required: string
-    pattern: {
-      value: RegExp
+    minLength: {
+      value: number
+      message: string
+    }
+    maxLength: {
+      value: number
       message: string
     }
   }

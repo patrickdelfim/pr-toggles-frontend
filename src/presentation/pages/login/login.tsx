@@ -29,7 +29,7 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
   } = useForm<Authentication.Params>({
     defaultValues: {
       email: '',
-      password: '',
+      senha: '',
     },
   })
 
@@ -94,13 +94,13 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
           </Box>
           <Box my={3}>
             <FormField
-              fieldName="password"
-              fieldKey="password"
-              placeholder="password"
-              type="password"
-              error={errors.password}
+              fieldName="senha"
+              fieldKey="senha"
+              placeholder="senha"
+              type="senha"
+              error={errors.senha}
               control={control}
-              validators={register('password', validators.password)}
+              validators={register('senha', validators.senha)}
             />
           </Box>
           <Box mt={5}>
@@ -117,7 +117,7 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
           <Divider borderColor="gray.400" />
         </Box>
         <Box mt={3} display="flex" alignItems="center" flexDirection="column">
-          <Link data-testid="signupBtn" as={RouterDomLink} to="/signup">
+          <Link data-testid="signupBtn" as={RouterDomLink} to="/cliente">
             Cadastro
           </Link>
         </Box>
