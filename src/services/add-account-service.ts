@@ -16,3 +16,5 @@ export default class AddAccountService implements AddAccount {
     }
   }
 }
+
+// Checkado com ronaldo

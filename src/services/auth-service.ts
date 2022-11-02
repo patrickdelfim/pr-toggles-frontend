@@ -16,3 +16,4 @@ export default class AuthService implements Authentication {
     }
   }
 }
+// Checkado com ronaldo
