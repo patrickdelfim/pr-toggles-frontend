@@ -17,6 +17,7 @@ import {
 import React, { useState } from 'react'
 import { FeatureModel } from '@/domain/models'
 import UpdateFeatureForm from './updateFeatureForm'
+import ManageSegments from './manageSegments'
 
 type props = {
   isOpen: boolean
@@ -74,7 +75,7 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
             </TabPanel>
 
             <TabPanel>
-              <p>Segmentos!</p>
+              <ManageSegments />
             </TabPanel>
           </TabPanels>
         </Tabs>
