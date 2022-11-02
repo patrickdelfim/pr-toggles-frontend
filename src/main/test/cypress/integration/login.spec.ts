@@ -4,11 +4,11 @@ import * as Helper from '../utils/helpers'
 import { makeServer } from '../../../../fakeServer/server.js'
 import { Response } from 'miragejs'
 
-const path = /auth/
+const path = /auth\/login/
 
 const populateFields = (): void => {
-  cy.getByTestId('email').type(faker.internet.email())
-  cy.getByTestId('senha').type(faker.internet.password(9))
+  cy.getByTestId('username').type(faker.internet.email())
+  cy.getByTestId('password').type(faker.internet.password(9))
 }
 
 const simulateValidSubmit = (): void => {
@@ -30,26 +30,26 @@ describe('login', () => {
   })
 
   it('should load Input with correct initial state ', () => {
-    FormHelper.testInputContent('email', '')
-    FormHelper.testInputContent('senha', '')
+    FormHelper.testInputContent('username', '')
+    FormHelper.testInputContent('password', '')
     cy.getByTestId('submit').click()
-    FormHelper.testInputStatus('email', 'Campo obrigatório')
-    FormHelper.testInputStatus('senha', 'Campo obrigatório')
+    FormHelper.testInputStatus('username', 'Campo obrigatório')
+    FormHelper.testInputStatus('password', 'Campo obrigatório')
   })
 
   it('should present error state if is invalid', () => {
-    cy.getByTestId('email').type(faker.random.word())
+    cy.getByTestId('username').type(faker.random.word())
     cy.getByTestId('submit').click()
-    FormHelper.testInputStatus('email', 'Email invalido.')
-    FormHelper.testInputStatus('senha', 'Campo obrigatório')
+    FormHelper.testInputStatus('username', 'Email invalido.')
+    FormHelper.testInputStatus('password', 'Campo obrigatório')
   })
 
   it('should present valid state if is valid', () => {
     server.timing = 2000
     populateFields()
     cy.getByTestId('submit').click()
-    FormHelper.testInputStatus('email')
-    FormHelper.testInputStatus('senha')
+    FormHelper.testInputStatus('username')
+    FormHelper.testInputStatus('password')
   })
   it('should present InvalidCredentialsError on 401', () => {
     server.post(path, () => {

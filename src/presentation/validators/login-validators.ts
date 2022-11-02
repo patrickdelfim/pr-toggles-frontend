@@ -5,7 +5,7 @@ import { UseFormGetValues } from 'react-hook-form'
 const loginValidators = (
   getValues: UseFormGetValues<Authentication.Params>
 ): loginValidatorsProtocol => ({
-  email: {
+  username: {
     required: 'Campo obrigatório',
     minLength: {
       value: 4,
@@ -21,14 +21,14 @@ const loginValidators = (
       message: 'Email invalido.',
     },
   },
-  senha: {
+  password: {
     required: 'Campo obrigatório',
   },
 })
 export default loginValidators
 
 export interface loginValidatorsProtocol {
-  email: {
+  username: {
     required: string
     minLength: {
       value: number
@@ -43,7 +43,7 @@ export interface loginValidatorsProtocol {
       message: string
     }
   }
-  senha: {
+  password: {
     required: string
   }
 }

@@ -5,7 +5,6 @@ import React, { useContext, useEffect } from 'react'
 import loginValidators from '@/presentation/validators/login-validators'
 import AccessLayoutHeader from '@/presentation/components/accessLayoutHeader/accessLayoutHeader'
 import FormField from '@/presentation/components/formField/formField'
-import { AddAccount } from '@/domain/usecases'
 import {
   ApiContext,
   getCurrentAccount,
@@ -28,8 +27,8 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
     formState: { errors, isSubmitting },
   } = useForm<Authentication.Params>({
     defaultValues: {
-      email: '',
-      senha: '',
+      username: '',
+      password: '',
     },
   })
 
@@ -49,8 +48,8 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
     handleSubmit(makeNewUser)(event)
   }
 
-  const makeNewUser: SubmitHandler<AddAccount.Params> = async (
-    values: AddAccount.Params
+  const makeNewUser: SubmitHandler<Authentication.Params> = async (
+    values: Authentication.Params
   ) => {
     try {
       console.log(values)
@@ -84,23 +83,23 @@ const Login: React.FC<Props> = ({ authentication }: Props) => {
           <Box my={3}>
             <FormField
               fieldName="Endereço de Email"
-              fieldKey="email"
+              fieldKey="username"
               placeholder="you@company.com"
               type="text"
-              error={errors.email}
+              error={errors.username}
               control={control}
-              validators={register('email', validators.email)}
+              validators={register('username', validators.username)}
             />
           </Box>
           <Box my={3}>
             <FormField
-              fieldName="senha"
-              fieldKey="senha"
+              fieldName="password"
+              fieldKey="password"
               placeholder="senha"
-              type="senha"
-              error={errors.senha}
+              type="password"
+              error={errors.password}
               control={control}
-              validators={register('senha', validators.senha)}
+              validators={register('password', validators.password)}
             />
           </Box>
           <Box mt={5}>

@@ -5,7 +5,7 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class AuthService implements Authentication {
   async auth (params: Authentication.Params): Promise<AddAccount.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl('/api/auth'),
+      url: makeApiUrl('/api/auth/login'),
       method: 'post',
       body: params,
     })

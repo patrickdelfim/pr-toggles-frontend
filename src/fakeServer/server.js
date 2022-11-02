@@ -41,7 +41,7 @@ export function makeServer ({ environment = 'development' } = {}) {
       /* ==========================
                 LOGIN AND AUTH
          ========================== */
-      this.post('/auth/', async (schema, request) => {
+      this.post('/auth/login', async (schema, request) => {
         return new Response(200, {}, {
           // deepcode ignore HardcodedNonCryptoSecret: <please specify a reason of ignoring this>
           accessToken: 'any_token',
