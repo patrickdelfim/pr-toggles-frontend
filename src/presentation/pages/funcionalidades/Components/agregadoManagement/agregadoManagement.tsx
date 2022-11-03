@@ -6,7 +6,10 @@ import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import NestedSegmentRulesArray from './nestedSegmentRuleArray'
 import createSegmentRulesValidation from '@/presentation/validators/create-segment-rules-validators'
 
-const AgregadoManagement: React.FC = () => {
+type props = {
+  cancelAddAgregadoAction: () => void
+}
+const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props) => {
   const {
     handleSubmit,
     register,
@@ -110,6 +113,7 @@ const AgregadoManagement: React.FC = () => {
                 <Box display='flex' flex-direction='row' alignItems="end" justifyContent="end">
                 <Button
                     variant="ghost"
+                    onClick={cancelAddAgregadoAction}
                   >
                     Cancel
                   </Button>

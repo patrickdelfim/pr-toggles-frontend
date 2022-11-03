@@ -33,7 +33,6 @@ const ChoiceSelect: React.FC<props> = ({
   placeholder,
   options
 }: props) => {
-  console.log('error: ', error)
   return (
     <FormControl
       data-testid={`${fieldKey}-wrap`}

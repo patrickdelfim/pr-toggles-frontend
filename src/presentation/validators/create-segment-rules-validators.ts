@@ -1,9 +1,9 @@
-import { CreateFeature } from '@/domain/usecases/create-feature'
+import { CreateAgregado } from '@/domain/usecases/create-agregado'
 import { UseFormGetValues } from 'react-hook-form'
 
 /* eslint-disable no-useless-escape */
 const createSegmentRulesValidation = (
-  getValues: UseFormGetValues<CreateFeature.Params>
+  getValues: UseFormGetValues<CreateAgregado.params>
 ): createSegmentRulesValidatorsProtocol => ({
   nome: {
     required: 'Campo obrigatório',

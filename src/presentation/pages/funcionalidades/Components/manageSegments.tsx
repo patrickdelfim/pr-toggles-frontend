@@ -1,25 +1,28 @@
 import React, { useState } from 'react'
-import { Box, Button, Select, useBoolean } from '@chakra-ui/react'
+import { Box, Button, Select, Text, useBoolean } from '@chakra-ui/react'
 import AgregadoManagement from './agregadoManagement/agregadoManagement'
 
 const segmentList = ['grupo_zap', 'pessoas_idosas', 'grupo_testes_A', 'grupo_testes_B']
 
 const ManageSegments: React.FC = () => {
   const [flag, setFlag] = useBoolean()
-  const [selectedSegment, setSegment] = useState(null)
+  const [selectedSegment, setSegment] = useState('')
   const handleSegmentSelected = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setSegment(e.target.value)
   }
   if (flag) {
     return (
       <Box>
-        <AgregadoManagement />
+        <AgregadoManagement cancelAddAgregadoAction={setFlag.off}/>
       </Box>
     )
   } else {
     return (
-      <Box onClick={() => console.log(selectedSegment)}>Manage segment value
-        <Select placeholder='Selecione o Segmento' onChange={handleSegmentSelected}>
+      <Box>
+        <Text pt={4} fontWeight="bold">
+          Gerencie valores de segmentos:
+          </Text>
+        <Select placeholder='Selecione o Segmento' value={selectedSegment} onChange={handleSegmentSelected}>
         {segmentList.map((segmento, idx) => (
           <option key={idx} value={segmento}>{segmento}</option>
         ))}
