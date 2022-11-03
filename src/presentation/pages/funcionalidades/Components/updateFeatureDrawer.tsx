@@ -40,7 +40,7 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
       size={'xl'}
     >
       <DrawerOverlay />
-      <DrawerContent overflow="scroll">
+      <DrawerContent overflowY="scroll">
         <Box borderBottomWidth="1px">
           <DrawerHeader>Atualizar feature: {feature.nome}</DrawerHeader>
         </Box>

@@ -139,7 +139,7 @@ const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
               <Box py={3}>
 
               <FormField
-                fieldName={`valor (opcional)${mainPercent >= 0 && getValues('variacoes').length > 0 ? ` - ${mainPercent}%` : ''}`}
+                fieldName={`valor${mainPercent >= 0 && getValues('variacoes').length > 0 ? ` - ${mainPercent}%` : ''}`}
                 fieldKey="valor"
                 placeholder="Ex: true"
                 type="text"

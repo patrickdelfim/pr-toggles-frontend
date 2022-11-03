@@ -6,7 +6,6 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { Controller } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 
 type props = {
   validators: object
@@ -18,7 +17,7 @@ type props = {
   control: any
   placeholder: string
   type: string
-  mask?: string
+  hideLabel?: boolean
 }
 
 const FormField: React.FC<props> = ({
@@ -29,23 +28,26 @@ const FormField: React.FC<props> = ({
   control,
   placeholder,
   type,
-  mask,
+  hideLabel,
 }: props) => {
   return (
     <FormControl
       data-testid={`${fieldKey}-wrap`}
       data-status={error ? 'invalid' : 'valid'}
-      isInvalid={!!error}
+      isInvalid={!!error?.message}
     >
-      <FormLabel
+      {!hideLabel && (
+
+        <FormLabel
         data-testid={`${fieldKey}-label`}
         title={error?.message}
         htmlFor={fieldKey}
         color="primary.700"
         fontWeight="600"
-      >
+        >
         {fieldName}
       </FormLabel>
+      )}
       <Controller
         name={fieldKey}
         control={control}
@@ -58,8 +60,6 @@ const FormField: React.FC<props> = ({
             title={error?.message}
             type={type}
             placeholder={placeholder}
-            as={!!mask && InputMask}
-            mask={mask}
           />
         )}
       />

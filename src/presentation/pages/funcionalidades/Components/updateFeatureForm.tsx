@@ -148,7 +148,7 @@ const UpdateFeatureForm: React.FC<props> = ({ feature, isOpen, onClose, ambiente
     >
       <Box py={3}>
         <FormField
-          fieldName={`valor (opcional)${
+          fieldName={`valor${
             mainPercent >= 0 && getValues('estrategia.variacoes')?.length > 0
               ? ` - ${mainPercent}%`
               : ''
