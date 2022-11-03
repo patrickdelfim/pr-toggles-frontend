@@ -5,11 +5,13 @@ import FormField from '@/presentation/components/formField/formField'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import NestedSegmentRulesArray from './nestedSegmentRuleArray'
 import createSegmentRulesValidation from '@/presentation/validators/create-segment-rules-validators'
+import { useParams } from 'react-router-dom'
 
 type props = {
   cancelAddAgregadoAction: () => void
 }
 const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props) => {
+  const params = useParams()
   const {
     handleSubmit,
     register,
@@ -19,7 +21,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
     formState: { errors },
   } = useForm<CreateAgregado.params>({
     defaultValues: {
-      projeto_id: '2',
+      projeto_id: params.id,
       nome: '',
       descricao: '',
       regras: [[]],
