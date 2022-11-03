@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
 import { Box, Button, Select, useBoolean } from '@chakra-ui/react'
-import FormField from '@/presentation/components/formField/formField'
-import { useFieldArray, useForm } from 'react-hook-form'
-import { CreateAgregado } from '@/domain/usecases/create-agregado'
 import AgregadoManagement from './agregadoManagement/agregadoManagement'
 
 const segmentList = ['grupo_zap', 'pessoas_idosas', 'grupo_testes_A', 'grupo_testes_B']

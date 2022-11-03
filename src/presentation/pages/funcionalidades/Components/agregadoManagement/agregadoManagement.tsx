@@ -1,9 +1,10 @@
-import { Box, IconButton } from '@chakra-ui/react'
+import { Box, Button, Divider, DrawerFooter, Text } from '@chakra-ui/react'
 import React from 'react'
 import { CreateAgregado } from '@/domain/usecases/create-agregado'
 import FormField from '@/presentation/components/formField/formField'
-import { FiTrash2 } from 'react-icons/fi'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
+import NestedSegmentRulesArray from './nestedSegmentRuleArray'
+import createSegmentRulesValidation from '@/presentation/validators/create-segment-rules-validators'
 
 const AgregadoManagement: React.FC = () => {
   const {
@@ -12,143 +13,116 @@ const AgregadoManagement: React.FC = () => {
     control,
     getValues,
     setValue,
-    reset,
-    formState: { errors, isDirty, dirtyFields },
+    formState: { errors },
   } = useForm<CreateAgregado.params>({
     defaultValues: {
       projeto_id: '2',
       nome: '',
       descricao: '',
-      regras: [
-        [
-          {
-            key: 'brasil',
-            operator: '>',
-            value: 'lula',
-          },
-          {
-            key: 'USA',
-            operator: '>',
-            value: 'trump',
-          },
-        ],
-        [
-          {
-            key: 'fruta',
-            operator: '=',
-            value: 'mamao',
-          },
-          {
-            key: 'fruta',
-            operator: '=',
-            value: 'melao',
-          },
-        ],
-      ],
+      regras: [[]],
     },
   })
+
+  const validators = createSegmentRulesValidation(getValues)
 
   const { fields: andArrayFields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: 'regras', // unique name for your Field Array
   })
 
+  const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault()
+    console.log(event)
+    handleSubmit(createNewFeature)(event)
+  }
+
+  const createNewFeature: SubmitHandler<any> = async (
+    values: any
+  ) => {
+    console.log('SubmitedSegmentValues: ', values)
+  }
+
   return (
     <Box >
       <form
       id="createSegmentForFeature"
       autoComplete="off"
-      onSubmit={() => console.log('create')}
+      onSubmit={handleSubmitForm}
     >
-      {andArrayFields.map((field, index) => (
-        <NestedFieldArray key={index} nestIndex={index} {...{ control, register }}/>
-      ))}
-    </form>
+      <Box width="30%" px={4}>
 
+      <FormField
+                fieldName="nome do segmento"
+                fieldKey={'nome'}
+                placeholder="clientes_tipo_A"
+                type="text"
+                error={errors.nome}
+                control={control}
+                validators={register(
+                  'nome',
+                  {
+                    ...validators.nome,
+                    onChange: () => setValue('nome', getValues('nome').replace(' ', '_'))
+                  }
+                )}
+                  />
+                  </Box>
+          <Text pt={4} fontWeight="bold">Condições de segmentação:</Text>
+      {andArrayFields.map((field, index) => (
+        <Box key={field.id}>
+        <Box boxShadow='xl' bgColor="#F5F5F5" my={2}>
+          <NestedSegmentRulesArray removeParent={remove} validators={validators} errors={errors} nestIndex={index} {...{ control, register }}/>
+        </Box>
+          {index < andArrayFields.length - 1 && (<Box display='flex' flex-direction='row' alignItems='center' justifyContent='center' >
+            <Divider orientation='horizontal' variant="dashed" borderColor={'gray.500'}/>
+            <Text px={2} color="gray.500">And</Text>
+            <Divider orientation='horizontal' variant="dashed" borderColor={'gray.500'}/>
+          </Box>)}
+        </Box>
+      ))}
+      <Box py={2} display="flex" alignItems="center" justifyContent="center">
+
+      <Button variant="outline" onClick={() => append([{
+        key: '',
+        operator: '',
+        value: '',
+      }])}>And Gate</Button>
+      </Box>
+      <Box width="70%" px={4}>
+
+            <FormField
+                fieldName="Descricao do segmento (opcional)"
+                fieldKey={'descricao'}
+                placeholder="Ex: pessoas do estado Rio de janeiro"
+                type="text"
+                error={errors.descricao}
+                control={control}
+                validators={register(
+                  'descricao',
+                  {
+                    ...validators.descricao,
+                  }
+                )}
+                    />
+                    </Box>
+    </form>
+    <DrawerFooter>
+                <Box display='flex' flex-direction='row' alignItems="end" justifyContent="end">
+                <Button
+                    variant="ghost"
+                  >
+                    Cancel
+                  </Button>
+                  <Button mx={4}
+                    form="createSegmentForFeature"
+                    type="submit"
+
+                  >
+                    Save
+                  </Button>
+                </Box>
+              </DrawerFooter>
     </Box>
   )
 }
-
-type nestedFieldArray = {
-  nestIndex: number
-  control: any
-  register: any
-}
-const NestedFieldArray: React.FC<nestedFieldArray> = ({ nestIndex, control, register }: nestedFieldArray) => {
-  const { fields, append, remove } = useFieldArray({
-    control, // control props comes from useForm (optional: if you are using FormContext)
-    name: `regras[${nestIndex}]`, // unique name for your Field Array
-  })
-
-  return (
-      <Box>
-        {fields.map((field, index) => (
-        <Box key={index} display="flex" alignItems="end" py={3}>
-            <Box flex="1" px={4}>
-              <FormField
-                fieldName="chave"
-                fieldKey={field.id}
-                placeholder="Ex: Chave"
-                type="text"
-                error={{ message: '' }}
-                control={control}
-                validators={register(
-                  `regras.${nestIndex}.${index}.key` as const,
-                  // validators.variacaoValor
-                )}
-              />
-            </Box>
-            <Box px={4}>
-              <FormField
-                fieldName="peso"
-                fieldKey={field.id}
-                placeholder="Ex: valor peso"
-                type="number"
-                error={{ message: '' }}
-                control={control}
-                validators={register(
-                  `regras.${nestIndex}.${index}.operator` as const,
-                  // {
-                  //   ...validators.variacaoPeso,
-                  //   onChange: calculateMainPercent,
-                  // }
-                )}
-              />
-            </Box>
-            <Box px={4}>
-              <FormField
-                fieldName="peso"
-                fieldKey={field.id}
-                placeholder="Ex: valor peso"
-                type="number"
-                error={{ message: '' }}
-                control={control}
-                validators={register(
-                  `regras.${nestIndex}.${index}.value` as const,
-                  // {
-                  //   ...validators.variacaoPeso,
-                  //   onChange: calculateMainPercent,
-                  // }
-                )}
-              />
-            </Box>
-            <Box alignSelf="end">
-              <IconButton
-                color="red"
-                width="30px"
-                size="lg"
-                variant="ghost"
-                aria-label="delete variant"
-                icon={<FiTrash2 size="22px" />}
-                onClick={() => {
-                  console.log('cliqued iconButton')
-                  // removeVariation(index)
-                }}
-              />
-            </Box>
-          </Box>
-        ))}
-      </Box>)
-}
-
 export default AgregadoManagement
