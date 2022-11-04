@@ -1,4 +1,4 @@
-import { Box, Button, Divider, DrawerFooter, Text } from '@chakra-ui/react'
+import { Box, Button, Divider, DrawerFooter, Text, useToast } from '@chakra-ui/react'
 import React from 'react'
 import { CreateAgregado } from '@/domain/usecases/create-agregado'
 import FormField from '@/presentation/components/formField/formField'
@@ -6,12 +6,32 @@ import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import NestedSegmentRulesArray from './nestedSegmentRuleArray'
 import createSegmentRulesValidation from '@/presentation/validators/create-segment-rules-validators'
 import { useParams } from 'react-router-dom'
+import useCreateAgregado from '@/presentation/hooks/useCreateAgregado'
 
 type props = {
   cancelAddAgregadoAction: () => void
 }
 const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props) => {
   const params = useParams()
+  const toast = useToast()
+  const onSuccess = async (): Promise<void> => {
+    toast({
+      title: 'Agregado criado com sucesso!',
+      status: 'success',
+      isClosable: true,
+    })
+    cancelAddAgregadoAction()
+  }
+
+  const onError = async (error: Error): Promise<void> => {
+    toast({
+      title: error.message || 'Algo inesperado aconteceu.',
+      status: 'error',
+      isClosable: true,
+    })
+  }
+
+  const agregadoMutation = useCreateAgregado(params.id, onSuccess, onError)
   const {
     handleSubmit,
     register,
@@ -19,7 +39,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
     getValues,
     setValue,
     formState: { errors },
-  } = useForm<CreateAgregado.params>({
+  } = useForm<CreateAgregado.Params>({
     defaultValues: {
       projeto_id: params.id,
       nome: '',
@@ -45,6 +65,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
     values: any
   ) => {
     console.log('SubmitedSegmentValues: ', values)
+    agregadoMutation.mutate(values)
   }
 
   return (
@@ -122,7 +143,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
                   <Button mx={4}
                     form="createSegmentForFeature"
                     type="submit"
-
+                    isLoading={agregadoMutation.isLoading}
                   >
                     Save
                   </Button>

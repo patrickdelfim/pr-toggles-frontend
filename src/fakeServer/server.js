@@ -10,7 +10,12 @@ export function makeServer ({ environment = 'development' } = {}) {
         keyForAttribute (key) {
           return key === 'id' ? 'projeto_id' : key
         },
-      })
+      }),
+      // agregado: RestSerializer.extend({
+      //   keyForRelationship (key) {
+      //     return key === 'projectId' ? 'projeto_id' : key
+      //   },
+      // })
     },
     models: {
       project: Model,
@@ -20,6 +25,9 @@ export function makeServer ({ environment = 'development' } = {}) {
       strategy: Model.extend({
         feature: belongsTo(),
       }),
+      agregado: Model.extend({
+        project: belongsTo()
+      })
     },
     seeds (server) {
       server.create('project', { projeto_id: 1, cliente_id: 1, nome: 'back end do futuro', descricao: 'descricao linda do projeto', created_at: new Date(), updated_at: new Date() })
@@ -159,6 +167,21 @@ export function makeServer ({ environment = 'development' } = {}) {
         await feature.update({ estrategias: [estrategiaDev.id, estrategiaHml.id, estrategiaPrd.id] })
         console.log(feature)
         return new Response(200, {}, { message: 'Feature criada com sucesso' },
+        )
+      })
+
+      /* ==========================
+              Agregados
+        ========================== */
+
+      this.post('/agregado', async (schema, request) => {
+        const attrs = JSON.parse(request.requestBody)
+        console.log('attr values: ', attrs)
+        const model = { projectId: attrs.projeto_id, nome: attrs.nome, descricao: attrs.descricao, regras: attrs.regras, created_at: new Date(), updated_at: new Date() }
+        console.log('agregado model: ', model)
+        const agregado = await schema.agregados.create(model)
+        console.log('added agregado: ', agregado)
+        return new Response(200, {}, { message: 'Agregado criada com sucesso' },
         )
       })
     }

@@ -7,11 +7,11 @@ export type createAgregadoParams = {
   descricao?: string
   regras: AgregadoRegras[][]
 }
-export interface createAgregado {
-  create: (params: CreateAgregado.params) => Promise<CreateAgregado.Model>
+export interface CreateAgregado {
+  create: (params: CreateAgregado.Params) => Promise<CreateAgregado.Model>
 }
 
 export namespace CreateAgregado {
   export type Model = AgregadoModel
-  export type params = createAgregadoParams
+  export type Params = createAgregadoParams
 }
