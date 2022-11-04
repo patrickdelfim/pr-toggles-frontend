@@ -41,6 +41,10 @@ export function makeServer ({ environment = 'development' } = {}) {
       server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'dev', valor: 55, variacoes: [] })
       server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'homolog', valor: 32, variacoes: [] })
       server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'prod', valor: 100, variacoes: [{ valor: 120, peso: 60 }, { valor: 130, peso: 20 }] })
+      server.create('agregado', { projectId: 3, nome: 'grupo_A', descricao: 'grupo do tipo 1 de agregados', regras: [], created_at: new Date(), updated_at: new Date() })
+      server.create('agregado', { projectId: 3, nome: 'moradores_RJ', descricao: 'grupo dos moradores do rj de agregados', regras: [], created_at: new Date(), updated_at: new Date() })
+      server.create('agregado', { projectId: 3, nome: 'clientes_em_potencial', descricao: '', regras: [], created_at: new Date(), updated_at: new Date() })
+      server.create('agregado', { projectId: 3, nome: 'adm_sis', descricao: 'grupo Adms', regras: [], created_at: new Date(), updated_at: new Date() })
     },
     routes () {
       this.namespace = 'api'
@@ -183,6 +187,13 @@ export function makeServer ({ environment = 'development' } = {}) {
         console.log('added agregado: ', agregado)
         return new Response(200, {}, { message: 'Agregado criada com sucesso' },
         )
+      })
+
+      this.get('/projects/:id/agregados', async (schema, request) => {
+        const id = request.params.id
+        const agregados = await schema.agregados.where({ projectId: id })
+        if (agregados.length === 0) return new Response(400, {}, { message: 'Error ao buscar agregados.' })
+        return agregados
       })
     }
 

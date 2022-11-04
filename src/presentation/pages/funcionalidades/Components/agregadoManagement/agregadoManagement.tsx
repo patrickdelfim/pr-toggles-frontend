@@ -137,6 +137,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
                 <Button
                     variant="ghost"
                     onClick={cancelAddAgregadoAction}
+                    disabled={agregadoMutation.isLoading}
                   >
                     Cancel
                   </Button>

@@ -1,5 +1,5 @@
 import { CreateAgregado } from '@/domain/usecases/create-agregado'
-// import { queryClient } from '@/main/routes/router'
+import { queryClient } from '@/main/routes/router'
 import CreateAgregadoService from '@/services/create-agregado-service'
 import { useMutation } from 'react-query'
 
@@ -8,7 +8,7 @@ function useCreateAgregado (projectId: string, onSuccessAction, onErrorAction): 
 
   return useMutation(async (params: CreateAgregado.Params) => await createAgregadoService.create(params), {
     onSuccess: async () => {
-      // await queryClient.invalidateQueries(['features', `${projectId}`])
+      await queryClient.invalidateQueries(['agregados', `${projectId}`])
       onSuccessAction()
     },
     onError: (error: Error) => {

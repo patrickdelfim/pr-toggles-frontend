@@ -1,12 +1,22 @@
 import React, { useState } from 'react'
-import { Box, Button, Select, Text, useBoolean } from '@chakra-ui/react'
+import { Box, Button, Select, Spinner, Text, useBoolean, useToast } from '@chakra-ui/react'
 import AgregadoManagement from './agregadoManagement/agregadoManagement'
-
-const segmentList = ['grupo_zap', 'pessoas_idosas', 'grupo_testes_A', 'grupo_testes_B']
+import useListAgregados from '@/presentation/hooks/useListAgregados'
+import { useParams } from 'react-router-dom'
 
 const ManageSegments: React.FC = () => {
   const [flag, setFlag] = useBoolean()
   const [selectedSegment, setSegment] = useState('')
+  const params = useParams()
+  const toast = useToast()
+  const onError = async (error: Error): Promise<void> => {
+    toast({
+      title: error.message || 'Algo inesperado aconteceu.',
+      status: 'error',
+      isClosable: true,
+    })
+  }
+  const { data, status } = useListAgregados(params.id, onError)
   const handleSegmentSelected = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setSegment(e.target.value)
   }
@@ -22,9 +32,20 @@ const ManageSegments: React.FC = () => {
         <Text pt={4} fontWeight="bold">
           Gerencie valores de segmentos:
           </Text>
-        <Select placeholder='Selecione o Segmento' value={selectedSegment} onChange={handleSegmentSelected}>
-        {segmentList.map((segmento, idx) => (
-          <option key={idx} value={segmento}>{segmento}</option>
+          {status === 'loading'
+            ? (<Box display="flex" alignItems="center" justifyContent="center" mt={10}>
+              <Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.200'
+                color='blue.500'
+                size='xl'
+              />
+              </Box>)
+            : (<>
+            <Select placeholder='Selecione o Segmento' value={selectedSegment} onChange={handleSegmentSelected}>
+        {data.map((segmento, idx) => (
+          <option key={idx} value={segmento.id}>{segmento.nome}</option>
         ))}
         </Select>
         <Box display="flex" justifyContent="end">
@@ -34,9 +55,10 @@ const ManageSegments: React.FC = () => {
         </Box>
         {selectedSegment && (
         <Box>
-            {selectedSegment}
+        {selectedSegment}
         </Box>
         )}
+        </>)}
       </Box>
     )
   }
