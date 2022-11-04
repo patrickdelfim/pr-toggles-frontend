@@ -27,7 +27,7 @@ import logo from '../../assets/logo_transparent_vector.svg'
 import Header from '../header/header'
 import { Link as RouterDomLink, useParams, useLocation } from 'react-router-dom'
 import { LoadProjects } from '@/domain/usecases/load-projects'
-import useGetProject from '@/presentation/hooks/usegetProject'
+import useGetProject from '@/presentation/hooks/useGetProject'
 import { useErrorHandler } from '@/presentation/hooks/use-error-handler'
 import { ProjectContext } from '@/presentation/context'
 

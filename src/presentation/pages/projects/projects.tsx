@@ -1,6 +1,6 @@
 import ApiError from '@/presentation/components/apiError/apiError'
 import { useErrorHandler } from '@/presentation/hooks/use-error-handler'
-import useListProjects from '@/presentation/hooks/uselistProjects'
+import useListProjects from '@/presentation/hooks/useListProjects'
 import {
   Box,
   Button,
