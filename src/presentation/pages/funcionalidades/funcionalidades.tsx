@@ -21,7 +21,7 @@ import SkeletonCardList from '@/presentation/components/skeletonCardList/skeleto
 import useListFeatures from '@/presentation/hooks/useListFeatures'
 import { useParams } from 'react-router-dom'
 import CreateFeatureDrawer from './Components/createFeatureDrawer'
-import UpdateFeatureDrawer from './Components/updateFeatureDrawer'
+import ManageFeatureDetails from './Components/manageFeatureDetails/manageFeatureDetails'
 
 const Funcionalidades: React.FC = () => {
   const envs = ['dev', 'homolog', 'prod']
@@ -219,7 +219,7 @@ const Funcionalidades: React.FC = () => {
       </Container>
       <CreateFeatureDrawer isOpen={isOpenCreate} onClose={onCloseCreate} />
       {data && selectedFeatureId && (
-        <UpdateFeatureDrawer isOpen={isOpenEdit} onClose={onCloseEdit} feature={data?.find(feature => feature.id === selectedFeatureId)} ambiente={selectedEnv}/>
+        <ManageFeatureDetails isOpen={isOpenEdit} onClose={onCloseEdit} feature={data?.find(feature => feature.id === selectedFeatureId)} ambiente={selectedEnv}/>
       )}
     </>
   )

@@ -16,8 +16,8 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { FeatureModel } from '@/domain/models'
-import UpdateFeatureForm from './updateFeatureForm'
-import ManageSegments from './manageSegments'
+import UpdateFeatureForm from './featureTab/updateFeatureForm'
+import ManageSegments from './segmentTab/manageSegments'
 
 type props = {
   isOpen: boolean
@@ -26,7 +26,7 @@ type props = {
   ambiente: string
 }
 
-const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambiente }: props) => {
+const ManageFeatureDetails: React.FC<props> = ({ isOpen, onClose, feature, ambiente }: props) => {
   const handleCloseModal = (): void => {
     onClose()
   }
@@ -84,4 +84,4 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
   )
 }
 
-export default UpdateFeatureDrawer
+export default ManageFeatureDetails

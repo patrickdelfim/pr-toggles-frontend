@@ -24,7 +24,7 @@ type props = {
   ambiente: string
   setValidSubmit: React.Dispatch<React.SetStateAction<boolean>>
 }
-const UpdateSegmentValueForm: React.FC<props> = ({
+const UpdateSegmentForm: React.FC<props> = ({
   feature,
   isOpen,
   onClose,
@@ -272,4 +272,4 @@ const UpdateSegmentValueForm: React.FC<props> = ({
   )
 }
 
-export default UpdateSegmentValueForm
+export default UpdateSegmentForm
