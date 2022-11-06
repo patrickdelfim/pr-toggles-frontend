@@ -27,6 +27,10 @@ export function makeServer ({ environment = 'development' } = {}) {
       }),
       agregado: Model.extend({
         project: belongsTo()
+      }),
+      strategyHasAgregado: Model.extend({
+        agregado: belongsTo(),
+        strategy: belongsTo()
       })
     },
     seeds (server) {
@@ -194,6 +198,28 @@ export function makeServer ({ environment = 'development' } = {}) {
         const agregados = await schema.agregados.where({ projectId: id })
         if (agregados.length === 0) return new Response(400, {}, { message: 'Error ao buscar agregados.' })
         return agregados
+      })
+
+      /* ==========================
+              StrategyHasAgregado
+        ========================== */
+
+      this.put('/strategyHasAgregado', async (schema, request) => {
+        const attrs = JSON.parse(request.requestBody)
+        const strategyHasAgregado = await schema.strategyHasAgregados.where({ strategyId: attrs.estrategia_id })
+        if (strategyHasAgregado.models.length > 0) {
+          console.log('atualizando strategyHasAgregado.')
+          const newUpdatedModel = { agregadoId: attrs.agregado_id, valor: attrs.valor, variacoes: attrs.variacoes, updated_at: new Date() }
+          await strategyHasAgregado.update({ ...newUpdatedModel })
+          return new Response(200, {}, { message: 'strategyHasAgregado atualizado com sucesso' },
+          )
+        } else {
+          console.log('criandoStrategy has agregado')
+          const model = { agregadoId: attrs.agregado_id, strategyId: attrs.estrategia_id, valor: attrs.valor, variacoes: attrs.variacoes, created_at: new Date(), updated_at: new Date() }
+          await schema.strategyHasAgregados.create(model)
+          return new Response(200, {}, { message: 'strategyHasAgregado criado com sucesso' },
+          )
+        }
       })
     }
 

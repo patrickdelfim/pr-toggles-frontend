@@ -1,4 +1,3 @@
-import TextAreaField from '@/presentation/components/textAreaField/textAreaField'
 import {
   Button,
   Box,
@@ -9,38 +8,35 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { FiTrash2 } from 'react-icons/fi'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import FormField from '@/presentation/components/formField/formField'
-import { FeatureModel } from '@/domain/models'
-import useUpdateFeature from '@/presentation/hooks/useUpdateFeature'
-import { UpdateFeature } from '@/domain/usecases/update-feature'
-import updateFeatureValidators from '@/presentation/validators/update-feature-validators'
+import { CreateOrUpdateEstrategiaHasAgregado } from '@/domain/usecases/create-estrategiaHasAgregado'
+import updateStrategyHasAgregadoValidators from '@/presentation/validators/update-strategyHasAgregado-validators'
+import useCreateOrUpdateStrategyHasAgregado from '@/presentation/hooks/useCreateOrUpdateStrategyHasAgregado'
 
 type props = {
-  feature: FeatureModel | null
-  isOpen: boolean
+  agregado: string
+  estrategiaId: string
   onClose: () => void
-  ambiente: string
-  setValidSubmit: React.Dispatch<React.SetStateAction<boolean>>
 }
 const UpdateSegmentForm: React.FC<props> = ({
-  feature,
-  isOpen,
+  agregado,
+  estrategiaId,
   onClose,
-  ambiente,
-  setValidSubmit,
 }: props) => {
   const toast = useToast()
   const onSuccess = async (): Promise<void> => {
     toast({
-      title: 'Funcionalidade atualizada com sucesso!',
+      title: 'Regras para o segmento atualizado com sucesso!',
       status: 'success',
       isClosable: true,
     })
     reset()
     onClose()
   }
+  console.log('agregadoId: ', agregado)
+  const [validSubmit, setValidSubmit] = useState(false)
 
   const onError = async (error: Error): Promise<void> => {
     toast({
@@ -51,10 +47,8 @@ const UpdateSegmentForm: React.FC<props> = ({
     })
   }
 
-  const updateFeatureMutation = useUpdateFeature(onSuccess, onError)
-  const selectedStrategy = feature.estrategias.find(
-    (estrategia) => estrategia.ambiente === ambiente
-  )
+  const createOrUpdateStrategyHasAgregadoMutation = useCreateOrUpdateStrategyHasAgregado(onSuccess, onError)
+  const [agregadoId, agregadoName] = agregado.split(',')
   const {
     handleSubmit,
     register,
@@ -62,46 +56,36 @@ const UpdateSegmentForm: React.FC<props> = ({
     getValues,
     setValue,
     reset,
-    formState: { errors, isDirty, dirtyFields },
-  } = useForm<UpdateFeature.params>({
+    formState: { errors, isDirty },
+  } = useForm<CreateOrUpdateEstrategiaHasAgregado.Params>({
     defaultValues: {
-      descricao: feature.descricao || '',
-      estrategia: {
-        valor: selectedStrategy.valor,
-        variacoes: selectedStrategy.variacoes,
-      },
+      estrategia_id: estrategiaId,
+      agregado_id: '',
+      ativado: false,
+      valor: '',
+      variacoes: [],
     },
   })
+  setValue('agregado_id', agregadoId)
   const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
-    name: 'estrategia.variacoes', // unique name for your Field Array
+    name: 'variacoes', // unique name for your Field Array
   })
 
-  useEffect(() => {
-    if (!isOpen) {
-      reset()
-      return
-    }
-    console.log('useEffect runned')
-    setValue('descricao', feature.descricao)
-    setValue('estrategia.valor', selectedStrategy.valor)
-    setValue('estrategia.variacoes', selectedStrategy.variacoes)
-    if (selectedStrategy.variacoes.length > 0) calculateMainPercent()
-  }, [isOpen])
   const removeVariation = (index: number): void => {
     remove(index)
     calculateMainPercent()
   }
 
-  const validators = updateFeatureValidators(getValues)
+  const validators = updateStrategyHasAgregadoValidators(getValues)
 
   const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
-    handleSubmit(updateFeature)(event)
+    handleSubmit(updateEstrategiaHasAgregado)(event)
   }
 
-  const updateFeature: SubmitHandler<UpdateFeature.params> = async (
-    values: UpdateFeature.params
+  const updateEstrategiaHasAgregado: SubmitHandler<CreateOrUpdateEstrategiaHasAgregado.Params> = async (
+    values: CreateOrUpdateEstrategiaHasAgregado.Params
   ) => {
     if (!isDirty) {
       toast({
@@ -111,37 +95,18 @@ const UpdateSegmentForm: React.FC<props> = ({
       })
       return
     }
-    // AJUSTAR PAYLOAD
-    const payload = {
-      ...(dirtyFields?.descricao && { descricao: values.descricao }),
-      id: feature.id,
-      ...(dirtyFields?.estrategia && {
-        estrategia: {
-          id: selectedStrategy.id,
-          ...(dirtyFields?.estrategia?.valor && {
-            valor: values.estrategia.valor,
-          }),
-          ...(dirtyFields?.estrategia?.variacoes && {
-            variacoes: values.estrategia.variacoes.map((element) => ({
-              valor: element.valor,
-              peso: parseFloat(element.peso),
-            })),
-          }),
-        },
-      }),
-    }
-    console.log('update feature values: ', payload)
-    updateFeatureMutation.mutate(payload)
+    console.log('update feature values: ', values)
+    createOrUpdateStrategyHasAgregadoMutation.mutate(values)
   }
 
   const [mainPercent, setMainPercent] = useState(100)
   const calculateMainPercent = (): void => {
-    const estrategia = getValues('estrategia')
+    const variacoes = getValues('variacoes')
     const value =
-      estrategia.variacoes.length === 0
+      variacoes.length === 0
         ? 100
         : 100 -
-          estrategia.variacoes.reduce(
+          variacoes.reduce(
             (acc, current) => acc + (parseFloat(current.peso) || 0),
             0
           )
@@ -151,24 +116,25 @@ const UpdateSegmentForm: React.FC<props> = ({
 
   return (
     <Box>
+      <Text>{agregadoName}</Text>
       <form
-        id="updateFeatureForm"
+        id="updateStrategyHasAgregadoForm"
         autoComplete="off"
         onSubmit={handleSubmitForm}
       >
         <Box py={3}>
           <FormField
             fieldName={`valor (opcional)${
-              mainPercent >= 0 && getValues('estrategia.variacoes')?.length > 0
+              mainPercent >= 0 && getValues('variacoes')?.length > 0
                 ? ` - ${mainPercent}%`
                 : ''
             }`}
-            fieldKey="estrategia.valor"
+            fieldKey="valor"
             placeholder="Ex: true"
             type="text"
-            error={errors?.estrategia?.valor}
+            error={errors?.valor}
             control={control}
-            validators={register('estrategia.valor', validators.valor)}
+            validators={register('valor', validators.valor)}
           />
         </Box>
 
@@ -203,7 +169,7 @@ const UpdateSegmentForm: React.FC<props> = ({
                   error={{ message: '' }}
                   control={control}
                   validators={register(
-                    `estrategia.variacoes.${index}.valor` as const,
+                    `variacoes.${index}.valor` as const,
                     validators.variacaoValor
                   )}
                 />
@@ -217,7 +183,7 @@ const UpdateSegmentForm: React.FC<props> = ({
                   error={{ message: '' }}
                   control={control}
                   validators={register(
-                    `estrategia.variacoes.${index}.peso` as const,
+                    `variacoes.${index}.peso` as const,
                     {
                       ...validators.variacaoPeso,
                       onChange: calculateMainPercent,
@@ -240,8 +206,8 @@ const UpdateSegmentForm: React.FC<props> = ({
               </Box>
             </Box>
             <Text px={4} fontSize="sm" color="red.500">
-              {errors?.estrategia?.variacoes?.[index]?.valor?.message ||
-                errors?.estrategia?.variacoes?.[index]?.peso?.message}{' '}
+              {errors?.variacoes?.[index]?.valor?.message ||
+                errors?.variacoes?.[index]?.peso?.message}{' '}
             </Text>
           </Box>
         ))}
@@ -257,17 +223,14 @@ const UpdateSegmentForm: React.FC<props> = ({
             add variação
           </Button>
         </Box>
-        <TextAreaField
-          fieldName="Descrição da feature"
-          fieldKey="descricao"
-          placeholder="Ex: Feature para adicionar liberação gradual do nosso mais novo chatbot empresarial"
-          maxLength={200}
-          type="text"
-          error={errors.descricao}
-          control={control}
-          validators={register('descricao', validators.descricao)}
-        />
       </form>
+      <Box display="flex" alignItems="end" justifyContent="end">
+        <Box width="15%">
+          <Button form="updateStrategyHasAgregadoForm" type="submit" disabled={validSubmit}>
+            Save
+          </Button>
+        </Box>
+      </Box>
     </Box>
   )
 }

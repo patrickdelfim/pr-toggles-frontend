@@ -1,7 +1,7 @@
 import { variacao } from './variacao-model'
 
 export type StrategyModel = {
-  id?: number
+  id?: string
   funcionalidade_id: number
   ambiente: string
   valor?: string

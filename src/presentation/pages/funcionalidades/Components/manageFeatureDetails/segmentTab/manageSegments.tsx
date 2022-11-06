@@ -3,10 +3,17 @@ import { Box, Button, Select, Spinner, Text, useBoolean, useToast } from '@chakr
 import AgregadoManagement from './agregadoManagement/agregadoManagement'
 import useListAgregados from '@/presentation/hooks/useListAgregados'
 import { useParams } from 'react-router-dom'
+import UpdateSegmentForm from './updateSegmentForm'
+import { StrategyModel } from '@/domain/models/strategy-model'
 
-const ManageSegments: React.FC = () => {
+type props = {
+  estrategia: StrategyModel | null
+  onClose: () => void
+}
+
+const ManageSegments: React.FC<props> = ({ estrategia, onClose }: props) => {
   const [flag, setFlag] = useBoolean()
-  const [selectedSegment, setSegment] = useState('')
+  const [selectedAgregado, setAgregado] = useState('')
   const params = useParams()
   const toast = useToast()
   const onError = async (error: Error): Promise<void> => {
@@ -18,7 +25,7 @@ const ManageSegments: React.FC = () => {
   }
   const { data, status } = useListAgregados(params.id, onError)
   const handleSegmentSelected = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setSegment(e.target.value)
+    setAgregado(e.target.value)
   }
   if (flag) {
     return (
@@ -43,9 +50,9 @@ const ManageSegments: React.FC = () => {
               />
               </Box>)
             : (<>
-            <Select placeholder='Selecione o Segmento' value={selectedSegment} onChange={handleSegmentSelected}>
-        {data.map((segmento, idx) => (
-          <option key={idx} value={segmento.id}>{segmento.nome}</option>
+            <Select placeholder='Selecione o Segmento' value={selectedAgregado} onChange={handleSegmentSelected}>
+        {data.map((agregado, idx) => (
+          <option key={idx} value={`${agregado.id as string},${agregado.nome as string}`}>{agregado.nome}</option>
         ))}
         </Select>
         <Box display="flex" justifyContent="end">
@@ -53,9 +60,9 @@ const ManageSegments: React.FC = () => {
             <Button onClick={setFlag.toggle}>Criar novo segmento</Button>
           </Box>
         </Box>
-        {selectedSegment && (
+        {selectedAgregado && (
         <Box>
-        {selectedSegment}
+          <UpdateSegmentForm agregado={selectedAgregado} estrategiaId={estrategia.id} onClose={onClose}/>
         </Box>
         )}
         </>)}

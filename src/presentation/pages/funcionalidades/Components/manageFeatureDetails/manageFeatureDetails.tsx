@@ -1,5 +1,4 @@
 import {
-  Button,
   Drawer,
   DrawerOverlay,
   DrawerContent,
@@ -14,7 +13,7 @@ import {
   TabPanel,
   TabPanels,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React from 'react'
 import { FeatureModel } from '@/domain/models'
 import UpdateFeatureForm from './featureTab/updateFeatureForm'
 import ManageSegments from './segmentTab/manageSegments'
@@ -30,7 +29,6 @@ const ManageFeatureDetails: React.FC<props> = ({ isOpen, onClose, feature, ambie
   const handleCloseModal = (): void => {
     onClose()
   }
-  const [validSubmit, setValidSubmit] = useState(false)
 
   return (
     <Drawer
@@ -55,27 +53,19 @@ const ManageFeatureDetails: React.FC<props> = ({ isOpen, onClose, feature, ambie
               <DrawerBody>
                 <UpdateFeatureForm
                   feature={feature}
+                  ambiente={ambiente}
                   isOpen={isOpen}
                   onClose={onClose}
-                  ambiente={ambiente}
-                  setValidSubmit={setValidSubmit}
                 />
+
               </DrawerBody>
               <DrawerFooter>
-                <Box>
-                  <Button
-                    form="updateFeatureForm"
-                    type="submit"
-                    disabled={validSubmit}
-                  >
-                    Save
-                  </Button>
-                </Box>
+
               </DrawerFooter>
             </TabPanel>
 
             <TabPanel>
-              <ManageSegments />
+              <ManageSegments estrategia={feature.estrategias.find(estrategia => estrategia.ambiente === ambiente)} onClose={onClose}/>
             </TabPanel>
           </TabPanels>
         </Tabs>
