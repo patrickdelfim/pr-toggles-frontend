@@ -1,5 +1,5 @@
-export type regras = {
-  key?: string
-  operator?: string
+export type AgregadoRegras = {
+  key: string
+  operator: string
   value: string
 }

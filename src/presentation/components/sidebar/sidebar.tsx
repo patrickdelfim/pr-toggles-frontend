@@ -25,9 +25,9 @@ import { IconType } from 'react-icons'
 import NavItem from './NavItem'
 import logo from '../../assets/logo_transparent_vector.svg'
 import Header from '../header/header'
-import { Link as RouterDomLink, useParams, useLocation } from 'react-router-dom'
+import { Link as RouterDomLink, useParams, useLocation, useNavigate } from 'react-router-dom'
 import { LoadProjects } from '@/domain/usecases/load-projects'
-import useGetProject from '@/presentation/hooks/usegetProject'
+import useGetProject from '@/presentation/hooks/useGetProject'
 import { useErrorHandler } from '@/presentation/hooks/use-error-handler'
 import { ProjectContext } from '@/presentation/context'
 
@@ -48,6 +48,7 @@ export default function SidebarWithHeader (): JSX.Element {
   const toast = useToast()
   const params = useParams()
   const location = useLocation()
+  const navigate = useNavigate()
   const onError = useErrorHandler((error) => {
     toast({
       id: 'getProjectById',
@@ -55,6 +56,7 @@ export default function SidebarWithHeader (): JSX.Element {
       status: 'error',
       isClosable: true,
     })
+    navigate('/panel')
   })
 
   const state = location.state as {project: LoadProjects.Model}

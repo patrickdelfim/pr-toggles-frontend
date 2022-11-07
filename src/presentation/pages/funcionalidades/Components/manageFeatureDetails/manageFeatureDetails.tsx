@@ -1,5 +1,4 @@
 import {
-  Button,
   Drawer,
   DrawerOverlay,
   DrawerContent,
@@ -14,9 +13,10 @@ import {
   TabPanel,
   TabPanels,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React from 'react'
 import { FeatureModel } from '@/domain/models'
-import UpdateFeatureForm from './updateFeatureForm'
+import UpdateFeatureForm from './featureTab/updateFeatureForm'
+import ManageSegments from './segmentTab/manageSegments'
 
 type props = {
   isOpen: boolean
@@ -25,11 +25,10 @@ type props = {
   ambiente: string
 }
 
-const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambiente }: props) => {
+const ManageFeatureDetails: React.FC<props> = ({ isOpen, onClose, feature, ambiente }: props) => {
   const handleCloseModal = (): void => {
     onClose()
   }
-  const [validSubmit, setValidSubmit] = useState(false)
 
   return (
     <Drawer
@@ -39,7 +38,7 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
       size={'xl'}
     >
       <DrawerOverlay />
-      <DrawerContent overflow="scroll">
+      <DrawerContent overflowY="scroll">
         <Box borderBottomWidth="1px">
           <DrawerHeader>Atualizar feature: {feature.nome}</DrawerHeader>
         </Box>
@@ -54,27 +53,19 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
               <DrawerBody>
                 <UpdateFeatureForm
                   feature={feature}
+                  ambiente={ambiente}
                   isOpen={isOpen}
                   onClose={onClose}
-                  ambiente={ambiente}
-                  setValidSubmit={setValidSubmit}
                 />
+
               </DrawerBody>
               <DrawerFooter>
-                <Box>
-                  <Button
-                    form="updateFeatureForm"
-                    type="submit"
-                    disabled={validSubmit}
-                  >
-                    Save
-                  </Button>
-                </Box>
+
               </DrawerFooter>
             </TabPanel>
 
             <TabPanel>
-              <p>Segmentos!</p>
+              <ManageSegments estrategia={feature.estrategias.find(estrategia => estrategia.ambiente === ambiente)} onClose={onClose}/>
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -83,4 +74,4 @@ const UpdateFeatureDrawer: React.FC<props> = ({ isOpen, onClose, feature, ambien
   )
 }
 
-export default UpdateFeatureDrawer
+export default ManageFeatureDetails

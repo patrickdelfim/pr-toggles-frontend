@@ -3,6 +3,7 @@ import { InputTheme as Input } from './components/inputStyles'
 import { TextareaTheme as Textarea } from './components/textAreaStyles'
 import { ButtonTheme as Button } from './components/buttonStyles'
 import { LinkTheme as Link } from './components/linkStyles'
+import { SelectTheme as Select } from './components/selectStyles'
 const theme = extendTheme({
   fonts: {
     heading: 'Open Sans, sans-serif',
@@ -38,7 +39,8 @@ const theme = extendTheme({
     Button,
     Input,
     Link,
-    Textarea
+    Textarea,
+    Select
   },
 })
 

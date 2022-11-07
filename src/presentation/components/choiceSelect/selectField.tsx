@@ -2,7 +2,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
+  Select,
 } from '@chakra-ui/react'
 import React from 'react'
 import { Controller } from 'react-hook-form'
@@ -16,19 +16,22 @@ type props = {
   fieldKey: string
   control: any
   placeholder: string
-  type: string
   hideLabel?: boolean
+  options: Array<{
+    value: string
+    text: string
+  }>
 }
 
-const FormField: React.FC<props> = ({
+const ChoiceSelect: React.FC<props> = ({
   validators,
   error,
   fieldName,
   fieldKey,
   control,
-  placeholder,
-  type,
   hideLabel,
+  placeholder,
+  options
 }: props) => {
   return (
     <FormControl
@@ -52,15 +55,18 @@ const FormField: React.FC<props> = ({
         name={fieldKey}
         control={control}
         render={({ field }) => (
-          <Input
+          <Select
+            placeholder={placeholder}
             key={fieldKey}
             data-testid={fieldKey}
             {...field}
             {...validators}
             title={error?.message}
-            type={type}
-            placeholder={placeholder}
-          />
+          >
+            {options.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.text}</option>
+            ))}
+          </Select>
         )}
       />
       <FormErrorMessage>{error?.message}</FormErrorMessage>
@@ -68,4 +74,4 @@ const FormField: React.FC<props> = ({
   )
 }
 
-export default FormField
+export default ChoiceSelect

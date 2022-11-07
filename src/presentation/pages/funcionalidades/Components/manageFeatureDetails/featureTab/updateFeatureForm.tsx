@@ -22,10 +22,10 @@ type props = {
   isOpen: boolean
   onClose: () => void
   ambiente: string
-  setValidSubmit: React.Dispatch<React.SetStateAction<boolean>>
 }
-const UpdateFeatureForm: React.FC<props> = ({ feature, isOpen, onClose, ambiente, setValidSubmit }: props) => {
+const UpdateFeatureForm: React.FC<props> = ({ feature, isOpen, onClose, ambiente }: props) => {
   const toast = useToast()
+  const [validSubmit, setValidSubmit] = useState(false)
   const onSuccess = async (): Promise<void> => {
     toast({
       title: 'Funcionalidade atualizada com sucesso!',
@@ -141,129 +141,131 @@ const UpdateFeatureForm: React.FC<props> = ({ feature, isOpen, onClose, ambiente
 
   return (
     <Box>
-    <form
-      id="updateFeatureForm"
-      autoComplete="off"
-      onSubmit={handleSubmitForm}
-    >
-      <Box py={3}>
-        <FormField
-          fieldName={`valor (opcional)${
-            mainPercent >= 0 && getValues('estrategia.variacoes')?.length > 0
-              ? ` - ${mainPercent}%`
-              : ''
-          }`}
-          fieldKey="estrategia.valor"
-          placeholder="Ex: true"
-          type="text"
-          error={errors?.estrategia?.valor}
-          control={control}
-          validators={register('estrategia.valor', validators.valor)}
-        />
-      </Box>
-
-      {fields.length > 0
-        ? (
-            mainPercent >= 0
-              ? (
-          <Alert status="info" py={3}>
-            <AlertIcon />
-            Variações são configuradas com base em porcentagem.
-          </Alert>
-                )
-              : (
-          <Alert status="error" py={3}>
-            <AlertIcon />
-            As porcentagens calculadas ultrapassam 100%.
-          </Alert>
-                )
-          )
-        : (
-            ''
-          )}
-      {fields.map((field, index) => (
-        <Box key={field.id}>
-          <Box display="flex" alignItems="end" py={3}>
-            <Box flex="1" px={4}>
-              <FormField
-                fieldName="variação"
-                fieldKey={field.id}
-                placeholder="Ex: valor variacao"
-                type="text"
-                error={{ message: '' }}
-                control={control}
-                validators={register(
-                  `estrategia.variacoes.${index}.valor` as const,
-                  validators.variacaoValor
-                )}
-              />
-            </Box>
-            <Box px={4}>
-              <FormField
-                fieldName="peso"
-                fieldKey={field.id}
-                placeholder="Ex: valor peso"
-                type="number"
-                error={{ message: '' }}
-                control={control}
-                validators={register(
-                  `estrategia.variacoes.${index}.peso` as const,
-                  {
-                    ...validators.variacaoPeso,
-                    onChange: calculateMainPercent,
-                  }
-                )}
-              />
-            </Box>
-            <Box alignSelf="end">
-              <IconButton
-                color="red"
-                width="30px"
-                size="lg"
-                variant="ghost"
-                aria-label="delete variant"
-                icon={<FiTrash2 size="22px" />}
-                onClick={() => {
-                  removeVariation(index)
-                }}
-              />
-            </Box>
-          </Box>
-          <Text px={4} fontSize="sm" color="red.500">
-            {errors?.estrategia?.variacoes?.[index]?.valor?.message ||
-              errors?.estrategia?.variacoes?.[index]?.peso?.message}{' '}
-          </Text>
-        </Box>
-      ))}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        py={3}
+      <form
+        id="updateFeatureForm"
+        autoComplete="off"
+        onSubmit={handleSubmitForm}
       >
-        <Button
-          variant="outline"
-          color="primary.500"
-          onClick={() => {
-            console.log(errors)
-            append({ valor: '', peso: '0' })
-          }}
-        >
-          add variação
-        </Button>
+        <Box py={3}>
+          <FormField
+            fieldName={`valor${
+              mainPercent >= 0 && getValues('estrategia.variacoes')?.length > 0
+                ? ` - ${mainPercent}%`
+                : ''
+            }`}
+            fieldKey="estrategia.valor"
+            placeholder="Ex: true"
+            type="text"
+            error={errors?.estrategia?.valor}
+            control={control}
+            validators={register('estrategia.valor', validators.valor)}
+          />
+        </Box>
+
+        {fields.length > 0
+          ? (
+              mainPercent >= 0
+                ? (
+            <Alert status="info" py={3}>
+              <AlertIcon />
+              Variações são configuradas com base em porcentagem.
+            </Alert>
+                  )
+                : (
+            <Alert status="error" py={3}>
+              <AlertIcon />
+              As porcentagens calculadas ultrapassam 100%.
+            </Alert>
+                  )
+            )
+          : (
+              ''
+            )}
+        {fields.map((field, index) => (
+          <Box key={field.id}>
+            <Box display="flex" alignItems="end" py={3}>
+              <Box flex="1" px={4}>
+                <FormField
+                  fieldName="variação"
+                  fieldKey={field.id}
+                  placeholder="Ex: valor variacao"
+                  type="text"
+                  error={{ message: '' }}
+                  control={control}
+                  validators={register(
+                    `estrategia.variacoes.${index}.valor` as const,
+                    validators.variacaoValor
+                  )}
+                />
+              </Box>
+              <Box px={4}>
+                <FormField
+                  fieldName="peso"
+                  fieldKey={field.id}
+                  placeholder="Ex: valor peso"
+                  type="number"
+                  error={{ message: '' }}
+                  control={control}
+                  validators={register(
+                    `estrategia.variacoes.${index}.peso` as const,
+                    {
+                      ...validators.variacaoPeso,
+                      onChange: calculateMainPercent,
+                    }
+                  )}
+                />
+              </Box>
+              <Box alignSelf="end">
+                <IconButton
+                  color="red"
+                  width="30px"
+                  size="lg"
+                  variant="ghost"
+                  aria-label="delete variant"
+                  icon={<FiTrash2 size="22px" />}
+                  onClick={() => {
+                    removeVariation(index)
+                  }}
+                />
+              </Box>
+            </Box>
+            <Text px={4} fontSize="sm" color="red.500">
+              {errors?.estrategia?.variacoes?.[index]?.valor?.message ||
+                errors?.estrategia?.variacoes?.[index]?.peso?.message}{' '}
+            </Text>
+          </Box>
+        ))}
+        <Box display="flex" alignItems="center" justifyContent="center" py={3}>
+          <Button
+            variant="outline"
+            color="primary.500"
+            onClick={() => {
+              console.log(errors)
+              append({ valor: '', peso: '0' })
+            }}
+          >
+            add variação
+          </Button>
+        </Box>
+        <TextAreaField
+          fieldName="Descrição da feature"
+          fieldKey="descricao"
+          placeholder="Ex: Feature para adicionar liberação gradual do nosso mais novo chatbot empresarial"
+          maxLength={200}
+          type="text"
+          error={errors.descricao}
+          control={control}
+          validators={register('descricao', validators.descricao)}
+        />
+      </form>
+      <Box display="flex" alignItems="end" justifyContent="end">
+        <Box width="15%">
+          <Button form="updateFeatureForm" type="submit" disabled={validSubmit}>
+            Save
+          </Button>
+        </Box>
       </Box>
-      <TextAreaField
-        fieldName="Descrição da feature"
-        fieldKey="descricao"
-        placeholder="Ex: Feature para adicionar liberação gradual do nosso mais novo chatbot empresarial"
-        maxLength={200}
-        type="text"
-        error={errors.descricao}
-        control={control}
-        validators={register('descricao', validators.descricao)}
-      />
-    </form>
-  </Box>
+    </Box>
   )
 }
 
