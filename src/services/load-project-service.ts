@@ -2,6 +2,7 @@ import { AccessDeniedError, UnexpectedError } from '@/domain/errors'
 import { LoadProjects } from '@/domain/usecases/load-projects'
 import { LoadProjectById } from '@/domain/usecases/load-project-by-Id'
 import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
+import { ResourceNotFoundError } from '@/domain/errors/resource-not-found-error'
 
 export default class LoadProjectsService implements LoadProjects, LoadProjectById {
   async load (): Promise<LoadProjects.Model[]> {
@@ -47,6 +48,8 @@ export default class LoadProjectsService implements LoadProjects, LoadProjectByI
         })
       case HttpStatusCode.forbidden:
         throw new AccessDeniedError()
+      case HttpStatusCode.notFound:
+        throw new ResourceNotFoundError()
       default:
         throw new UnexpectedError()
     }

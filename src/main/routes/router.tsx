@@ -21,6 +21,7 @@ import Projects from '@/presentation/pages/projects/projects'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import PrivateRoute from '@/presentation/components/private-route/private-route'
 import Funcionalidades from '@/presentation/pages/funcionalidades/funcionalidades'
+import NotFound from '@/presentation/pages/notFound/notFound'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,6 +60,7 @@ const Router: React.FC = () => {
                 path="/signup"
                 element={<SignUp addAccount={new AddAccountService()} />}
               />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </ChakraProvider>

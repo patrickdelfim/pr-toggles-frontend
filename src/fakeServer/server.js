@@ -107,9 +107,15 @@ export function makeServer ({ environment = 'development' } = {}) {
         return schema.projects.all()
       })
 
-      this.get('/projects/:id', (schema, request) => {
+      this.get('/projects/:id', async (schema, request) => {
         const id = request.params.id
-        return schema.projects.findBy({ id })
+        const project = await schema.projects.findBy({ id })
+        console.log(project)
+        if (!project) {
+          return new Response(404, {}, { message: 'Projeto não encontrado.' },
+          )
+        }
+        return project
       })
 
       this.post('/project/create', async (schema, request) => {
