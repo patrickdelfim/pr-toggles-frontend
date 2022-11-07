@@ -14,16 +14,19 @@ import FormField from '@/presentation/components/formField/formField'
 import { CreateOrUpdateEstrategiaHasAgregado } from '@/domain/usecases/create-estrategiaHasAgregado'
 import updateStrategyHasAgregadoValidators from '@/presentation/validators/update-strategyHasAgregado-validators'
 import useCreateOrUpdateStrategyHasAgregado from '@/presentation/hooks/useCreateOrUpdateStrategyHasAgregado'
+import { EstrategiaHasAgregadoModel } from '@/domain/models/strategyHasAgregated-model'
 
 type props = {
   agregado: string
   estrategiaId: string
   onClose: () => void
+  defaultValues: EstrategiaHasAgregadoModel | null
 }
 const UpdateSegmentForm: React.FC<props> = ({
   agregado,
   estrategiaId,
   onClose,
+  defaultValues
 }: props) => {
   const toast = useToast()
   const onSuccess = async (): Promise<void> => {
@@ -47,7 +50,7 @@ const UpdateSegmentForm: React.FC<props> = ({
     })
   }
 
-  const createOrUpdateStrategyHasAgregadoMutation = useCreateOrUpdateStrategyHasAgregado(onSuccess, onError)
+  const createOrUpdateStrategyHasAgregadoMutation = useCreateOrUpdateStrategyHasAgregado(estrategiaId, onSuccess, onError)
   const [agregadoId, agregadoName] = agregado.split(',')
   const {
     handleSubmit,
@@ -56,14 +59,14 @@ const UpdateSegmentForm: React.FC<props> = ({
     getValues,
     setValue,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useForm<CreateOrUpdateEstrategiaHasAgregado.Params>({
     defaultValues: {
       estrategia_id: estrategiaId,
-      agregado_id: '',
-      ativado: false,
-      valor: '',
-      variacoes: [],
+      agregado_id: defaultValues?.agregado_id ?? '',
+      ativado: defaultValues?.ativado ?? false,
+      valor: defaultValues?.valor ?? '',
+      variacoes: defaultValues?.variacoes ?? [],
     },
   })
   setValue('agregado_id', agregadoId)
@@ -87,14 +90,6 @@ const UpdateSegmentForm: React.FC<props> = ({
   const updateEstrategiaHasAgregado: SubmitHandler<CreateOrUpdateEstrategiaHasAgregado.Params> = async (
     values: CreateOrUpdateEstrategiaHasAgregado.Params
   ) => {
-    if (!isDirty) {
-      toast({
-        title: 'Nenhum valor alterado no formulário.',
-        status: 'info',
-        isClosable: true,
-      })
-      return
-    }
     console.log('update feature values: ', values)
     createOrUpdateStrategyHasAgregadoMutation.mutate(values)
   }
@@ -226,7 +221,7 @@ const UpdateSegmentForm: React.FC<props> = ({
       </form>
       <Box display="flex" alignItems="end" justifyContent="end">
         <Box width="15%">
-          <Button form="updateStrategyHasAgregadoForm" type="submit" disabled={validSubmit}>
+          <Button form="updateStrategyHasAgregadoForm" type="submit" disabled={validSubmit} isLoading={createOrUpdateStrategyHasAgregadoMutation.isLoading}>
             Save
           </Button>
         </Box>

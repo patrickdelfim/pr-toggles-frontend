@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Button, Select, Spinner, Text, useBoolean, useToast } from '@chakra-ui/react'
 import AgregadoManagement from './agregadoManagement/agregadoManagement'
 import useListAgregados from '@/presentation/hooks/useListAgregados'
 import { useParams } from 'react-router-dom'
 import UpdateSegmentForm from './updateSegmentForm'
 import { StrategyModel } from '@/domain/models/strategy-model'
+import useListStrategyHasAgregado from '@/presentation/hooks/useListStrategyHasAgregado'
 
 type props = {
   estrategia: StrategyModel | null
@@ -24,6 +25,16 @@ const ManageSegments: React.FC<props> = ({ estrategia, onClose }: props) => {
     })
   }
   const { data, status } = useListAgregados(params.id, onError)
+  const { data: strategyHasAggData, status: strategyHasAggStatus } = useListStrategyHasAgregado(estrategia.id)
+
+  useEffect(() => {
+    if (strategyHasAggData && data) {
+      console.log('strategyHasAggData: ', strategyHasAggData)
+      const defaultAgregado = data.find(agregado => agregado.id === strategyHasAggData.agregado_id)
+      setAgregado(`${defaultAgregado.id as string},${defaultAgregado.nome as string}`)
+    }
+  }, [strategyHasAggStatus])
+
   const handleSegmentSelected = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setAgregado(e.target.value)
   }
@@ -39,7 +50,7 @@ const ManageSegments: React.FC<props> = ({ estrategia, onClose }: props) => {
         <Text pt={4} fontWeight="bold">
           Gerencie valores de segmentos:
           </Text>
-          {status === 'loading'
+          {status === 'loading' || strategyHasAggStatus === 'loading'
             ? (<Box display="flex" alignItems="center" justifyContent="center" mt={10}>
               <Spinner
                 thickness='4px'
@@ -62,7 +73,7 @@ const ManageSegments: React.FC<props> = ({ estrategia, onClose }: props) => {
         </Box>
         {selectedAgregado && (
         <Box>
-          <UpdateSegmentForm agregado={selectedAgregado} estrategiaId={estrategia.id} onClose={onClose}/>
+          <UpdateSegmentForm agregado={selectedAgregado} defaultValues={strategyHasAggData || null} estrategiaId={estrategia.id} onClose={onClose}/>
         </Box>
         )}
         </>)}

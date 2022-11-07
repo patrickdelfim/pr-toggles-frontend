@@ -1,5 +1,17 @@
 
-import { belongsTo, createServer, hasMany, Model, Response, RestSerializer, } from 'miragejs'
+import { belongsTo, createServer, hasMany, Model, Response, RestSerializer, Serializer, } from 'miragejs'
+
+const ApplicationSerializer = Serializer.extend({
+  // will always serialize the ids of all relationships for the model or collection in the response
+  serializeIds: 'always',
+
+  serialize (resource, request) {
+    const json = Serializer.prototype.serialize.apply(this, arguments)
+
+    const root = resource.models ? this.keyForCollection(resource.modelName) : this.keyForModel(resource.modelName)
+    return json[root]
+  }
+})
 
 export function makeServer ({ environment = 'development' } = {}) {
   console.log('creation server')
@@ -16,6 +28,18 @@ export function makeServer ({ environment = 'development' } = {}) {
       //     return key === 'projectId' ? 'projeto_id' : key
       //   },
       // })
+      strategyHasAgregado: ApplicationSerializer.extend({
+        keyForForeignKey (key) {
+          if (key === 'strategy') {
+            return 'estrategia_id'
+          }
+          if (key === 'agregado') {
+            return 'agregado_id'
+          }
+          return key
+        },
+      })
+
     },
     models: {
       project: Model,
@@ -42,13 +66,14 @@ export function makeServer ({ environment = 'development' } = {}) {
       server.create('strategy', { feature: chatBot, funcionalidade_id: chatBot.id, ambiente: 'homolog', valor: false, variacoes: [] })
       server.create('strategy', { feature: chatBot, funcionalidade_id: chatBot.id, ambiente: 'prod', valor: 'trds', variacoes: [{ valor: 'blabla', peso: 10 }, { valor: 'salaz', peso: 20 }] })
       const natal = server.create('feature', { projeto_id: '3', nome: 'Layout especial de natal', descricao: '', ativada_prod: true, ativada_homolog: true, ativada_dev: false, estrategias: null, created_at: new Date(), updated_at: new Date() })
-      server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'dev', valor: 55, variacoes: [] })
+      const devStrategy = server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'dev', valor: 55, variacoes: [] })
       server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'homolog', valor: 32, variacoes: [] })
       server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'prod', valor: 100, variacoes: [{ valor: 120, peso: 60 }, { valor: 130, peso: 20 }] })
       server.create('agregado', { projectId: 3, nome: 'grupo_A', descricao: 'grupo do tipo 1 de agregados', regras: [], created_at: new Date(), updated_at: new Date() })
       server.create('agregado', { projectId: 3, nome: 'moradores_RJ', descricao: 'grupo dos moradores do rj de agregados', regras: [], created_at: new Date(), updated_at: new Date() })
       server.create('agregado', { projectId: 3, nome: 'clientes_em_potencial', descricao: '', regras: [], created_at: new Date(), updated_at: new Date() })
-      server.create('agregado', { projectId: 3, nome: 'adm_sis', descricao: 'grupo Adms', regras: [], created_at: new Date(), updated_at: new Date() })
+      const adminSisAgrr = server.create('agregado', { projectId: 3, nome: 'adm_sis', descricao: 'grupo Adms', regras: [], created_at: new Date(), updated_at: new Date() })
+      server.create('strategyHasAgregado', { strategy: devStrategy, agregado: adminSisAgrr, agregado_id: adminSisAgrr.id, estrategia_id: devStrategy.id, ativado: true, valor: 100, variacoes: [{ valor: 120, peso: 60 }, { valor: 130, peso: 20 }] })
     },
     routes () {
       this.namespace = 'api'
@@ -103,14 +128,13 @@ export function makeServer ({ environment = 'development' } = {}) {
       this.get('/projects/:id/features', async (schema, request) => {
         const id = request.params.id
         const features = await schema.features.where({ projeto_id: id })
-        if (features.length === 0) return new Response(400, {}, { message: 'Error ao buscar feature' })
+        if (features.length === 0) return new Response(404, {}, { message: 'Features não encontrada.' })
         const responsePayload = []
         features.models.forEach(feat => {
           const featureWithStrategies = { ...feat.attrs, estrategias: extractStrategyFromFeatureObject(feat) }
           delete featureWithStrategies.strategyIds
           responsePayload.push(featureWithStrategies)
         })
-        console.log(responsePayload)
         return { features: responsePayload }
       })
 
@@ -220,6 +244,14 @@ export function makeServer ({ environment = 'development' } = {}) {
           return new Response(200, {}, { message: 'strategyHasAgregado criado com sucesso' },
           )
         }
+      })
+
+      this.get('estrategiaHasAgregado/:strategyId', async (schema, request) => {
+        const strategyId = request.params.strategyId
+        const agregado = await schema.strategyHasAgregados.findBy({ strategyId })
+        console.log('agregado found: ', agregado)
+        if (!agregado) return new Response(404, {}, { message: 'Error ao buscar agregados.' })
+        return agregado
       })
     }
 
