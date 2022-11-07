@@ -18,11 +18,12 @@ import ProjectCardList from './Components/projectcardList'
 import CreateProjectModal from './Components/createProjectModal'
 import SkeletonCardList from '@/presentation/components/skeletonCardList/skeletonCardList'
 import useGetUserData from '@/presentation/hooks/useGetUserData'
+import { DecodedAccountModel } from '@/domain/models/decoded-account-model'
 
 const Projects: React.FC = () => {
   const onError = useErrorHandler()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const user = useGetUserData()
+  const user: DecodedAccountModel = useGetUserData()
   const { data, status, error } = useListProjects(onError, user.cliente_id)
   const [search, setSearch] = useState('')
   const onCloseModal = (): void => {
@@ -188,7 +189,7 @@ const Projects: React.FC = () => {
           </Box>
         )}
       </Container>
-      <CreateProjectModal isOpen={isOpen} onClose={onCloseModal} />
+      <CreateProjectModal isOpen={isOpen} onClose={onCloseModal} user={user}/>
     </>
   )
 }

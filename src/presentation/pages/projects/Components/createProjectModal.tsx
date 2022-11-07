@@ -16,13 +16,15 @@ import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import FormField from '@/presentation/components/formField/formField'
 import useCreateProject from '@/presentation/hooks/useCreateProject'
+import { DecodedAccountModel } from '@/domain/models/decoded-account-model'
 
 type props = {
   isOpen: boolean
   onClose: () => void
+  user: DecodedAccountModel
 }
 
-const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
+const CreateProjectModal: React.FC<props> = ({ isOpen, onClose, user }: props) => {
   const toast = useToast()
   const handleCloseModal = (): void => {
     resetField('nome')
@@ -62,6 +64,7 @@ const CreateProjectModal: React.FC<props> = ({ isOpen, onClose }: props) => {
     formState: { errors },
   } = useForm<CreateProject.Params>({
     defaultValues: {
+      cliente_id: user.cliente_id,
       nome: '',
       descricao: '',
     },

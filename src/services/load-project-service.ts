@@ -5,7 +5,7 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 import { ResourceNotFoundError } from '@/domain/errors/resource-not-found-error'
 
 export default class LoadProjectsService implements LoadProjects, LoadProjectById {
-  async loadAllByClientId (idCliente: string): Promise<LoadProjects.Model[]> {
+  async loadAllByClientId (idCliente: number): Promise<LoadProjects.Model[]> {
     const httpResponse = await makeRequest({
       url: makeApiUrl(`/api/projetos/cliente/${idCliente}`),
       method: 'get',

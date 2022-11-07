@@ -120,10 +120,10 @@ export function makeServer ({ environment = 'development' } = {}) {
         return project
       })
 
-      this.post('/project/create', async (schema, request) => {
+      this.post('/projetos', async (schema, request) => {
         const attrs = JSON.parse(request.requestBody)
 
-        const model = { cliente_id: 1, nome: attrs.nome, descricao: attrs.descricao, created_at: new Date(), updated_at: new Date() }
+        const model = { cliente_id: attrs.cliente_id, nome: attrs.nome, descricao: attrs.descricao, created_at: new Date(), updated_at: new Date() }
         schema.projects.create(model)
         return new Response(200, {}, { message: 'projeto criado com sucesso' },
         )

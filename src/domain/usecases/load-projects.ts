@@ -1,7 +1,7 @@
 import { ProjectModel } from '@/domain/models'
 
 export interface LoadProjects {
-  loadAllByClientId: (idCliente: string) => Promise<LoadProjects.Model[]>
+  loadAllByClientId: (idCliente: number) => Promise<LoadProjects.Model[]>
 }
 
 export namespace LoadProjects {

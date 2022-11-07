@@ -5,14 +5,16 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class CreateProjectService implements CreateProject {
   async create (params: CreateProject.Params): Promise<CreateProject.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl('/api/project/create'),
+      url: makeApiUrl('/api/projetos'),
       method: 'post',
       body: params,
     })
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return httpResponse.body
+      case HttpStatusCode.created: return httpResponse.body
       case HttpStatusCode.forbidden: throw new AccessDeniedError()
       default: throw new UnexpectedError()
     }
   }
 }
+
+// Checkado com ronaldo

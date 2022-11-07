@@ -1,7 +1,8 @@
 
 export type createProjectParams = {
+  cliente_id: number
   nome: string
-  descricao: string
+  descricao?: string
 }
 
 export interface CreateProject {
