@@ -6,6 +6,8 @@ import {
   Alert,
   AlertIcon,
   useToast,
+  Switch,
+  Spacer,
 } from '@chakra-ui/react'
 import { FiTrash2 } from 'react-icons/fi'
 import React, { useState } from 'react'
@@ -38,7 +40,6 @@ const UpdateSegmentForm: React.FC<props> = ({
     reset()
     onClose()
   }
-  console.log('agregadoId: ', agregado)
   const [validSubmit, setValidSubmit] = useState(false)
 
   const onError = async (error: Error): Promise<void> => {
@@ -108,10 +109,23 @@ const UpdateSegmentForm: React.FC<props> = ({
     setMainPercent(value)
     setValidSubmit(value < 0)
   }
+  const [checked, setChecked] = useState(defaultValues?.ativado ?? false)
+  const handleSwitchToggle = (): void => {
+    const newCheckedValue = !checked
+    setChecked(newCheckedValue)
+  }
 
   return (
     <Box>
-      <Text>{agregadoName}</Text>
+      <Box display="flex" my={2} py={2} >
+
+        <Text fontWeight="bold" >{agregadoName}</Text>
+        <Spacer />
+        <Box display='flex' flexDirection="row">
+          <Switch colorScheme="facebook" isChecked={checked} onChange={handleSwitchToggle}/>
+          <Text pl={2}>Ativado</Text>
+        </Box>
+      </Box>
       <form
         id="updateStrategyHasAgregadoForm"
         autoComplete="off"

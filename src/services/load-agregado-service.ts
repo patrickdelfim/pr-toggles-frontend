@@ -21,6 +21,8 @@ export default class LoadAgregadoService implements LoadAgregadoByProjectId {
         }))
       case HttpStatusCode.forbidden:
         throw new AccessDeniedError()
+      case HttpStatusCode.notFound:
+        return []
       default:
         throw new UnexpectedError()
     }

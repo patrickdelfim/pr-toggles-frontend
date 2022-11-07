@@ -62,13 +62,13 @@ export function makeServer ({ environment = 'development' } = {}) {
       server.create('project', { projeto_id: 2, cliente_id: 1, nome: 'back end do futuro 2', descricao: '', created_at: new Date(), updated_at: new Date() })
       server.create('project', { projeto_id: 3, cliente_id: 1, nome: 'back end do futuro 3', descricao: 'descricao linda do projeto 2', created_at: new Date(), updated_at: new Date() })
       const chatBot = server.create('feature', { projeto_id: '3', nome: 'chatBot', descricao: 'liberação gradual de chatbot', ativada_prod: false, ativada_homolog: false, ativada_dev: true, estrategias: null, created_at: new Date(), updated_at: new Date() })
-      server.create('strategy', { feature: chatBot, funcionalidade_id: chatBot.id, ambiente: 'dev', valor: true, variacoes: [] })
-      server.create('strategy', { feature: chatBot, funcionalidade_id: chatBot.id, ambiente: 'homolog', valor: false, variacoes: [] })
-      server.create('strategy', { feature: chatBot, funcionalidade_id: chatBot.id, ambiente: 'prod', valor: 'trds', variacoes: [{ valor: 'blabla', peso: 10 }, { valor: 'salaz', peso: 20 }] })
+      server.create('strategy', { feature: chatBot, featureId: chatBot.id, ambiente: 'dev', valor: true, variacoes: [] })
+      server.create('strategy', { feature: chatBot, featureId: chatBot.id, ambiente: 'homolog', valor: false, variacoes: [] })
+      server.create('strategy', { feature: chatBot, featureId: chatBot.id, ambiente: 'prod', valor: 'trds', variacoes: [{ valor: 'blabla', peso: 10 }, { valor: 'salaz', peso: 20 }] })
       const natal = server.create('feature', { projeto_id: '3', nome: 'Layout especial de natal', descricao: '', ativada_prod: true, ativada_homolog: true, ativada_dev: false, estrategias: null, created_at: new Date(), updated_at: new Date() })
-      const devStrategy = server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'dev', valor: 55, variacoes: [] })
-      server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'homolog', valor: 32, variacoes: [] })
-      server.create('strategy', { feature: natal, funcionalidade_id: natal.id, ambiente: 'prod', valor: 100, variacoes: [{ valor: 120, peso: 60 }, { valor: 130, peso: 20 }] })
+      const devStrategy = server.create('strategy', { feature: natal, featureId: natal.id, ambiente: 'dev', valor: 55, variacoes: [] })
+      server.create('strategy', { feature: natal, featureId: natal.id, ambiente: 'homolog', valor: 32, variacoes: [] })
+      server.create('strategy', { feature: natal, featureId: natal.id, ambiente: 'prod', valor: 100, variacoes: [{ valor: 120, peso: 60 }, { valor: 130, peso: 20 }] })
       server.create('agregado', { projectId: 3, nome: 'grupo_A', descricao: 'grupo do tipo 1 de agregados', regras: [], created_at: new Date(), updated_at: new Date() })
       server.create('agregado', { projectId: 3, nome: 'moradores_RJ', descricao: 'grupo dos moradores do rj de agregados', regras: [], created_at: new Date(), updated_at: new Date() })
       server.create('agregado', { projectId: 3, nome: 'clientes_em_potencial', descricao: '', regras: [], created_at: new Date(), updated_at: new Date() })
@@ -109,7 +109,7 @@ export function makeServer ({ environment = 'development' } = {}) {
 
       this.get('/projects/:id', (schema, request) => {
         const id = request.params.id
-        return schema.projects.findBy({ projeto_id: id })
+        return schema.projects.findBy({ id })
       })
 
       this.post('/project/create', async (schema, request) => {
@@ -169,8 +169,8 @@ export function makeServer ({ environment = 'development' } = {}) {
         // Edit STRATEGY SECTION
         if (body?.estrategia?.id && Object.keys(strategyToUpdate).length !== 0) {
           const estrategia = await schema.strategies.findBy({ id: body?.estrategia?.id })
-          if (estrategia.attrs.funcionalidade_id === feature.attrs.id) {
-            estrategia.update(strategyToUpdate)
+          if (estrategia.attrs.featureId === feature.attrs.id) {
+            await estrategia.update(strategyToUpdate)
           }
         }
 
@@ -190,13 +190,13 @@ export function makeServer ({ environment = 'development' } = {}) {
         console.log('criando ambiente...')
 
         console.log('criando ambiente ', 'dev')
-        const estrategiaDev = await schema.strategies.create({ funcionalidade_id: feature.id, ambiente: 'dev', valor: attrs.valor, variacoes: [...attrs.variacoes] })
+        const estrategiaDev = await schema.strategies.create({ featureId: feature.id, ambiente: 'dev', valor: attrs.valor, variacoes: [...attrs.variacoes] })
         console.log('criando ambiente ', 'hml')
-        const estrategiaHml = await schema.strategies.create({ funcionalidade_id: feature.id, ambiente: 'hml', valor: attrs.valor, variacoes: [...attrs.variacoes] })
+        const estrategiaHml = await schema.strategies.create({ featureId: feature.id, ambiente: 'homolog', valor: attrs.valor, variacoes: [...attrs.variacoes] })
         console.log('criando ambiente ', 'prd')
-        const estrategiaPrd = await schema.strategies.create({ funcionalidade_id: feature.id, ambiente: 'prd', valor: attrs.valor, variacoes: [...attrs.variacoes] })
+        const estrategiaPrd = await schema.strategies.create({ featureId: feature.id, ambiente: 'prod', valor: attrs.valor, variacoes: [...attrs.variacoes] })
 
-        await feature.update({ estrategias: [estrategiaDev.id, estrategiaHml.id, estrategiaPrd.id] })
+        await feature.update({ strategyIds: [estrategiaDev.id, estrategiaHml.id, estrategiaPrd.id] })
         console.log(feature)
         return new Response(200, {}, { message: 'Feature criada com sucesso' },
         )
@@ -220,7 +220,7 @@ export function makeServer ({ environment = 'development' } = {}) {
       this.get('/projects/:id/agregados', async (schema, request) => {
         const id = request.params.id
         const agregados = await schema.agregados.where({ projectId: id })
-        if (agregados.length === 0) return new Response(400, {}, { message: 'Error ao buscar agregados.' })
+        if (agregados.length === 0) return new Response(404, {}, { message: 'Error ao buscar agregados.' })
         return agregados
       })
 
@@ -233,13 +233,13 @@ export function makeServer ({ environment = 'development' } = {}) {
         const strategyHasAgregado = await schema.strategyHasAgregados.where({ strategyId: attrs.estrategia_id })
         if (strategyHasAgregado.models.length > 0) {
           console.log('atualizando strategyHasAgregado.')
-          const newUpdatedModel = { agregadoId: attrs.agregado_id, valor: attrs.valor, variacoes: attrs.variacoes, updated_at: new Date() }
+          const newUpdatedModel = { agregadoId: attrs.agregado_id, ativado: attrs.ativado, valor: attrs.valor, variacoes: attrs.variacoes, updated_at: new Date() }
           await strategyHasAgregado.update({ ...newUpdatedModel })
           return new Response(200, {}, { message: 'strategyHasAgregado atualizado com sucesso' },
           )
         } else {
           console.log('criandoStrategy has agregado')
-          const model = { agregadoId: attrs.agregado_id, strategyId: attrs.estrategia_id, valor: attrs.valor, variacoes: attrs.variacoes, created_at: new Date(), updated_at: new Date() }
+          const model = { agregadoId: attrs.agregado_id, strategyId: attrs.estrategia_id, ativado: attrs.ativado, valor: attrs.valor, variacoes: attrs.variacoes, created_at: new Date(), updated_at: new Date() }
           await schema.strategyHasAgregados.create(model)
           return new Response(200, {}, { message: 'strategyHasAgregado criado com sucesso' },
           )
