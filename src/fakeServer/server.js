@@ -25,6 +25,19 @@ export function makeServer ({ environment = 'development' } = {}) {
           return key === 'id' ? 'projeto_id' : key
         },
       }),
+      feature: RestSerializer.extend({
+        embed: true,
+        root: false,
+        keyForAttribute (key) {
+          return key === 'projetoId' ? 'projeto_id' : key
+        },
+        keyForForeignKey (key) {
+          if (key === 'projetoId') {
+            return 'projeto_id'
+          }
+          return key
+        },
+      }),
       // agregado: RestSerializer.extend({
       //   keyForRelationship (key) {
       //     return key === 'projectId' ? 'projeto_id' : key
@@ -145,11 +158,10 @@ export function makeServer ({ environment = 'development' } = {}) {
         return responsePayload
       })
 
-      this.patch('/features/:featureId', async (schema, request) => {
+      this.patch('/funcionalidades/:featureId', async (schema, request) => {
         // TODO: INCLUIR A EDICAO DE ESTRATEGIAS NESSE PATH
         console.log('server: start update feature')
         const featureEditableSchema = ['ativada_prod', 'ativada_homolog', 'ativada_dev', 'descricao']
-        const strategyEditableSchema = ['valor', 'variacoes']
         const featureId = request.params.featureId
         const body = JSON.parse(request.requestBody)
         const feature = await schema.features.findBy({ id: featureId })
@@ -162,30 +174,13 @@ export function makeServer ({ environment = 'development' } = {}) {
             Object.assign(fieldsToUpdate, { [field]: body[field] })
           }
         }
-        const strategyToUpdate = {}
-        if (body?.estrategia) {
-          for (const field of strategyEditableSchema) {
-            if (Object.keys(body?.estrategia).includes(field)) {
-              Object.assign(strategyToUpdate, { [field]: body.estrategia[field] })
-            }
-          }
-        }
-        if (Object.keys(fieldsToUpdate).length === 0 && Object.keys(strategyToUpdate).length === 0) return new Response(400, {}, { message: 'Nenhum campo foi atualizado.' })
-
-        await feature.update(fieldsToUpdate)
-        // Edit STRATEGY SECTION
-        if (body?.estrategia?.id && Object.keys(strategyToUpdate).length !== 0) {
-          const estrategia = await schema.strategies.findBy({ id: body?.estrategia?.id })
-          if (estrategia.attrs.featureId === feature.attrs.id) {
-            await estrategia.update(strategyToUpdate)
-          }
+        if (Object.keys(fieldsToUpdate).length !== 0) {
+          await feature.update(fieldsToUpdate)
         }
 
         // Return updated feature
         const updatedFeature = await schema.features.findBy({ id: featureId })
-        const response = { ...updatedFeature.attrs, estrategias: extractStrategyFromFeatureObject(updatedFeature) }
-        delete response.strategyIds
-        return { feature: response }
+        return updatedFeature
       })
 
       this.post('/funcionalidades', async (schema, request) => {
@@ -209,6 +204,35 @@ export function makeServer ({ environment = 'development' } = {}) {
         )
       })
 
+      /* ==========================
+                STRATEGY
+         ========================== */
+
+      this.patch('/estrategias/:estrategiaId', async (schema, request) => {
+        console.log('server: start update feature')
+        const strategyEditableSchema = ['valor', 'variacoes']
+        const body = JSON.parse(request.requestBody)
+
+        const strategyToUpdate = {}
+
+        for (const field of strategyEditableSchema) {
+          if (Object.keys(body).includes(field)) {
+            Object.assign(strategyToUpdate, { [field]: body[field] })
+          }
+        }
+
+        if (Object.keys(strategyToUpdate).length === 0) return new Response(400, {}, { message: 'Nenhum campo foi atualizado.' })
+
+        // Edit STRATEGY SECTION
+        if (body?.id && Object.keys(strategyToUpdate).length !== 0) {
+          const estrategia = await schema.strategies.findBy({ id: body.id })
+          const updatedStrategy = await estrategia.update(strategyToUpdate)
+          return updatedStrategy
+        }
+
+        return new Response(500, {}, { message: 'Error.' },
+        )
+      })
       /* ==========================
               Agregados
         ========================== */

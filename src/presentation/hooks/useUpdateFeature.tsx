@@ -8,7 +8,8 @@ function useUpdateFeature (onSuccessAction, onErrorAction): any {
 
   return useMutation(async (params: UpdateFeature.params) => await updateFeatureService.update(params), {
     onSuccess: async (newFeature) => {
-      await queryClient.setQueryData(['features', `${newFeature.projeto_id}`], (old: UpdateFeature.Model[]) => old.map(feature => feature.id === newFeature.id ? newFeature : feature))
+      await queryClient.invalidateQueries(['features', `${newFeature.projeto_id}`])
+      // await queryClient.setQueryData(['features', `${newFeature.projeto_id}`], (old: UpdateFeature.Model[]) => old.map(feature => feature.id === newFeature.id ? newFeature : feature))
       onSuccessAction(newFeature.id)
     },
     onError: (error: Error) => {
