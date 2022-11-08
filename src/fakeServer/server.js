@@ -43,6 +43,10 @@ export function makeServer ({ environment = 'development' } = {}) {
       //     return key === 'projectId' ? 'projeto_id' : key
       //   },
       // })
+      agregado: RestSerializer.extend({
+        embed: true,
+        root: false,
+      }),
       strategyHasAgregado: ApplicationSerializer.extend({
         keyForForeignKey (key) {
           if (key === 'strategy') {
@@ -248,7 +252,7 @@ export function makeServer ({ environment = 'development' } = {}) {
         )
       })
 
-      this.get('/projects/:id/agregados', async (schema, request) => {
+      this.get('/agregados/projeto/:id', async (schema, request) => {
         const id = request.params.id
         const agregados = await schema.agregados.where({ projectId: id })
         if (agregados.length === 0) return new Response(404, {}, { message: 'Error ao buscar agregados.' })

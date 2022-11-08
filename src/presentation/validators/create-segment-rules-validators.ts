@@ -3,7 +3,7 @@ import { UseFormGetValues } from 'react-hook-form'
 
 /* eslint-disable no-useless-escape */
 const createSegmentRulesValidation = (
-  getValues: UseFormGetValues<CreateAgregado.params>
+  getValues: UseFormGetValues<CreateAgregado.Params>
 ): createSegmentRulesValidatorsProtocol => ({
   nome: {
     required: 'Campo obrigatório',
@@ -34,7 +34,7 @@ const createSegmentRulesValidation = (
       message: 'Campo Chave atingiu numero máximo de characteres.',
     },
   },
-  operator: {
+  operation: {
     required: 'Campo Operator obrigatório',
   },
   value: {
@@ -76,7 +76,7 @@ export interface createSegmentRulesValidatorsProtocol {
       message: string
     }
   }
-  operator: {
+  operation: {
     required: string
   }
   value: {

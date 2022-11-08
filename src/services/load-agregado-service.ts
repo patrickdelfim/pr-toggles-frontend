@@ -5,10 +5,10 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class LoadAgregadoService implements LoadAgregadoByProjectId {
   async loadByProjectId (projectId: string): Promise<LoadAgregado.Model[]> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl(`/api/projects/${projectId}/agregados`),
+      url: makeApiUrl(`/api/agregados/projeto/${projectId}`),
       method: 'get',
     })
-    const agregadoList = httpResponse.body?.agregados || []
+    const agregadoList = httpResponse.body || []
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
         return agregadoList.map((feature) => Object.assign(feature, {
@@ -28,3 +28,5 @@ export default class LoadAgregadoService implements LoadAgregadoByProjectId {
     }
   }
 }
+
+// Checkado com ronaldo

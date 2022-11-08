@@ -32,7 +32,7 @@ const NestedSegmentRulesArray: React.FC<nestedSegmentRulesArray> = ({
       append([
         {
           key: '',
-          operator: '',
+          operation: '',
           value: '',
         },
       ])
@@ -74,9 +74,9 @@ const NestedSegmentRulesArray: React.FC<nestedSegmentRulesArray> = ({
                 error={{ message: '' }}
                 control={control}
                 validators={register(
-                  `regras.${nestIndex}.${index}.operator` as const,
+                  `regras.${nestIndex}.${index}.operation` as const,
                   {
-                    ...validators.operator,
+                    ...validators.operation,
                   }
                 )}
                 options={[
@@ -122,7 +122,7 @@ const NestedSegmentRulesArray: React.FC<nestedSegmentRulesArray> = ({
           </Box>
           <Text px={4} fontSize="sm" color="red.500">
             {errors?.regras?.[nestIndex]?.[index]?.key?.message ||
-              errors?.regras?.[nestIndex]?.[index]?.operator?.message ||
+              errors?.regras?.[nestIndex]?.[index]?.operation?.message ||
               errors?.regras?.[nestIndex]?.[index]?.value.message}
           </Text>
           </Box>
@@ -157,7 +157,7 @@ const NestedSegmentRulesArray: React.FC<nestedSegmentRulesArray> = ({
                 onClick={() => {
                   append({
                     key: '',
-                    operator: '',
+                    operation: '',
                     value: '',
                   })
                 }}

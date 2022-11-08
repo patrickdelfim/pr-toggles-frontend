@@ -1,5 +1,5 @@
 export type AgregadoRegras = {
   key: string
-  operator: string
+  operation: string
   value: string
 }

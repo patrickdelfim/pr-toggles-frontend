@@ -110,7 +110,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
 
       <Button variant="outline" onClick={() => append([{
         key: '',
-        operator: '',
+        operation: '',
         value: '',
       }])}>And Gate</Button>
       </Box>
