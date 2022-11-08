@@ -5,10 +5,11 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class LoadFeatureService implements LoadFeaturesByProjectId {
   async loadByProjectId (projectId: string): Promise<LoadFeaturesByProjectId.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl(`/api/projects/${projectId}/features`),
+      url: makeApiUrl(`/api/funcionalidades/projeto/${projectId}`),
       method: 'get',
     })
-    const featureList = httpResponse.body?.features || []
+
+    const featureList = httpResponse.body || []
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
         return featureList.map((feature) => Object.assign(feature, {
@@ -28,3 +29,5 @@ export default class LoadFeatureService implements LoadFeaturesByProjectId {
     }
   }
 }
+
+// Checkado com ronaldo

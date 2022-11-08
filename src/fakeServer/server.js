@@ -112,7 +112,6 @@ export function makeServer ({ environment = 'development' } = {}) {
       this.get('/projetos/:id', async (schema, request) => {
         const id = request.params.id
         const project = await schema.projects.findBy({ id })
-        console.log(project)
         if (!project) {
           return new Response(404, {}, { message: 'Projeto não encontrado.' },
           )
@@ -133,7 +132,7 @@ export function makeServer ({ environment = 'development' } = {}) {
                 FEATURES
          ========================== */
 
-      this.get('/projects/:id/features', async (schema, request) => {
+      this.get('/funcionalidades/projeto/:id', async (schema, request) => {
         const id = request.params.id
         const features = await schema.features.where({ projeto_id: id })
         if (features.length === 0) return new Response(404, {}, { message: 'Features não encontrada.' })
@@ -143,7 +142,7 @@ export function makeServer ({ environment = 'development' } = {}) {
           delete featureWithStrategies.strategyIds
           responsePayload.push(featureWithStrategies)
         })
-        return { features: responsePayload }
+        return responsePayload
       })
 
       this.patch('/features/:featureId', async (schema, request) => {
@@ -270,7 +269,11 @@ export function makeServer ({ environment = 'development' } = {}) {
 
 const extractStrategyFromFeatureObject = (feature) => {
   const estrategias = []
-  feature.strategy.models.forEach(estrategia => estrategias.push(estrategia.attrs))
+  feature.strategy.models.forEach(estrategia => {
+    const newObj = { ...estrategia.attrs, funcionalidade_id: estrategia.attrs.featureId }
+    delete newObj.featureId
+    estrategias.push(newObj)
+  })
   const featureWithStrategies = { ...feature.attrs, estrategias }
   delete featureWithStrategies.strategyIds
   return estrategias
