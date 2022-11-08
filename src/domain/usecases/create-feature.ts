@@ -1,7 +1,7 @@
 import { variacao } from '../models/variacao-model'
 
 export type createFeatureParams = {
-  project_id: string
+  projeto_id: string
   nome: string
   descricao: string
   valor: string

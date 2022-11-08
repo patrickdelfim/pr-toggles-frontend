@@ -6,13 +6,12 @@ export default class CreateFeatureService implements CreateFeature {
   async create (params: CreateFeature.Params): Promise<CreateFeature.Model> {
     console.log('starting create feature service')
     const httpResponse = await makeRequest({
-      url: makeApiUrl('/api/feature'),
+      url: makeApiUrl('/api/funcionalidades'),
       method: 'post',
       body: params,
     })
-    console.log(httpResponse.body)
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return httpResponse.body
+      case HttpStatusCode.created: return httpResponse.body
       case HttpStatusCode.forbidden:
         throw new AccessDeniedError()
       default:
@@ -20,3 +19,4 @@ export default class CreateFeatureService implements CreateFeature {
     }
   }
 }
+// Checkado com ronaldo

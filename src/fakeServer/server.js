@@ -188,7 +188,7 @@ export function makeServer ({ environment = 'development' } = {}) {
         return { feature: response }
       })
 
-      this.post('/feature', async (schema, request) => {
+      this.post('/funcionalidades', async (schema, request) => {
         const attrs = JSON.parse(request.requestBody)
         console.log('attr values: ', attrs)
         const model = { projeto_id: attrs.projeto_id, nome: attrs.nome, descricao: attrs.descricao, estrategias: [], ativada_prod: true, ativada_homolog: true, ativada_dev: true, created_at: new Date(), updated_at: new Date() }
