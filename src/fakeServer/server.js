@@ -241,7 +241,7 @@ export function makeServer ({ environment = 'development' } = {}) {
               Agregados
         ========================== */
 
-      this.post('/agregado', async (schema, request) => {
+      this.post('/agregados', async (schema, request) => {
         const attrs = JSON.parse(request.requestBody)
         console.log('attr values: ', attrs)
         const model = { projectId: attrs.projeto_id, nome: attrs.nome, descricao: attrs.descricao, regras: attrs.regras, created_at: new Date(), updated_at: new Date() }
