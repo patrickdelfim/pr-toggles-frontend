@@ -11,7 +11,15 @@ module.exports = merge(common, {
     rules: [{
       test: /\.ts(x?)$/,
       loader: 'ts-loader',
-      exclude: /node_modules/
+      exclude: /node_modules/,
+      options: {
+        transpileOnly: true,
+        experimentalWatchApi: true,
+      },
+    },
+    {
+      test: /\.css$/,
+      loader: 'css-loader',
     }, {
       test: /\.scss$/,
       use: [{
@@ -33,14 +41,10 @@ module.exports = merge(common, {
   },
   plugins: [
     new DefinePlugin({
-      'process.env.API_URL': JSON.stringify('https://fordevs.herokuapp.com/api')
+      'process.env.API_URL': JSON.stringify('http://localhost:3000')
     }),
     new HtmlWebpackPlugin({
       template: './template.prod.html',
-      favicon: './public/favicon.png'
     }),
-    new MiniCssExtractPlugin({
-      filename: 'main-bundle-[contenthash].css'
-    })
   ]
 })

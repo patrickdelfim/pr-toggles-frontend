@@ -32,6 +32,7 @@ type props = {
 const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
   const toast = useToast()
   const params = useParams()
+  const projectId = parseInt(params.id, 10)
   const handleCloseModal = (): void => {
     reset()
     onClose()
@@ -57,7 +58,7 @@ const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
     })
   }
 
-  const createFeatureMutation = useCreateFeature(params.id, onSuccess, onError)
+  const createFeatureMutation = useCreateFeature(projectId, onSuccess, onError)
 
   const {
     handleSubmit,
@@ -96,7 +97,7 @@ const CreateFeatureDrawer: React.FC<props> = ({ isOpen, onClose }: props) => {
     values: CreateFeature.Params
   ) => {
     const payload = {
-      projeto_id: params.id,
+      projeto_id: projectId,
       ...values,
       variacoes: values.variacoes.map(element => ({ valor: element.valor, peso: parseFloat(element.peso) }))
     }

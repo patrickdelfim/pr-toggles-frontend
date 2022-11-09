@@ -5,12 +5,12 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class AddAccountService implements AddAccount {
   async add (params: AddAccount.Params): Promise<AddAccount.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl('/api/cliente'),
+      url: makeApiUrl('/api/clientes'),
       method: 'post',
       body: params,
     })
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return httpResponse.body
+      case HttpStatusCode.created: return httpResponse.body
       case HttpStatusCode.forbidden: throw new EmailInUseError()
       default: throw new UnexpectedError()
     }
