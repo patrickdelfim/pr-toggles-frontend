@@ -13,6 +13,7 @@ type props = {
 }
 const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props) => {
   const params = useParams()
+  const projectId = parseInt(params.id)
   const toast = useToast()
   const onSuccess = async (): Promise<void> => {
     toast({
@@ -31,7 +32,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
     })
   }
 
-  const agregadoMutation = useCreateAgregado(params.id, onSuccess, onError)
+  const agregadoMutation = useCreateAgregado(projectId, onSuccess, onError)
   const {
     handleSubmit,
     register,
@@ -41,7 +42,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
     formState: { errors },
   } = useForm<CreateAgregado.Params>({
     defaultValues: {
-      projeto_id: params.id,
+      projeto_id: projectId,
       nome: '',
       descricao: '',
       regras: [[]],

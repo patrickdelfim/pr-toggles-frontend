@@ -2,7 +2,7 @@ import { AgregadoModel } from '../models/agregado-model'
 import { AgregadoRegras } from '../models/regras-model'
 
 export type createAgregadoParams = {
-  projeto_id: string
+  projeto_id: number
   nome: string
   descricao?: string
   regras: AgregadoRegras[][]
