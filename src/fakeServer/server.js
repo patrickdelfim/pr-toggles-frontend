@@ -21,9 +21,14 @@ export function makeServer ({ environment = 'development' } = {}) {
       project: RestSerializer.extend({
         embed: true,
         root: false,
-        keyForAttribute (key) {
-          return key === 'id' ? 'projeto_id' : key
-        },
+        // keyForAttribute (key) {
+        //   if (key === 'id') {
+        //     console.log('projeto_id: ', key)
+        //     return 'projeto_id'
+        //   }
+        //   console.log(key)
+        //   return key
+        // },
       }),
       feature: RestSerializer.extend({
         embed: true,
@@ -109,7 +114,7 @@ export function makeServer ({ environment = 'development' } = {}) {
         },
         )
       })
-      this.post('/cliente/', async (schema, request) => {
+      this.post('/clientes/', async (schema, request) => {
         return new Response(200, {}, {
           // deepcode ignore HardcodedNonCryptoSecret: <please specify a reason of ignoring this>
           accessToken: 'any_token',
@@ -122,8 +127,10 @@ export function makeServer ({ environment = 'development' } = {}) {
                 PROJECTS
          ========================== */
 
-      this.get('/projetos/cliente/:id', (schema, request) => {
-        return schema.projects.all()
+      this.get('/projetos/cliente/:id', async (schema, request) => {
+        const projetos = await schema.projects.all()
+        console.log(projetos)
+        return projetos
       })
 
       this.get('/projetos/:id', async (schema, request) => {
