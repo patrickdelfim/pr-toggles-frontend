@@ -19,6 +19,7 @@ import { FiMenu, FiChevronDown } from 'react-icons/fi'
 import { Outlet } from 'react-router-dom'
 import logo from '../../assets/logo-no-text.svg'
 import { ApiContext } from '@/presentation/context'
+import { useLogout } from '@/presentation/hooks/useLogout'
 
 type props = {
   onOpen?: () => void
@@ -26,6 +27,7 @@ type props = {
 
 const Header: React.FC<props> = ({ onOpen }: props) => {
   const { getCurrentAccount } = useContext(ApiContext)
+  const logout = useLogout()
   const withSidebar = !!onOpen
 
   const userData = getCurrentAccount()
@@ -104,7 +106,7 @@ const Header: React.FC<props> = ({ onOpen }: props) => {
                 <MenuItem>Settings</MenuItem>
                 <MenuItem>Billing</MenuItem>
                 <MenuDivider />
-                <MenuItem>Sign out</MenuItem>
+                <MenuItem onClick={() => logout()}>Sign out</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
