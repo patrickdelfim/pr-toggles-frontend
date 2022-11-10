@@ -21,6 +21,12 @@ export function makeServer ({ environment = 'development' } = {}) {
       project: RestSerializer.extend({
         embed: true,
         root: false,
+        keyForAttribute (key) {
+          if (key === 'createdAt') return 'created_at'
+          if (key === 'updatedAt') return 'updated_at'
+
+          return key
+        },
         // keyForAttribute (key) {
         //   if (key === 'id') {
         //     console.log('projeto_id: ', key)
@@ -148,7 +154,7 @@ export function makeServer ({ environment = 'development' } = {}) {
 
         const model = { cliente_id: attrs.cliente_id, nome: attrs.nome, descricao: attrs.descricao, created_at: new Date(), updated_at: new Date() }
         schema.projects.create(model)
-        return new Response(200, {}, { message: 'projeto criado com sucesso' },
+        return new Response(201, {}, { message: 'projeto criado com sucesso' },
         )
       })
 

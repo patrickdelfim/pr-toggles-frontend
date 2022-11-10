@@ -4,8 +4,8 @@ import { Response } from 'miragejs'
 import * as FormHelper from '../utils/form-helpers'
 import faker from '@faker-js/faker'
 
-const path = /projects/
-const pathCreateProject = /project\/create/
+const path = /projetos\/cliente\/2/ // numero 2 é a cliente Id do accessToken. Access token inserido dentro do fixture
+const pathCreateProject = /projetos/
 
 describe('ProjectList', () => {
   let server
@@ -61,7 +61,7 @@ describe('ProjectList', () => {
   it('should present not available projects message', () => {
     server.timing = 2000
     server.get(path, () => {
-      return new Response(200, {}, {})
+      return new Response(200, {}, [])
     })
     cy.visit('panel')
     cy.getByTestId('skeletonCardList').children().should('have.length', 5)
