@@ -38,7 +38,7 @@ describe('login', () => {
   })
 
   it('should present error state if is invalid', () => {
-    cy.getByTestId('username').type(faker.random.word())
+    cy.getByTestId('username').type(faker.random.alpha(10))
     cy.getByTestId('submit').click()
     FormHelper.testInputStatus('username', 'Email invalido.')
     FormHelper.testInputStatus('password', 'Campo obrigatório')
@@ -80,7 +80,7 @@ describe('login', () => {
     Helper.testUrl('/cliente')
   })
   it('should navigate to Panel page when account already defined', () => {
-    Helper.SetLocalStorageItem('account', { accessToken: 'any_token', name: 'myCompany' })
+    Helper.SetLocalStorageItem('account', { accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNpY2xhbm9AZ21haWwuY29tIiwic3ViIjoxLCJuYW1lIjoiQ2ljbGFubyBkYSBTaWx2YSIsImNsaWVudGVfaWQiOjIsImlhdCI6MTY2NzM1NjMwMX0.HgvwjoDIK-UisH5w7_eOcKo1mp_dOx0CytghEF4SIyE', name: 'myCompany' })
     cy.visit('login')
     Helper.testUrl('/panel')
   })
