@@ -115,9 +115,9 @@ export function makeServer ({ environment = 'development' } = {}) {
         )
       })
       this.post('/clientes/', async (schema, request) => {
-        return new Response(200, {}, {
+        return new Response(201, {}, {
           // deepcode ignore HardcodedNonCryptoSecret: <please specify a reason of ignoring this>
-          accessToken: 'any_token',
+          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNpY2xhbm9AZ21haWwuY29tIiwic3ViIjoxLCJuYW1lIjoiQ2ljbGFubyBkYSBTaWx2YSIsImNsaWVudGVfaWQiOjIsImlhdCI6MTY2NzM1NjMwMX0.HgvwjoDIK-UisH5w7_eOcKo1mp_dOx0CytghEF4SIyE',
           name: 'empresa do patrick'
         },
         )

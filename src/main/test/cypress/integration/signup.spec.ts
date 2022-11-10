@@ -5,7 +5,7 @@ import * as Helper from '../utils/helpers'
 import { makeServer } from '../../../../fakeServer/server.js'
 import { Response } from 'miragejs'
 
-const path = /cliente/
+const path = /clientes/
 
 const populateFields = (): void => {
   cy.getByTestId('nome_cliente').type(faker.name.findName())
@@ -55,7 +55,7 @@ describe('Cliente', () => {
   it('should present error state if is invalid', () => {
     cy.getByTestId('nome_cliente').type(faker.random.alphaNumeric(3))
     cy.getByTestId('nome_usuario').type(faker.random.numeric(3))
-    cy.getByTestId('email').type(faker.random.word())
+    cy.getByTestId('email').type(faker.random.alphaNumeric(10))
     cy.getByTestId('senha').type(faker.random.alphaNumeric(3))
     cy.getByTestId('confirmacao_senha').type(faker.random.alphaNumeric(4))
     cy.getByTestId('submit').click()
@@ -105,7 +105,7 @@ describe('Cliente', () => {
     Helper.testUrl('/login')
   })
   it('should navigate to Panel page when account already defined', () => {
-    Helper.SetLocalStorageItem('account', { accessToken: 'any_token', name: 'myCompany' })
+    Helper.SetLocalStorageItem('account', { accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNpY2xhbm9AZ21haWwuY29tIiwic3ViIjoxLCJuYW1lIjoiQ2ljbGFubyBkYSBTaWx2YSIsImNsaWVudGVfaWQiOjIsImlhdCI6MTY2NzM1NjMwMX0.HgvwjoDIK-UisH5w7_eOcKo1mp_dOx0CytghEF4SIyE', name: 'myCompany' })
     cy.visit('cliente')
     Helper.testUrl('/panel')
   })
