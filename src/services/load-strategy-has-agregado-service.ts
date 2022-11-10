@@ -5,7 +5,7 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class LoadEstrategiaHasAgregadoService implements LoadStrategyHasAgregadoByStrategyId {
   async loadByStrategyId (strategyId: string): Promise<LoadStrategyHasAgregadoByStrategyId.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl(`/api/estrategiaHasAgregado/${strategyId}`),
+      url: makeApiUrl(`/api/estrategias/${strategyId}/agregados`),
       method: 'get',
     })
     const estrategiaHasAgregado = httpResponse.body

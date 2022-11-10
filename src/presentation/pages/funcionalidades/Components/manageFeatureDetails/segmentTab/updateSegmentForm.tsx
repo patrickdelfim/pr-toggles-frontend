@@ -10,7 +10,7 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import { FiTrash2 } from 'react-icons/fi'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import FormField from '@/presentation/components/formField/formField'
 import { CreateOrUpdateEstrategiaHasAgregado } from '@/domain/usecases/create-estrategiaHasAgregado'
@@ -63,14 +63,14 @@ const UpdateSegmentForm: React.FC<props> = ({
     formState: { errors },
   } = useForm<CreateOrUpdateEstrategiaHasAgregado.Params>({
     defaultValues: {
-      estrategia_id: estrategiaId,
-      agregado_id: defaultValues?.agregado_id ?? '',
+      estrategia_id: parseInt(estrategiaId),
+      agregado_id: defaultValues?.agregado_id ? parseInt(defaultValues.agregado_id) : null,
       ativado: defaultValues?.ativado ?? false,
       valor: defaultValues?.valor ?? '',
       variacoes: defaultValues?.variacoes ?? [],
     },
   })
-  setValue('agregado_id', agregadoId)
+  setValue('agregado_id', parseInt(agregadoId))
   const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: 'variacoes', // unique name for your Field Array
@@ -94,6 +94,10 @@ const UpdateSegmentForm: React.FC<props> = ({
     console.log('update feature values: ', values)
     createOrUpdateStrategyHasAgregadoMutation.mutate(values)
   }
+  useEffect(() => {
+    const variacoes = getValues('variacoes')
+    if (variacoes.length > 0) calculateMainPercent()
+  }, [])
 
   const [mainPercent, setMainPercent] = useState(100)
   const calculateMainPercent = (): void => {

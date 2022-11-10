@@ -5,8 +5,8 @@ import { HttpStatusCode, makeApiUrl, makeRequest } from './api-service'
 export default class CreateOrUpdateStrategyHasAgregadoService implements CreateOrUpdateEstrategiaHasAgregado {
   async createOrUpdate (params: CreateOrUpdateEstrategiaHasAgregado.Params): Promise<CreateOrUpdateEstrategiaHasAgregado.Model> {
     const httpResponse = await makeRequest({
-      url: makeApiUrl('/api/strategyHasAgregado'),
-      method: 'put',
+      url: makeApiUrl('/api/estrategias/hasAgregado'),
+      method: 'patch',
       body: params,
     })
 

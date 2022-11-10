@@ -7,6 +7,7 @@ function useGetProject (projectId: string, initialData?, onError?): any {
 
   return useQuery<ProjectModel, Error>(['projects', `${projectId}`], async () => await loadProjectsService.loadByProjectId(projectId), {
     initialData,
+    retry: 2,
     onError
   })
 }

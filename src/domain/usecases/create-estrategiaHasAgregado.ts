@@ -2,8 +2,8 @@ import { EstrategiaHasAgregadoModel } from '../models/strategyHasAgregated-model
 import { variacao } from '../models/variacao-model'
 
 export type createOrUpdateEstrategiaHasAgregadoParams = {
-  estrategia_id: string
-  agregado_id: string
+  estrategia_id: number
+  agregado_id: number
   ativado: boolean
   valor: string
   variacoes?: variacao[]
