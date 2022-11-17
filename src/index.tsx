@@ -7,6 +7,7 @@ import { makeServer } from './fakeServer/server'
 import { createServer, Response } from 'miragejs'
 
 if (process.env.NODE_ENV === 'development') {
+  console.log('building fake server')
   makeServer({ environment: 'development' })
 }
 

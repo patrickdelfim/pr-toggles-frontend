@@ -88,9 +88,9 @@ export function makeServer ({ environment = 'development' } = {}) {
       })
     },
     seeds (server) {
-      server.create('project', { id: 1, cliente_id: 1, nome: 'back end do futuro', descricao: 'descricao linda do projeto', created_at: new Date(), updated_at: new Date() })
-      server.create('project', { id: 2, cliente_id: 1, nome: 'back end do futuro 2', descricao: '', created_at: new Date(), updated_at: new Date() })
-      server.create('project', { id: 3, cliente_id: 1, nome: 'back end do futuro 3', descricao: 'descricao linda do projeto 2', created_at: new Date(), updated_at: new Date() })
+      server.create('project', { id: 1, cliente_id: 1, nome: 'back end website principal', descricao: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', created_at: new Date(), updated_at: new Date() })
+      server.create('project', { id: 2, cliente_id: 1, nome: 'Aplicacao interna dos funcionarios', descricao: '', created_at: new Date(), updated_at: new Date() })
+      server.create('project', { id: 3, cliente_id: 1, nome: 'Loja virtual camisetas legais', descricao: 'camisetas legais is simply dummy text of the printing and typesetting industry.', created_at: new Date(), updated_at: new Date() })
       const chatBot = server.create('feature', { projeto_id: '3', nome: 'chatBot', descricao: 'liberação gradual de chatbot', ativada_prod: false, ativada_homolog: false, ativada_dev: true, estrategias: null, created_at: new Date(), updated_at: new Date() })
       server.create('strategy', { feature: chatBot, featureId: chatBot.id, ambiente: 'dev', valor: true, variacoes: [] })
       server.create('strategy', { feature: chatBot, featureId: chatBot.id, ambiente: 'homolog', valor: false, variacoes: [] })
