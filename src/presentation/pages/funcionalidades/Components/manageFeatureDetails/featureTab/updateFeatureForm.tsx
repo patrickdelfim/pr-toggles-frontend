@@ -200,7 +200,7 @@ const UpdateFeatureForm: React.FC<props> = ({ feature, isOpen, onClose, ambiente
               </Box>
               <Box px={4}>
                 <FormField
-                  fieldName="peso"
+                  fieldName="peso (%)"
                   fieldKey={field.id}
                   placeholder="Ex: valor peso"
                   type="number"
