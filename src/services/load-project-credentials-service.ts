@@ -8,10 +8,11 @@ export default class LoadProjectCredentialsService implements LoadProjectCredent
       url: makeApiUrl(`/api/chaves/projeto/${projectId}`),
       method: 'get',
     })
-    const featureList = httpResponse.body || []
+    const credentialList = httpResponse.body
+    if (httpResponse.body?.length === 0) throw new UnexpectedError()
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
-        return featureList.map((feature) => Object.assign(feature, {
+        return credentialList.map((feature) => Object.assign(feature, {
           created_at: new Date(feature.created_at).toLocaleDateString(
             'pt-BR'
           ),
@@ -22,7 +23,6 @@ export default class LoadProjectCredentialsService implements LoadProjectCredent
       case HttpStatusCode.forbidden:
         throw new AccessDeniedError()
       case HttpStatusCode.notFound:
-        return []
       default:
         throw new UnexpectedError()
     }
