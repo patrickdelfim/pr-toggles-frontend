@@ -37,10 +37,10 @@ interface LinkItemProps {
   path: string
 }
 const LinkItems: LinkItemProps[] = [
-  { name: 'Funcionalidades', icon: FiFlag, path: '#' },
+  { name: 'Funcionalidades', icon: FiFlag, path: '' },
   { name: 'Segmentos', icon: FiUsers, path: '#' },
   { name: 'Auditoria e Logs', icon: FiCompass, path: '#' },
-  { name: 'Configuração', icon: FiSettings, path: '#' },
+  { name: 'Configuração', icon: FiSettings, path: 'config' },
 ]
 
 export default function SidebarWithHeader (): JSX.Element {

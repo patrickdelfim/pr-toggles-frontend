@@ -22,6 +22,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import PrivateRoute from '@/presentation/components/private-route/private-route'
 import Funcionalidades from '@/presentation/pages/funcionalidades/funcionalidades'
 import NotFound from '@/presentation/pages/notFound/notFound'
+import Configuration from '@/presentation/pages/configuration/configuration'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +51,7 @@ const Router: React.FC = () => {
                 </Route>
                 <Route path="project/:id" element={<SidebarWithHeader />}>
                   <Route index element={<Funcionalidades />} />
+                  <Route path="config" element={<Configuration />} />
                 </Route>
               </Route>
               <Route

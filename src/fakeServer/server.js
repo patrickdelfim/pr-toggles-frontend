@@ -159,6 +159,42 @@ export function makeServer ({ environment = 'development' } = {}) {
       })
 
       /* ==========================
+                Chaves
+         ========================== */
+
+      this.get('/chaves/projeto/:id', async (schema, request) => {
+        const id = request.params.id
+        const project = await schema.projects.findBy({ id })
+        if (!project) {
+          return new Response(404, {}, { message: 'Projeto não encontrado.' },
+          )
+        }
+        return new Response(200, {}, [
+          {
+            id: '39709ce2-37cf-4ac0-9668-e99f360f0a6d',
+            projeto_id: 3,
+            ambiente: 'homolog',
+            created_at: '2022-11-17T23:15:52.000Z',
+            updated_at: '2022-11-17T23:15:52.000Z'
+          },
+          {
+            id: '8c2b48ca-5014-4e10-9d30-5ffb9c9b615b',
+            projeto_id: 3,
+            ambiente: 'prod',
+            created_at: '2022-11-17T23:15:52.000Z',
+            updated_at: '2022-11-17T23:15:52.000Z'
+          },
+          {
+            id: 'a628e3d3-b988-4403-a72f-3d25fa5e8938',
+            projeto_id: 3,
+            ambiente: 'dev',
+            created_at: '2022-11-17T23:15:52.000Z',
+            updated_at: '2022-11-17T23:15:52.000Z'
+          }
+        ])
+      })
+
+      /* ==========================
                 FEATURES
          ========================== */
 
