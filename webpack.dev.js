@@ -64,6 +64,7 @@ module.exports = merge(common, {
     }),
     new HtmlWebpackPlugin({
       template: './template.dev.html',
+      favicon: './public/favicon.png'
     }),
   ],
   cache: true,
