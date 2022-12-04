@@ -102,7 +102,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
         </Box>
           {index < andArrayFields.length - 1 && (<Box display='flex' flex-direction='row' alignItems='center' justifyContent='center' >
             <Divider orientation='horizontal' variant="dashed" borderColor={'gray.500'}/>
-            <Text px={2} color="gray.500">And</Text>
+            <Text px={2} color="gray.500">Or</Text>
             <Divider orientation='horizontal' variant="dashed" borderColor={'gray.500'}/>
           </Box>)}
         </Box>
@@ -113,7 +113,7 @@ const AgregadoManagement: React.FC<props> = ({ cancelAddAgregadoAction }: props)
         key: '',
         operation: '',
         value: '',
-      }])}>And Gate</Button>
+      }])}>Or Gate</Button>
       </Box>
       <Box width="70%" px={4}>
 

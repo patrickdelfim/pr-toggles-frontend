@@ -140,7 +140,7 @@ const NestedSegmentRulesArray: React.FC<nestedSegmentRulesArray> = ({
                 borderColor={'gray.500'}
               />
               <Text px={2} color="gray.500">
-                or
+                And
               </Text>
               <Divider
                 orientation="horizontal"
@@ -163,7 +163,7 @@ const NestedSegmentRulesArray: React.FC<nestedSegmentRulesArray> = ({
                 }}
               >
                 {' '}
-                OR Gate
+                And Gate
               </Button>
             </Box>
               )}
