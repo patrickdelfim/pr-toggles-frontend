@@ -82,7 +82,7 @@ const NestedSegmentRulesArray: React.FC<nestedSegmentRulesArray> = ({
                 options={[
                   { value: '>', text: 'Maior que (>)' },
                   { value: '<', text: 'Menor que (<)' },
-                  { value: '=', text: 'Igual a (=)' },
+                  { value: '==', text: 'Igual a (=)' },
                   { value: 'contains', text: 'contains' },
                 ]}
               />
