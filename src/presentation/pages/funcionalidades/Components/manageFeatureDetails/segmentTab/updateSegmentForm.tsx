@@ -117,6 +117,7 @@ const UpdateSegmentForm: React.FC<props> = ({
   const handleSwitchToggle = (): void => {
     const newCheckedValue = !checked
     setChecked(newCheckedValue)
+    setValue('ativado', newCheckedValue)
   }
 
   return (
