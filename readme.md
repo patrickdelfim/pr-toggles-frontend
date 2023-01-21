@@ -1,7 +1,7 @@
 <a name="readme-top"></a>
 
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/patrickdelfim/]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -17,7 +17,7 @@
   <p align="center">
     Painel administrativo para gerenciamento de feature toggles.
     <br />
-    <a href="https://github.com/patrickdelfim/pr-toggles-frontend"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/patrickdelfim/pr-toggles-frontend/blob/master/doc/TCC-PRToggles.pdf"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/patrickdelfim/pr-toggles-frontend">View Demo</a>
@@ -30,38 +30,10 @@
 
 
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
-
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![Product Name Screen Shot][product-screenshot]
 
 PR Toggles é um projeto desenvolvido para o trabalho de conclusão da minha graduação. Ele consiste em um sistema de gerenciamento de feature toggles.
 
@@ -169,8 +141,8 @@ Esse projeto foi fortemente baseado em diversos outros projetos relacionados a f
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
+[linkedin-url]: https://www.linkedin.com/in/patrickdelfim/
+[product-screenshot]: doc/images/Screenshot%20from%202023-01-21%2015-48-34.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
