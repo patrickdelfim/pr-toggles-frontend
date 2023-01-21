@@ -99,6 +99,7 @@ Para rodar o projeto é necessario ter nodejs e npm instalados.
 
 Em construção.
 
+<a href="https://github.com/patrickdelfim/pr-toggles-frontend/tree/master/doc/images"><strong>Clique aqui para conferir imagens do front end.</strong></a>
 <!-- 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
