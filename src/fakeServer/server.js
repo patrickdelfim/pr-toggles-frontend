@@ -1,6 +1,39 @@
 
 import { belongsTo, createServer, hasMany, Model, Response, RestSerializer, Serializer, } from 'miragejs'
 
+function serializeIdsToInteger (responseData) {
+  const shouldConvert = (key, value) => {
+    return (key === 'id' || key.endsWith('Id') || key.endsWith('id')) && typeof value === 'string'
+  }
+
+  const mapData = (data) => {
+    console.log('data to be serialized: ', data)
+    if (Array.isArray(data)) {
+      console.log('Array serialized: ', data)
+
+      return data.map((item) => mapData(item))
+    }
+
+    if (typeof data === 'object' && data !== null) {
+      return Object.entries(data)
+        .reduce((acc, [key, value]) => {
+          if (key === 'id') console.log(key, value, typeof value)
+          const newValue = shouldConvert(key, value) ? +value : mapData(value)
+          if (key === 'id') console.log(key, value, typeof value)
+
+          return {
+            ...acc,
+            [key]: newValue
+          }
+        }, {})
+    }
+
+    return data
+  }
+
+  return mapData(responseData)
+}
+
 const ApplicationSerializer = Serializer.extend({
   // will always serialize the ids of all relationships for the model or collection in the response
   serializeIds: 'always',
@@ -9,7 +42,7 @@ const ApplicationSerializer = Serializer.extend({
     const json = Serializer.prototype.serialize.apply(this, arguments)
 
     const root = resource.models ? this.keyForCollection(resource.modelName) : this.keyForModel(resource.modelName)
-    return json[root]
+    return serializeIdsToInteger(json[root])
   }
 })
 
@@ -57,6 +90,11 @@ export function makeServer ({ environment = 'development' } = {}) {
       agregado: RestSerializer.extend({
         embed: true,
         root: false,
+        serialize () {
+          const json = RestSerializer.prototype.serialize.apply(this, arguments)
+
+          return serializeIdsToInteger(json)
+        }
       }),
       strategyHasAgregado: ApplicationSerializer.extend({
         keyForForeignKey (key) {
@@ -253,7 +291,7 @@ export function makeServer ({ environment = 'development' } = {}) {
 
         await feature.update({ strategyIds: [estrategiaDev.id, estrategiaHml.id, estrategiaPrd.id] })
         console.log(feature)
-        return new Response(200, {}, { message: 'Feature criada com sucesso' },
+        return new Response(201, {}, { message: 'Feature criada com sucesso' },
         )
       })
 
@@ -297,12 +335,12 @@ export function makeServer ({ environment = 'development' } = {}) {
         console.log('agregado model: ', model)
         const agregado = await schema.agregados.create(model)
         console.log('added agregado: ', agregado)
-        return new Response(200, {}, { message: 'Agregado criada com sucesso' },
+        return new Response(201, {}, { message: 'Agregado criada com sucesso' },
         )
       })
 
       this.get('/agregados/projeto/:id', async (schema, request) => {
-        const id = request.params.id
+        const id = parseInt(request.params.id)
         const agregados = await schema.agregados.where({ projectId: id })
         if (agregados.length === 0) return new Response(404, {}, { message: 'Error ao buscar agregados.' })
         return agregados
@@ -312,7 +350,7 @@ export function makeServer ({ environment = 'development' } = {}) {
               StrategyHasAgregado
         ========================== */
 
-      this.put('/strategyHasAgregado', async (schema, request) => {
+      this.patch('/estrategias/hasAgregado', async (schema, request) => {
         const attrs = JSON.parse(request.requestBody)
         const strategyHasAgregado = await schema.strategyHasAgregados.where({ strategyId: attrs.estrategia_id })
         if (strategyHasAgregado.models.length > 0) {
@@ -330,7 +368,7 @@ export function makeServer ({ environment = 'development' } = {}) {
         }
       })
 
-      this.get('estrategiaHasAgregado/:strategyId', async (schema, request) => {
+      this.get('/estrategias/:strategyId/agregados', async (schema, request) => {
         const strategyId = request.params.strategyId
         const agregado = await schema.strategyHasAgregados.findBy({ strategyId })
         console.log('agregado found: ', agregado)
