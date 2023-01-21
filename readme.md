@@ -142,7 +142,7 @@ Esse projeto foi fortemente baseado em diversos outros projetos relacionados a f
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/patrickdelfim/
-[product-screenshot]: doc/images/Screenshot%20from%202023-01-21%2015-48-34.png
+[product-screenshot]: doc/images/Tela%20Painel%20administrativo.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
