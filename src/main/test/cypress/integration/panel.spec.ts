@@ -46,16 +46,16 @@ describe('ProjectList', () => {
     cy.visit('panel')
     cy.getByTestId('skeletonCardList').children().should('have.length', 5)
     cy.getByTestId('projectsContainer').children().first().then(element => {
-      assert.equal(element.find('[data-testid="title"]').text(), 'back end do futuro')
-      assert.equal(element.find('[data-testid="subtitle"]').text(), `Created ${new Date().toLocaleDateString('pt-BR')} - descricao linda do projeto`)
+      assert.equal(element.find('[data-testid="title"]').text(), 'back end website principal')
+      assert.equal(element.find('[data-testid="subtitle"]').text(), `Created ${new Date().toLocaleDateString('pt-BR')} - Lorem Ipsum is simply dummy text of the printing and typesetting industry.`)
     })
     cy.getByTestId('projectsContainer').children().eq(1).then(element => {
-      assert.equal(element.find('[data-testid="title"]').text(), 'back end do futuro 2')
+      assert.equal(element.find('[data-testid="title"]').text(), 'Aplicacao interna dos funcionarios')
       assert.equal(element.find('[data-testid="subtitle"]').text(), `Created ${new Date().toLocaleDateString('pt-BR')} - Sem descrição`)
     })
     cy.getByTestId('projectsContainer').children().eq(2).then(element => {
-      assert.equal(element.find('[data-testid="title"]').text(), 'back end do futuro 3')
-      assert.equal(element.find('[data-testid="subtitle"]').text(), `Created ${new Date().toLocaleDateString('pt-BR')} - descricao linda do projeto 2`)
+      assert.equal(element.find('[data-testid="title"]').text(), 'Loja virtual camisetas legais')
+      assert.equal(element.find('[data-testid="subtitle"]').text(), `Created ${new Date().toLocaleDateString('pt-BR')} - camisetas legais is simply dummy text of the printing and typesetting industry.`)
     })
   })
   it('should present not available projects message', () => {
@@ -72,10 +72,10 @@ describe('ProjectList', () => {
   })
   it('should search for a existing project', () => {
     cy.visit('panel')
-    cy.getByTestId('searchInput').type('futuro 3')
+    cy.getByTestId('searchInput').type('camisetas legais')
     cy.getByTestId('projectsContainer').children().first().then(element => {
-      assert.equal(element.find('[data-testid="title"]').text(), 'back end do futuro 3')
-      assert.equal(element.find('[data-testid="subtitle"]').text(), `Created ${new Date().toLocaleDateString('pt-BR')} - descricao linda do projeto 2`)
+      assert.equal(element.find('[data-testid="title"]').text(), 'Loja virtual camisetas legais')
+      assert.equal(element.find('[data-testid="subtitle"]').text(), `Created ${new Date().toLocaleDateString('pt-BR')} - camisetas legais is simply dummy text of the printing and typesetting industry.`)
     })
   })
   it('should fail when searching for an not existing project', () => {
